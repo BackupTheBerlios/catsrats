@@ -18,7 +18,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 
 	public CatAgentBehaviour(Agent agente, long period) {
 		super(agente, period);
-		this.coordX= Math.random();
+		this.coordX= Math.random()*5;
 		this.coordY= Math.random();
 		this.coordZ= Math.random();
 		this.nombre= myAgent.getLocalName();
@@ -74,7 +74,6 @@ public class CatAgentBehaviour extends TickerBehaviour{
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 		//agrega contenido
 		String contenido = generaCoordenadas();
-		System.out.println(contenido);
 		msg.setContent(contenido);
 		//agrega la direccion del destinatario
 		msg.addReceiver( new AID(destinatario, AID.ISLOCALNAME) );
