@@ -20,7 +20,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 		super(agente, period);	
 		this.coordX= Math.random();
 		this.coordY= Math.random();
-		this.coordZ= Math.random();
+		this.coordZ= Math.random()*5;
 		this.nombre= myAgent.getLocalName();
 		this.activado = false;
 		paginasAmarillas= new YellowPagesPerception();
@@ -70,7 +70,6 @@ public class RatAgentBehaviour extends TickerBehaviour{
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 		//agrega contenido
 		String contenido = generaCoordenadas();
-		System.out.println(contenido);
 		msg.setContent(contenido);
 		//agrega la direccion del destinatario
 		msg.addReceiver( new AID(destinatario, AID.ISLOCALNAME) );
