@@ -42,9 +42,18 @@ public class FormatAndSendBehaviour extends OneShotBehaviour{
 			cab.setXFormateada(xFormateada);
 			cab.setYFormateada(yFormateada);
 			cab.setZFormateada(yFormateada);
+			
+			int numGatos = 0;
+			int numRatones = 0;
+			for(int i = 0; i<cab.getAgentesGeneradores().length;i++){
+				if(cab.getAgentesGeneradores()[i].getLocalName().contains("gato"))
+					numGatos++;
+				else if(cab.getAgentesGeneradores()[i].getLocalName().contains("raton"))
+					numRatones++;
+			}
 
 			// Se preparan los datos para enviar.
-			DatoSocket x = new DatoSocket(":"+objetoAMover+"("+xFormateada+",");
+			DatoSocket x = new DatoSocket(":"+numGatos+":"+numRatones+":"+objetoAMover+"("+xFormateada+",");
 			DatoSocket y = new DatoSocket(yFormateada+",");
 			DatoSocket z = new DatoSocket(zFormateada+")*"); //Con el * indicamos a C el final de la cadena
 
@@ -69,9 +78,6 @@ public class FormatAndSendBehaviour extends OneShotBehaviour{
 				myAgent.doDelete(); //Matamos al agente socket
 				//System.exit(0);
 			}
-			System.out.println ("Enviado X " + x.toString());
-			System.out.println ("Enviado Y " + y.toString());
-			System.out.println ("Enviado Z " + z.toString());
 
 		}
 		else {
