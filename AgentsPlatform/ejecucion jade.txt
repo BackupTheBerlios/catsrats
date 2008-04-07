@@ -1,3 +1,5 @@
 agenteComunicacion:agents.ComunicationAgent
+gato0:agents.CatAgent
 gato1:agents.CatAgent
+raton0:agents.RatAgent
 raton1:agents.RatAgent
