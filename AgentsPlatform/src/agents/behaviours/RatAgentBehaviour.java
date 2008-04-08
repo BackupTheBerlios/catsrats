@@ -27,9 +27,9 @@ public class RatAgentBehaviour extends TickerBehaviour{
 	}
 
 	protected String generaCoordenadas() {
-		coordX = coordX - 0.010;
-		coordY = coordY + 0.010;
-		coordZ = coordZ + 0.010;
+		coordX = coordX + Math.random()/10;
+		coordY = coordY + Math.random()/10;
+		coordZ = coordZ - Math.random()/10;
 		String mensaje= nombre+","+coordX+","+coordY+","+coordZ;
 		
 		return mensaje;	
