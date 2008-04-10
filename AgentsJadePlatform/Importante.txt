@@ -6,6 +6,4 @@ Los agentes los vamos a indentificar como:
 gato1, gato2, ..., gaton
 raton1, raton2, ..., ratonn
 
-En la parte grafica habra que mover el objeto correspondiente. Tenemos que saber a priori
-el numero de agentes gato y raton que se van a lanzar, ya que de lo contrario no se
-visualizara correctamente.
+En la parte grafica habra que mover el objeto correspondiente.

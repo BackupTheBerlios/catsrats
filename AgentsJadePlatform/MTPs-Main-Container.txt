@@ -1,1 +1,1 @@
-http://PTO1003.lab.fdi:7778/acc
+http://Nachete.lan:7778/acc
