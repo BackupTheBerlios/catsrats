@@ -1,4 +1,4 @@
-package socket;
+package es.ucm.fdi.socket;
 /*
  * Javier Abellán. 9 Dic 2003
  *
@@ -8,8 +8,7 @@ package socket;
 
 import java.net.*;
 import java.io.*;
-import java.text.*;
-import java.util.Locale;
+
 
 /**
  * Clase principal que instancia un socket servidor, acepta una conexión

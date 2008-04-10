@@ -1,4 +1,4 @@
-package socket;
+package es.ucm.fdi.socket;
 /*
  * Javier Abellán. 9 Dic 2003
  *
