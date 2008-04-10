@@ -1,0 +1,11 @@
+En la parte de agentes se van creando los agentes segun el nombre que les damos en 
+la ejecucion, por tanto, es necesario cambiar en el entorno grafico la forma en la
+que se hacen comprobaciones para mover los distintos objetos por la pantalla.
+
+Los agentes los vamos a indentificar como:
+gato1, gato2, ..., gaton
+raton1, raton2, ..., ratonn
+
+En la parte grafica habra que mover el objeto correspondiente. Tenemos que saber a priori
+el numero de agentes gato y raton que se van a lanzar, ya que de lo contrario no se
+visualizara correctamente.
