@@ -1,6 +1,6 @@
 package es.ucm.fdi.agents.behaviours;
 
-import es.ucm.fdi.agents.yellowPages.YellowPagesPerception;
+import es.ucm.fdi.agents.yellowPages.YellowPages;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
@@ -14,7 +14,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 	private String nombre;
 	private boolean activado;
 	private AID[] listaAgentesComunicacion;
-	private YellowPagesPerception paginasAmarillas;
+	private YellowPages paginasAmarillas;
 
 	public CatAgentBehaviour(Agent agente, long period) {
 		super(agente, period);
@@ -23,7 +23,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 		this.coordZ= Math.random();
 		this.nombre= myAgent.getLocalName();
 		this.activado = false;
-		paginasAmarillas= new YellowPagesPerception();
+		paginasAmarillas= new YellowPages();
 	
 	}
 
