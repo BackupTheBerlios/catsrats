@@ -7,9 +7,9 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
-public class YellowPagesComunication {
+public class YellowPages {
 	
-	public YellowPagesComunication(){}
+	public YellowPages(){}
 	
 	public AID[] buscarServicio(String tipoServicio, Agent agente) {
 		AID[] listaAgentes = null;

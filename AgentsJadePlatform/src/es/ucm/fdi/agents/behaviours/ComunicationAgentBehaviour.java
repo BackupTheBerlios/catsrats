@@ -2,7 +2,7 @@ package es.ucm.fdi.agents.behaviours;
 
 import java.text.DecimalFormat;
 
-import es.ucm.fdi.agents.yellowPages.YellowPagesComunication;
+import es.ucm.fdi.agents.yellowPages.YellowPages;
 import es.ucm.fdi.socket.SocketServidor;
 
 
@@ -21,7 +21,7 @@ public class ComunicationAgentBehaviour extends TickerBehaviour{
 	private SocketServidor socket;
 	private boolean activarAgentes;
 	private AID[] agentesGeneradores;
-	private YellowPagesComunication paginasAmarillas;
+	private YellowPages paginasAmarillas;
 	
 	public ComunicationAgentBehaviour(Agent agente, long tiempo, SocketServidor socket, boolean activarAgentes) {
 		super(agente, tiempo);
@@ -30,7 +30,7 @@ public class ComunicationAgentBehaviour extends TickerBehaviour{
 		this.zFormateada=new String();
 		this.socket = socket;
 		this.activarAgentes = activarAgentes;
-		this.paginasAmarillas = new YellowPagesComunication();
+		this.paginasAmarillas = new YellowPages();
 		
 		
 	}
