@@ -15,6 +15,8 @@ public class CatAgentBehaviour extends TickerBehaviour{
 	private boolean activado;
 	private AID[] listaAgentesComunicacion;
 	private YellowPages paginasAmarillas;
+	private enum Orientacion{N,S,E,O,NE,NO,SE,SO};
+	private Orientacion orientacion;
 
 	public CatAgentBehaviour(Agent agente, long period) {
 		super(agente, period);
@@ -22,6 +24,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 		this.coordY= Math.random();
 		this.coordZ= Math.random();
 		this.nombre= myAgent.getLocalName();
+		this.orientacion = Orientacion.E;
 		this.activado = false;
 		paginasAmarillas= new YellowPages();
 	
