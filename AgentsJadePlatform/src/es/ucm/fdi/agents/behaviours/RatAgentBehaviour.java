@@ -19,17 +19,19 @@ public class RatAgentBehaviour extends TickerBehaviour{
 	private Orientacion orientacion;
 	private double trayectoria;
 	private double anguloTrayectoriaCircular;
+	private double radioCircunferencia;
 	
-	public RatAgentBehaviour(Agent agente, long period) {
-		super(agente, period);	
-		this.coordX= Math.random();
-		this.coordY= Math.random();
+	public RatAgentBehaviour(Agent agente, long tiempo) {
+		super(agente, tiempo);	
+		this.coordX= Math.random()*10;
+		this.coordY= Math.random()*10;
 		this.coordZ= 0.0;
 		this.nombre= myAgent.getLocalName();
 		this.orientacion = Orientacion.E;
 		this.activado = false;
 		paginasAmarillas= new YellowPages();
 		this.trayectoria = (Math.random()*10)%2;
+		this.radioCircunferencia = Math.random()*10;
 		this.anguloTrayectoriaCircular = 0.0;
 	}
 
@@ -47,16 +49,16 @@ public class RatAgentBehaviour extends TickerBehaviour{
 	}
 
 	private void trayectoriaZigZag() {
-		//TODO
-		
+			//TODO
 	}
 
 	private void trayectoriaCircular() {
-		double radio = 3;
-		double incremento = 5*Math.PI/180; //incrementamos el angulo en 5 grados
-		coordX = radio*Math.cos(anguloTrayectoriaCircular);
-		coordY = radio*Math.sin(anguloTrayectoriaCircular);
-		anguloTrayectoriaCircular += incremento;
+		
+		double incrementoAngulo = 5*Math.PI/180; //incrementamos el angulo en 5 grados
+
+		coordX = radioCircunferencia*Math.cos(anguloTrayectoriaCircular);
+		coordY = radioCircunferencia*Math.sin(anguloTrayectoriaCircular);
+		anguloTrayectoriaCircular += incrementoAngulo;
 	}
 
 	protected void onTick() {
@@ -67,22 +69,23 @@ public class RatAgentBehaviour extends TickerBehaviour{
 		ACLMessage mensajeEntrante = myAgent.receive();
 		if(mensajeEntrante != null){
 			String contenidoMensaje = mensajeEntrante.getContent();
-			if(contenidoMensaje.contains("morir")){
+			if(contenidoMensaje.contains("morir")){ //Matamos a los agentes
 				myAgent.doDelete();
 			}
-			else if(contenidoMensaje.contains("activacion")){				
+			else if(contenidoMensaje.contains("activacion")){	//Activamos a los agentes			
 				activado= true;
 				for(int i = 0; i<listaAgentesComunicacion.length; i++){
 					nuevoMensaje(listaAgentesComunicacion[i].getLocalName());
 				}
 			}
 		}
-		else if(activado){
+		else if(activado){ //Si no recibimos mensaje pero los agentes estan activados
+							//continuamos con la ejecucion
 			for(int i = 0; i<listaAgentesComunicacion.length; i++){
 				nuevoMensaje(listaAgentesComunicacion[i].getLocalName());
 			}
 		}
-		else {
+		else {  //Permanecemos a la espera de que llegue el mensaje de activacion
 			block();
 		}
 		

@@ -18,11 +18,11 @@ public class CatAgentBehaviour extends TickerBehaviour{
 	private enum Orientacion{N,S,E,O,NE,NO,SE,SO};
 	private Orientacion orientacion;
 
-	public CatAgentBehaviour(Agent agente, long period) {
-		super(agente, period);
-		this.coordX= Math.random()*5;
-		this.coordY= Math.random();
-		this.coordZ= Math.random();
+	public CatAgentBehaviour(Agent agente, long tiempo) {
+		super(agente, tiempo);
+		this.coordX= Math.random()*10;
+		this.coordY= Math.random()*10;
+		this.coordZ= 0.0;
 		this.nombre= myAgent.getLocalName();
 		this.orientacion = Orientacion.E;
 		this.activado = false;
@@ -34,7 +34,6 @@ public class CatAgentBehaviour extends TickerBehaviour{
 		
 		coordX = coordX - Math.random()/10;
 		coordY = coordY - Math.random()/10;
-		coordZ = coordZ + Math.random()/10;
 		
 	    String mensaje= nombre+","+coordX+","+coordY+","+coordZ;
 	    
@@ -49,10 +48,10 @@ public class CatAgentBehaviour extends TickerBehaviour{
 		ACLMessage mensajeEntrante = myAgent.receive();
 		if(mensajeEntrante != null){
 			String contenidoMensaje = mensajeEntrante.getContent();
-			if(contenidoMensaje.contains("morir")){
+			if(contenidoMensaje.contains("morir")){ //Matamos a los agentes
 				myAgent.doDelete();
 			}
-			else if(contenidoMensaje.contains("activacion")){				
+			else if(contenidoMensaje.contains("activacion")){	//Activamos a los agentes			
 				activado= true;
 				for(int i = 0; i<listaAgentesComunicacion.length; i++){
 					nuevoMensaje(listaAgentesComunicacion[i].getLocalName());
@@ -60,12 +59,13 @@ public class CatAgentBehaviour extends TickerBehaviour{
 				
 			}
 		}
-		else if(activado){
+		else if(activado){  //Si no recibimos mensaje pero los agentes estan activados
+							//continuamos con la ejecucion
 			for(int i = 0; i<listaAgentesComunicacion.length; i++){
 				nuevoMensaje(listaAgentesComunicacion[i].getLocalName());
 			}
 		}
-		else {
+		else {  //Permanecemos a la espera de que llegue el mensaje de activacion
 			block();
 		}
 		
