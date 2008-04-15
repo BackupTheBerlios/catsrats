@@ -34,8 +34,8 @@ public class ComunicationAgent extends Agent{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Agente "+getAID().getName()+" está listo");
-		//logger.info("Agente "+getAID().getName()+" está listo");
+		//System.out.println("Agente "+getAID().getName()+" está listo");
+		logger.info("Agente "+getAID().getName()+" está listo");
 		
 		//Creamos el socket servidor y lo dejamos preparado a la escucha		
 		final SocketServidor socketServ=new SocketServidor();
@@ -51,8 +51,8 @@ public class ComunicationAgent extends Agent{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Agente "+getAID().getName()+" terminando...");
-		//logger.info("Agente "+getAID().getName()+" terminando...");
+		//System.out.println("Agente "+getAID().getName()+" terminando...");
+		logger.info("Agente "+getAID().getName()+" terminando...");
 		
 	}
 }

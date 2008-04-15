@@ -9,6 +9,10 @@ package es.ucm.fdi.socket;
 import java.net.*;
 import java.io.*;
 
+import org.apache.log4j.Logger;
+
+import es.ucm.fdi.agents.CatAgent;
+import org.apache.log4j.Logger;
 
 /**
  * Clase principal que instancia un socket servidor, acepta una conexión
@@ -21,7 +25,8 @@ public class SocketServidor
 	private DataInputStream bufferEntrada;
 	private DataOutputStream bufferSalida;
 	private DatoSocket aux;
-
+	
+	static Logger logger = Logger.getLogger(CatAgent.class);
     
      /**
       * Constructor por defecto. Hace todo lo que hace el ejemplo.
@@ -37,10 +42,11 @@ public class SocketServidor
     		socket = new ServerSocket (25557); //Creamos una vez el canal de comunicacion y lo dejamos abierto para recibir las 
 			// Se acepata una conexión con un cliente. Esta llamada se queda
     			// bloqueada hasta que se arranque el cliente.
-    		System.out.println ("Esperando cliente..."); //peticiones de los clientes
+    		//System.out.println ("Esperando cliente..."); //peticiones de los clientes
+    		logger.info("Esperando cliente..."); //peticiones de los clientes
     		cliente = socket.accept();
-    		System.out.println ("Conectado con cliente de " + cliente.getInetAddress());
-
+    		//System.out.println ("Conectado con cliente de " + cliente.getInetAddress());
+    		logger.info("Conectado con cliente de " + cliente.getInetAddress());
     			// Se hace que el cierre del socket sea "gracioso". Esta llamada sólo
     			// es necesaria si cerramos el socket inmediatamente después de
     			// enviar los datos (como en este caso).
@@ -59,7 +65,8 @@ public class SocketServidor
     			aux = new DatoSocket("");
 
     			aux.readObject (bufferEntrada);
-    			System.out.println ("Recibido: " + aux.toString());
+    			//System.out.println ("Recibido: " + aux.toString());
+    			logger.info("Recibido: " + aux.toString());
     			// Se prepara un flujo de salida de datos, es decir, la clase encargada
     			// de escribir datos en el socket.
     			bufferSalida = new DataOutputStream (cliente.getOutputStream());

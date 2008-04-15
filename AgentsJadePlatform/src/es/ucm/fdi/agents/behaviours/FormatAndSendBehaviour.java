@@ -69,8 +69,8 @@ public class FormatAndSendBehaviour extends OneShotBehaviour{
 				z.writeObject (socket.getBufferSalida());
 			} catch (IOException e) {
 				socket.cerrarSocket();
-				System.out.println("SE HA CERRADO EL SOCKET CORRECTAMENTE");
-				//logger.info("SE HA CERRADO EL SOCKET CORRECTAMENTE");
+				//System.out.println("SE HA CERRADO EL SOCKET CORRECTAMENTE");
+				logger.info("SE HA CERRADO EL SOCKET CORRECTAMENTE");
 				ACLMessage mensaje = new ACLMessage(ACLMessage.INFORM);
 				//agrega contenido: queremos matar a los agentes de percepcion
 				String contenido = "morir";
