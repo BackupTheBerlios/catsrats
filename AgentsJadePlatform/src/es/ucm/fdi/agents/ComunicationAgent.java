@@ -39,7 +39,7 @@ public class ComunicationAgent extends Agent{
 		
 		//Creamos el socket servidor y lo dejamos preparado a la escucha		
 		final SocketServidor socketServ=new SocketServidor();
-		cab = new ComunicationAgentBehaviour(this, 100, socketServ, true);
+		cab = new ComunicationAgentBehaviour(this, 30, socketServ, true);
 		addBehaviour(cab);
 	}
 	

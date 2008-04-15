@@ -1,10 +1,4 @@
 package es.ucm.fdi.socket;
-/*
- * Javier Abellán. 9 Dic 2003
- *
- * DatoSocket.java
- * Dato que se va a enviar entre servidores y clientes java y c.
- */
 
 import java.io.*;
 

@@ -23,25 +23,25 @@ public class RatAgentBehaviour extends TickerBehaviour{
 	
 	public RatAgentBehaviour(Agent agente, long tiempo) {
 		super(agente, tiempo);	
-		this.coordX= Math.random()*10;
-		this.coordY= Math.random()*10;
+		this.coordX= Math.random()*20;
+		this.coordY= Math.random()*20;
 		this.coordZ= 0.0;
 		this.nombre= myAgent.getLocalName();
 		this.orientacion = Orientacion.E;
 		this.activado = false;
 		paginasAmarillas= new YellowPages();
-		this.trayectoria = (Math.random()*10)%2;
+		this.trayectoria = Math.round((Math.random()*10)%2);
 		this.radioCircunferencia = Math.random()*10;
 		this.anguloTrayectoriaCircular = 0.0;
+		
 	}
 
 	protected String generaCoordenadas() {
 		
-		//Movimiento en circulo
-		//if(trayectoria==0)
-			trayectoriaCircular();
-		//else
-			//trayectoriaZigZag();
+		if(trayectoria==0)
+			trayectoriaCircular();  //Movimiento en circulo
+		else
+			trayectoriaZigZag();  //Movimiento en zigzag??
 		
 		String mensaje= nombre+","+coordX+","+coordY+","+coordZ;
 		
@@ -49,7 +49,23 @@ public class RatAgentBehaviour extends TickerBehaviour{
 	}
 
 	private void trayectoriaZigZag() {
-			//TODO
+		double direccion = Math.round((Math.random()*10)%4);
+		
+		if(direccion == 0){
+			coordX += 0.5;
+			coordY += 0.5;
+		}
+		else if(direccion == 1){
+			coordX += 0.5;
+			coordY -= 0.5;
+		}else if(direccion == 2){
+			coordX -= 0.5;
+			coordY += 0.5;
+		}else if(direccion == 3){
+			coordX -= 0.5;
+			coordY -= 0.5;
+		}
+		
 	}
 
 	private void trayectoriaCircular() {

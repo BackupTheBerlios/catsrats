@@ -1,18 +1,9 @@
 package es.ucm.fdi.socket;
-/*
- * Javier Abellán. 9 Dic 2003
- *
- * SocketServidor.java
- * Ejemplo de un socket servidor en java que se conecta con un cliente C.
- */
 
 import java.net.*;
 import java.io.*;
-
 import org.apache.log4j.Logger;
 
-import es.ucm.fdi.agents.CatAgent;
-import org.apache.log4j.Logger;
 
 /**
  * Clase principal que instancia un socket servidor, acepta una conexión
@@ -26,7 +17,7 @@ public class SocketServidor
 	private DataOutputStream bufferSalida;
 	private DatoSocket aux;
 	
-	static Logger logger = Logger.getLogger(CatAgent.class);
+	static Logger logger = Logger.getLogger(SocketServidor.class);
     
      /**
       * Constructor por defecto. Hace todo lo que hace el ejemplo.

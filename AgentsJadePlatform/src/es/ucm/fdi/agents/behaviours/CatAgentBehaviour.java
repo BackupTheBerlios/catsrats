@@ -20,8 +20,8 @@ public class CatAgentBehaviour extends TickerBehaviour{
 
 	public CatAgentBehaviour(Agent agente, long tiempo) {
 		super(agente, tiempo);
-		this.coordX= Math.random()*10;
-		this.coordY= Math.random()*10;
+		this.coordX= Math.random()*20;
+		this.coordY= Math.random()*20;
 		this.coordZ= 0.0;
 		this.nombre= myAgent.getLocalName();
 		this.orientacion = Orientacion.E;
