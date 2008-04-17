@@ -1,5 +1,6 @@
 package es.ucm.fdi.agents.behaviours;
 
+import es.ucm.fdi.agents.coordinates.Point;
 import es.ucm.fdi.agents.yellowPages.YellowPages;
 import jade.core.AID;
 import jade.core.Agent;
@@ -8,9 +9,7 @@ import jade.lang.acl.ACLMessage;
 
 public class RatAgentBehaviour extends TickerBehaviour{
 	
-	private double coordX;
-	private double coordY;
-	private double coordZ;
+	private Point punto;
 	private String nombre;
 	private boolean activado;
 	private AID[] listaAgentesComunicacion;
@@ -23,9 +22,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 	
 	public RatAgentBehaviour(Agent agente, long tiempo) {
 		super(agente, tiempo);	
-		this.coordX= Math.random()*20;
-		this.coordY= Math.random()*20;
-		this.coordZ= 0.0;
+		punto= new Point(Math.random()*20, Math.random()*20, 0.0);
 		this.nombre= myAgent.getLocalName();
 		this.orientacion = Orientacion.E;
 		this.activado = false;
@@ -43,7 +40,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 		else
 			trayectoriaZigZag();  //Movimiento en zigzag??
 		
-		String mensaje= nombre+","+coordX+","+coordY+","+coordZ;
+		String mensaje= nombre+","+punto.getX()+","+punto.getY()+","+punto.getZ();
 		
 		return mensaje;	
 	}
@@ -52,18 +49,18 @@ public class RatAgentBehaviour extends TickerBehaviour{
 		double direccion = Math.round((Math.random()*10)%4);
 		
 		if(direccion == 0){
-			coordX += 0.5;
-			coordY += 0.5;
+			punto.setX(punto.getX()+ 0.5);
+			punto.setY(punto.getY()+ 0.5);
 		}
 		else if(direccion == 1){
-			coordX += 0.5;
-			coordY -= 0.5;
+			punto.setX(punto.getX()+ 0.5);
+			punto.setY(punto.getY()- 0.5);
 		}else if(direccion == 2){
-			coordX -= 0.5;
-			coordY += 0.5;
+			punto.setX(punto.getX()- 0.5);
+			punto.setY(punto.getY()+ 0.5);
 		}else if(direccion == 3){
-			coordX -= 0.5;
-			coordY -= 0.5;
+			punto.setX(punto.getX()- 0.5);
+			punto.setY(punto.getY()- 0.5);
 		}
 		
 	}
@@ -72,8 +69,8 @@ public class RatAgentBehaviour extends TickerBehaviour{
 		
 		double incrementoAngulo = 5*Math.PI/180; //incrementamos el angulo en 5 grados
 
-		coordX = radioCircunferencia*Math.cos(anguloTrayectoriaCircular);
-		coordY = radioCircunferencia*Math.sin(anguloTrayectoriaCircular);
+		punto.setX(radioCircunferencia*Math.cos(anguloTrayectoriaCircular));
+		punto.setY(radioCircunferencia*Math.sin(anguloTrayectoriaCircular));
 		anguloTrayectoriaCircular += incrementoAngulo;
 	}
 

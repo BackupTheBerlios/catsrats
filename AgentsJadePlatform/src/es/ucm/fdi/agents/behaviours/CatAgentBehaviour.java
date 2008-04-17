@@ -1,5 +1,6 @@
 package es.ucm.fdi.agents.behaviours;
 
+import es.ucm.fdi.agents.coordinates.Point;
 import es.ucm.fdi.agents.yellowPages.YellowPages;
 import jade.core.AID;
 import jade.core.Agent;
@@ -8,9 +9,7 @@ import jade.lang.acl.ACLMessage;
 
 public class CatAgentBehaviour extends TickerBehaviour{
 	
-	private double coordX;
-	private double coordY;
-	private double coordZ;
+	private Point punto;
 	private String nombre;
 	private boolean activado;
 	private AID[] listaAgentesComunicacion;
@@ -20,9 +19,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 
 	public CatAgentBehaviour(Agent agente, long tiempo) {
 		super(agente, tiempo);
-		this.coordX= Math.random()*20;
-		this.coordY= Math.random()*20;
-		this.coordZ= 0.0;
+		punto= new Point(Math.random()*20, Math.random()*20, 0.0);
 		this.nombre= myAgent.getLocalName();
 		this.orientacion = Orientacion.E;
 		this.activado = false;
@@ -32,10 +29,10 @@ public class CatAgentBehaviour extends TickerBehaviour{
 
 	public String generaCoordenadas(){
 		
-		coordX = coordX - Math.random()/10;
-		coordY = coordY - Math.random()/10;
+		punto.setX(punto.getX()- Math.random()/10);
+		punto.setY(punto.getY() - Math.random()/10);
 		
-	    String mensaje= nombre+","+coordX+","+coordY+","+coordZ;
+	    String mensaje= nombre+","+punto.getX()+","+punto.getY()+","+punto.getZ();
 	    
 	    return mensaje;			
 	}
