@@ -1,0 +1,4 @@
+agenteComunicacion:es.ucm.fdi.agents.ComunicationAgent
+agenteDeteccionColisiones:es.ucm.fdi.agents.CollisionDetectionAgent
+gato0:es.ucm.fdi.agents.CatAgent
+raton0:es.ucm.fdi.agents.RatAgent
