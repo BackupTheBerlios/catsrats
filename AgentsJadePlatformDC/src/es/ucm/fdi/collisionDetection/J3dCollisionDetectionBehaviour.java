@@ -174,7 +174,10 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 							else{
 								infoAgente= isCollision(resultArray5);
 								if(infoAgente != null) Java3d.infoColisiones.add(infoAgente);
-								else onMiss();//No ha habido colisión.
+								else {
+									onMiss();//No ha habido colisión.
+									System.out.println("NO HA HABIDO COLISIÓN");
+								}
 							}
 						}						
 					}

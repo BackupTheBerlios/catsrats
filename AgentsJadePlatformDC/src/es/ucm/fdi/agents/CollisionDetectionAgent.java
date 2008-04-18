@@ -48,6 +48,8 @@ public class CollisionDetectionAgent extends Agent{
 		
 		//ic= new ArrayList<InfoCollision>();
 		
+		System.out.println("Agente "+getAID().getName()+" está listo");
+		
 		cdb= new CollisionDetectionBehaviour(this);		
 		
 		addBehaviour(cdb);//añadimos el comportamiento JADE.

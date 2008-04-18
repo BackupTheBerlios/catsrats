@@ -20,14 +20,15 @@ public class CatAgentBehaviour extends TickerBehaviour{
 	private AID[] listaAgentesDeteccionColisiones;
 	private YellowPages paginasAmarillas;
 	private Orientation orientacion;
+	private boolean activado;
 
 	public CatAgentBehaviour(Agent agente, long tiempo) {
 		super(agente, tiempo);
-		punto= new Point(Math.random()*20, Math.random()*20, 0.0);
+		punto= new Point(Math.random()*10, Math.random()*10, 0.0);
 		this.nombre= myAgent.getLocalName();
 		this.orientacion = Orientation.E;
 		paginasAmarillas= new YellowPages();
-	
+		this.activado= false;
 	}
 
 	public String generaCoordenadas(){
@@ -48,17 +49,15 @@ public class CatAgentBehaviour extends TickerBehaviour{
 		//Estamos a la escucha para recibir algun mansaje procedente del Agente Servidor
 		ACLMessage mensajeEntrante = myAgent.receive();
 		if(mensajeEntrante != null){
+			System.out.println("Mensaje entrante del gato: "+mensajeEntrante.getContent());
 			String contenidoMensaje = mensajeEntrante.getContent();
 			if(contenidoMensaje.contains("morir")){ //Matamos a los agentes
 				myAgent.doDelete();
+			}			
+			else if(contenidoMensaje.contains("comunicacion-lista")){	//Permitimos que empiecen a generar coordenadas				
+				activado= true;
 			}
-			else if(contenidoMensaje.contains("activacion")){	//Activamos a los agentes			
-				for(int i = 0; i<listaAgentesComunicacion.length; i++){
-					nuevoMensaje(listaAgentesComunicacion[i].getLocalName());
-					mensajeInfoAgente(listaAgentesDeteccionColisiones[i].getLocalName());
-				}				
-			}
-			else if(contenidoMensaje.contains("genera")){	//Permitimos que sigan generando coordenadas
+			else if(activado && contenidoMensaje.contains("genera")){	//Permitimos que sigan generando coordenadas
 				for(int i = 0; i<listaAgentesComunicacion.length; i++){
 					nuevoMensaje(listaAgentesComunicacion[i].getLocalName());
 					mensajeInfoAgente(listaAgentesDeteccionColisiones[i].getLocalName());
@@ -67,8 +66,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 		}		
 		else {  //Permanecemos a la espera de que llegue un mensaje
 			block();
-		}
-		
+		}		
 	}
 	
 	private void mensajeInfoAgente(String destinatario) {

@@ -23,17 +23,18 @@ public class RatAgentBehaviour extends TickerBehaviour{
 	private double trayectoria;
 	private double anguloTrayectoriaCircular;
 	private double radioCircunferencia;
+	private boolean activado;
 	
 	public RatAgentBehaviour(Agent agente, long tiempo) {
 		super(agente, tiempo);	
-		punto= new Point(Math.random()*20, Math.random()*20, 0.0);
+		punto= new Point(Math.random()*10, Math.random()*10, 0.0);
 		this.nombre= myAgent.getLocalName();
 		this.orientacion = Orientation.E;
 		paginasAmarillas= new YellowPages();
 		this.trayectoria = Math.round((Math.random()*10)%2);
 		this.radioCircunferencia = Math.random()*10;
 		this.anguloTrayectoriaCircular = 0.0;
-		
+		this.activado= false;
 	}
 
 	protected String generaCoordenadas() {
@@ -85,15 +86,13 @@ public class RatAgentBehaviour extends TickerBehaviour{
 		//Estamos a la escucha para recibir algun mansaje procedente del Agente Servidor
 		ACLMessage mensajeEntrante = myAgent.receive();
 		if(mensajeEntrante != null){
+			System.out.println("Mensaje entrante del raton: "+mensajeEntrante.getContent());
 			String contenidoMensaje = mensajeEntrante.getContent();
 			if(contenidoMensaje.contains("morir")){ //Matamos a los agentes
 				myAgent.doDelete();
-			}
-			else if(contenidoMensaje.contains("activacion")){	//Activamos a los agentes			
-				for(int i = 0; i<listaAgentesComunicacion.length; i++){
-					nuevoMensaje(listaAgentesComunicacion[i].getLocalName());
-					mensajeInfoAgente(listaAgentesDeteccionColisiones[i].getLocalName());
-				}
+			}	
+			else if(contenidoMensaje.contains("comunicacion-lista")){	//Permitimos que empiecen a generar coordenadas				
+				activado= true;
 			}
 			else if(contenidoMensaje.contains("genera")){	//Permitimos que sigan generando coordenadas
 				for(int i = 0; i<listaAgentesComunicacion.length; i++){
@@ -104,8 +103,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 		}		
 		else {  //Permanecemos a la espera de que llegue el mensaje de activacion
 			block();
-		}
-		
+		}		
 	}
 	
 	private void mensajeInfoAgente(String destinatario) {

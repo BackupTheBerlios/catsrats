@@ -14,27 +14,22 @@ public class ActivationAgentsBehaviour extends OneShotBehaviour{
 	
 	public void action() {
 
-		boolean activarAgentes = cab.isActivarAgentes();
+		boolean activarAgentes = cab.getEstablecerComunicacion();
 		
 		if(activarAgentes){
 			//Construye mensaje de tipo INFORM
 			ACLMessage mensajeActivacion = new ACLMessage(ACLMessage.INFORM);
 			//agregamos el contenido
-			String contenidoMensaje= "activacion";
+			String contenidoMensaje= "comunicacion-lista";
 			mensajeActivacion.setContent(contenidoMensaje);
 			for(int i = 0; i<cab.getAgentesGeneradores().length; i++){
 				String localName = cab.getAgentesGeneradores()[i].getLocalName();
 				mensajeActivacion.addReceiver(new AID(localName,AID.ISLOCALNAME));
-				myAgent.send(mensajeActivacion);				
-			}
-			//Enviamos el mensaje de activación a todos los agentes de detección de colisiones (solo hay 1)
-			for(int i= 0; i< cab.getAgentesDeteccionColisiones().length; i++){
-				String localName = cab.getAgentesDeteccionColisiones()[i].getLocalName();
-				mensajeActivacion.addReceiver(new AID(localName,AID.ISLOCALNAME));
 				myAgent.send(mensajeActivacion);
+				
 			}
 			
-			cab.setActivarAgentes(false);
+			cab.setEstablecerComunicacion(false);
 		}	
 		
 	}

@@ -31,6 +31,8 @@ public class CollisionDetectionBehaviour extends OneShotBehaviour{
 	
 	private static int m_kWidth = 400;	
 	private static int m_kHeight = 400;
+	
+	private boolean generaCoordenadasPrimeraVez;
 
 
 	public CollisionDetectionBehaviour(Agent arg0) {
@@ -38,13 +40,29 @@ public class CollisionDetectionBehaviour extends OneShotBehaviour{
 		this.listaAgentes = new ArrayList<InfoAgent>();		
 		paginasAmarillas= new YellowPages();
 		j3d= null;
+		generaCoordenadasPrimeraVez= true;
 	}
 
 	public void action() {			
 
 		listaAgentesGeneradores= paginasAmarillas.buscarServicio("generacion-coordenadas", myAgent);
 		int numAgentes= listaAgentesGeneradores.length;
-
+		System.out.println("Numero de agentes generadores: "+ numAgentes);
+		
+		if(generaCoordenadasPrimeraVez){
+			System.out.println("Mandamos mensaje 'genera'por primera vez");
+			ACLMessage mensaje = new ACLMessage(ACLMessage.INFORM);
+			//agrega contenido: generar coordenadas para la primera vez
+			String contenido = "genera";
+			mensaje.setContent(contenido);
+			for(int i = 0; i< numAgentes; i++){
+				String localName = listaAgentesGeneradores[i].getLocalName();
+				mensaje.addReceiver(new AID(localName,AID.ISLOCALNAME));
+				myAgent.send(mensaje);					
+			}	
+			generaCoordenadasPrimeraVez= false;
+		}
+		
 		//Recibir el mensaje de activación o morir:
 		ACLMessage mensajeEntrante = myAgent.receive();
 		if(mensajeEntrante != null){
@@ -78,6 +96,19 @@ public class CollisionDetectionBehaviour extends OneShotBehaviour{
 							System.out.println("nombre del agente que es visto: "+ic.get(i).getAgenteQueEsVisto());
 							System.out.println("Claridad de percepción: "+ic.get(i).getClaridadPercepcion());
 						}
+						
+						//Volvemos a decir a los agentes gato y ratón que generen coordenadas:
+						System.out.println("Mandamos mensaje 'genera'de nuevo...");
+						ACLMessage mensaje = new ACLMessage(ACLMessage.INFORM);
+						//agrega contenido: generar coordenadas para la primera vez
+						String contenido = "genera";
+						mensaje.setContent(contenido);
+						for(int i = 0; i< numAgentes; i++){
+							String localName = listaAgentesGeneradores[i].getLocalName();
+							mensaje.addReceiver(new AID(localName,AID.ISLOCALNAME));
+							myAgent.send(mensaje);					
+						}	
+						
 					}
 
 				} catch (UnreadableException e) {

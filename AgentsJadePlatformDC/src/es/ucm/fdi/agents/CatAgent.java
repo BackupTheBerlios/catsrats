@@ -34,7 +34,7 @@ public class CatAgent extends Agent{
 			e.printStackTrace();
 		}
 		
-		//System.out.println("Agente "+getAID().getName()+" está listo");
+		System.out.println("Agente "+getAID().getName()+" está listo");
 		logger.info("Agente "+getAID().getName()+" está listo");
 		cab = new CatAgentBehaviour(this, 1);
 		addBehaviour(cab);		

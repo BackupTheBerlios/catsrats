@@ -19,21 +19,19 @@ public class ComunicationAgentBehaviour extends TickerBehaviour{
 	private DecimalFormat coordenada; 
 	private ACLMessage msg;
 	private SocketServidor socket;
-	private boolean activarAgentes;
 	private AID[] agentesGeneradores;
 	private YellowPages paginasAmarillas;
 	private AID[] agentesDeteccionColisiones;
+	private boolean establecerComunicacion;//el socket ya está activo para recibir coordenadas. 
 	
-	public ComunicationAgentBehaviour(Agent agente, long tiempo, SocketServidor socket, boolean activarAgentes) {
+	public ComunicationAgentBehaviour(Agent agente, long tiempo, SocketServidor socket) {
 		super(agente, tiempo);
 		this.xFormateada=new String();
 		this.yFormateada=new String();
 		this.zFormateada=new String();
 		this.socket = socket;
-		this.activarAgentes = activarAgentes;
 		this.paginasAmarillas = new YellowPages();
-		
-		
+		this.establecerComunicacion= true;
 	}
 
 	protected void onTick() {
@@ -42,7 +40,6 @@ public class ComunicationAgentBehaviour extends TickerBehaviour{
 		
 		agentesDeteccionColisiones= paginasAmarillas.buscarServicio("deteccion-colisiones", myAgent);
 		
-		//Comportamiento que activa los agentes y que se ejecuta una sola vez
 		myAgent.addBehaviour(new ActivationAgentsBehaviour(this));
 		
 		msg =myAgent.receive(); //captura un mensaje de la bandeja de entrada 
@@ -100,14 +97,6 @@ public class ComunicationAgentBehaviour extends TickerBehaviour{
 		this.socket = socket;
 	}
 
-	public boolean isActivarAgentes() {
-		return activarAgentes;
-	}
-
-	public void setActivarAgentes(boolean activarAgentes) {
-		this.activarAgentes = activarAgentes;
-	}
-
 	public AID[] getAgentesGeneradores() {
 		return agentesGeneradores;
 	}
@@ -120,6 +109,11 @@ public class ComunicationAgentBehaviour extends TickerBehaviour{
 		return agentesDeteccionColisiones;
 	}
 
+	public boolean getEstablecerComunicacion() {
+		return establecerComunicacion;
+	}
 
-
+	public void setEstablecerComunicacion(boolean establecerComunicacion) {
+		this.establecerComunicacion = establecerComunicacion;
+	}
 }

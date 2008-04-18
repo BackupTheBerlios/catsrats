@@ -34,7 +34,7 @@ public class RatAgent extends Agent{
 			e.printStackTrace();
 		}
 		
-		//System.out.println("Agente "+getAID().getName()+" está listo");
+		System.out.println("Agente "+getAID().getName()+" está listo");
 		logger.info("Agente "+getAID().getName()+" está listo");
 		rab= new RatAgentBehaviour(this, 1);
 		addBehaviour(rab);
