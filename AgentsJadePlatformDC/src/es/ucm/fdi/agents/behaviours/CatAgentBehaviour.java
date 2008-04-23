@@ -54,12 +54,12 @@ public class CatAgentBehaviour extends TickerBehaviour{
 			if(contenidoMensaje.contains("morir")){ //Matamos a los agentes
 				myAgent.doDelete();
 			}			
-			else if(contenidoMensaje.contains("comunicacion-lista")){	//Permitimos que empiecen a generar coordenadas				
+			if(contenidoMensaje.contains("comunicacion-lista")){	//Permitimos que empiecen a generar coordenadas				
 				activado= true;
 			}
-			else if(activado && contenidoMensaje.contains("genera")){	//Permitimos que sigan generando coordenadas
+			if(contenidoMensaje.contains("genera")){	//Permitimos que sigan generando coordenadas
 				for(int i = 0; i<listaAgentesComunicacion.length; i++){
-					nuevoMensaje(listaAgentesComunicacion[i].getLocalName());
+					if(activado) nuevoMensaje(listaAgentesComunicacion[i].getLocalName());
 					mensajeInfoAgente(listaAgentesDeteccionColisiones[i].getLocalName());
 				}
 			}

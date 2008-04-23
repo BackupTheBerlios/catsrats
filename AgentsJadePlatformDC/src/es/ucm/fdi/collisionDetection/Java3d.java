@@ -1,6 +1,7 @@
 package es.ucm.fdi.collisionDetection;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 import javax.media.j3d.AmbientLight;
 import javax.media.j3d.Appearance;
@@ -19,13 +20,16 @@ import com.sun.j3d.utils.geometry.Sphere;
 
 
 public class Java3d extends Java3dApplet{
-	private ArrayList<InfoAgent> agentes= null;
-	public static ArrayList<InfoCollision> infoColisiones= null;
+	private ArrayList<InfoAgent> agentes;
+	public static ArrayList<InfoCollision> infoColisiones;
+	
+	BranchGroup objRoot;
 
 	public Java3d(ArrayList<InfoAgent> agentes) {
 		super();		
 		this.agentes= agentes;
-		this.infoColisiones= new ArrayList<InfoCollision>(); 
+		//Java3d.infoColisiones= new ArrayList<InfoCollision>(); 
+		this.objRoot= new BranchGroup();
 	}
 	
 	protected BranchGroup createSceneBranchGroup() {
@@ -42,7 +46,10 @@ public class Java3d extends Java3dApplet{
 		headLight.setInfluencingBounds(lightBounds);
 		objRoot.addChild(headLight);
 		
-		rellenaArbol(objRoot,agentes);
+		this.objRoot= objRoot;
+		
+		//rellenaArbol(objRoot,agentes);
+		rellenaArbol(agentes);
 		
 		return objRoot;
 	}
@@ -52,22 +59,57 @@ public class Java3d extends Java3dApplet{
 	 * El nombre del agente está compuesto por la siguiente información:
 	 * "nombre del agente" x "coordenada x" y "coordenada y" z "coordenada z"
 	 */
-	private void rellenaArbol(BranchGroup objRoot, ArrayList<InfoAgent> agentes){
-		for(int i= 0; i< agentes.size(); i++){
-			TransformGroup tgAgente= new TransformGroup();
-			tgAgente.setName(agentes.get(i).getNombreAgente()+" x "+agentes.get(i).getX()+" y "+agentes.get(i).getY()+" z "+agentes.get(i).getZ());
-			System.out.println(tgAgente.getName()+" ; Orientación(null si no es gato ni ratón): "+agentes.get(i).getOrientacion());//Imprimimos el nombre del agente.
-			if(agentes.get(i).getNombreAgente().contains("gato")||
-			   agentes.get(i).getNombreAgente().contains("raton")){
-				//añadimos el cono:				
-				Vector3d nuevasCoord= cambiaCoordendas(agentes.get(i).getOrientacion(),agentes.get(i).getX(),agentes.get(i).getY(),agentes.get(i).getZ());
-				//System.out.println("X "+nuevasCoord.x+" Y "+nuevasCoord.y+" Z "+nuevasCoord.z);				
-				añadeCirculoPequeñoDelCono(objRoot, nuevasCoord.x, nuevasCoord.y, nuevasCoord.z, tgAgente, agentes.get(i).getOrientacion());				
+	public void rellenaArbol(ArrayList<InfoAgent> agentes){
+		if (agentes != null){
+			for(int i= 0; i< agentes.size(); i++){
+				TransformGroup tgAgente= new TransformGroup();
+				tgAgente.setName(agentes.get(i).getNombreAgente()+" x "+agentes.get(i).getX()+" y "+agentes.get(i).getY()+" z "+agentes.get(i).getZ());
+				System.out.println(tgAgente.getName()+" ; Orientación(null si no es gato ni ratón): "+agentes.get(i).getOrientacion());//Imprimimos el nombre del agente.
+				if(agentes.get(i).getNombreAgente().contains("gato")||
+						agentes.get(i).getNombreAgente().contains("raton")){
+					//añadimos el cono:				
+					Vector3d nuevasCoord= cambiaCoordendas(agentes.get(i).getOrientacion(),agentes.get(i).getX(),agentes.get(i).getY(),agentes.get(i).getZ());					
+							
+					añadeCirculoPequeñoDelCono(nuevasCoord.x, nuevasCoord.y, nuevasCoord.z, tgAgente, agentes.get(i).getOrientacion());
+					System.out.println("Añadido CIRCULITO del agente: "+agentes.get(i).getNombreAgente());
+				}
+				//añadimos la esfera:
+				añadeEsfera(agentes.get(i).getX(), agentes.get(i).getY(), agentes.get(i).getZ(), tgAgente);
+				System.out.println("Añadida ESFERA del agente: "+agentes.get(i).getNombreAgente());
+				objRoot.addChild(tgAgente);
+			}		
+		}
+	}
+	/*
+	 * Esta función se encarga de actualizar el arbol:
+	 */
+	public void updateArbol(ArrayList<InfoAgent> listaAgentes) {		
+		Enumeration hijosArbol= objRoot.getAllChildren();
+		while(hijosArbol.hasMoreElements()){
+			Object hijo= hijosArbol.nextElement();
+			if(hijo.getClass().isInstance(TransformGroup.class)){//TODO ¿¿??
+				for(int i= 0; i< listaAgentes.size(); i++){
+					InfoAgent agenteI= listaAgentes.get(i);
+					if(((TransformGroup)hijo).getName().contains(agenteI.getNombreAgente())){
+						((TransformGroup)hijo).setName(agenteI.getNombreAgente()+" x "+agenteI.getX()+" y "+agenteI.getY()+" z "+agenteI.getZ());
+						if(agenteI.getNombreAgente().contains("gato")||
+								agenteI.getNombreAgente().contains("raton")){								
+							if(((TransformGroup)hijo).getName().contains("circulito")){
+								//Es un circulito:
+								TransformGroup circulito= (TransformGroup)hijo;
+								this.updateCirculoPequeñoDelCono(agenteI.getX(), agenteI.getY(), agenteI.getZ(), circulito, agenteI.getOrientacion());
+								System.out.println("Realizado update del CIRCULITO del agente: "+agenteI.getNombreAgente());
+							}
+						}
+						if(((TransformGroup)hijo).getName().contains("esfera")){
+							//Es una esfera:
+							TransformGroup esfera= (TransformGroup)hijo;
+							this.updateEsfera(agenteI.getX(), agenteI.getY(), agenteI.getZ(), esfera);
+							System.out.println("Realizado update de la ESFERA del agente: "+agenteI.getNombreAgente());
+						}
+					}
+				}
 			}
-			//añadimos la esfera:
-			//TODO quitar el ELSE cuando terminen las pruebas.
-			añadeEsfera(agentes.get(i).getX(), agentes.get(i).getY(), agentes.get(i).getZ(), tgAgente);
-			objRoot.addChild(tgAgente);
 		}		
 	}
 	
@@ -128,7 +170,67 @@ public class Java3d extends Java3dApplet{
 		recursiveSetUserData(sphereTg, sphereTg.getName());
 	}
 	
-	private void añadeCono(BranchGroup objRoot, double x, double y, double z, TransformGroup circulito/*, Orientacion orientacion*/){
+	private void updateEsfera(double x, double y, double z, TransformGroup esferaTg){
+		//Appearance app = new Appearance();
+		//TransformGroup sphereTg = new TransformGroup();
+		//sphereTg.setName(tgAgente.getName()+" esfera");
+		Transform3D t3d = new Transform3D();
+		t3d.setTranslation(new Vector3d(x, y, z));
+		esferaTg.setTransform(t3d);
+		
+		//sphereTg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		//sphereTg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+		
+		//sphereTg.addChild(new Sphere(5,app));//TODO Radio de la esfera es 5
+		//tgAgente.addChild(sphereTg);		
+		//recursiveSetUserData(sphereTg, sphereTg.getName());
+	}
+	
+	private void añadeCirculoPequeñoDelCono(double x, double y, double z, TransformGroup tgAgente, Orientation orientacion){
+		Appearance app = new Appearance();
+		TransformGroup sphereTg = new TransformGroup();
+		sphereTg.setName(tgAgente.getName()+" circulito");
+		Transform3D t3d = new Transform3D();
+		
+		//t3d.set(new Vector3d(x,y,z));
+		
+		//¡¡PRIMERO HACER LA ROTACIÓN Y DESPUÉS LA TRASLACIÓN, SINO NO HACE LA TRASLACIÓN!!
+		orientaCono(orientacion,t3d);//FUNCIÓN QUE SE ENCARGA DE ORIENTAR EL CONO.
+		t3d.setTranslation(new Vector3d(x, y, z));
+		//t3d.rotZ(0); //Parámetro en radianes.		
+		//t3d.setRotation(new AxisAngle4d(0.0,0.0,1.0,Math.PI/2));
+		//System.out.println("Coordenadas de la punta del cono (circulito): x " + x + " ,y " + y + " ,z "+ z);
+		//Vector3d coordenadas= new Vector3d(x, y, z);
+		//t3d.get(coordenadas);
+		//System.out.println("Coordenadas de la punta del cono (circulito).......: x " + coordenadas.x + " ,y " + coordenadas.y + " ,z "+ coordenadas.z);
+		
+		sphereTg.setTransform(t3d);
+		
+		sphereTg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		sphereTg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+		
+		sphereTg.addChild(new Sphere(1,app));//he cambiado el 1 por 0 y ya no pinta ni detecta el circulo pequeño-->OK!		
+		recursiveSetUserData(sphereTg, sphereTg.getName());		
+		//this.addCone(bg, sphereTg, x, y-2.5, z, incVector, "CONO", 2, 5);//5 es la altura del cono, y 2 el radio.		
+		
+		añadeCono(x,y,z,sphereTg);//AÑADIMOS EL CONO AL CIRCULO PEQUEÑO
+		tgAgente.addChild(sphereTg);//AÑADIMOS EL CONO AL AGENTE 
+	}
+	
+	private void updateCirculoPequeñoDelCono(double x, double y, double z, TransformGroup circulitoTg, Orientation orientacion){
+		Transform3D t3d = new Transform3D();
+		
+		//¡¡PRIMERO HACER LA ROTACIÓN Y DESPUÉS LA TRASLACIÓN, SINO NO HACE LA TRASLACIÓN!!
+		orientaCono(orientacion,t3d);//FUNCIÓN QUE SE ENCARGA DE ORIENTAR EL CONO.
+		t3d.setTranslation(new Vector3d(x, y, z));
+		
+		circulitoTg.setTransform(t3d);		
+		
+		updateCono(x,y,z,circulitoTg);//MODIFICAMOS EL CONO AL CIRCULO PEQUEÑO
+		//tgAgente.addChild(sphereTg);//AÑADIMOS EL CONO AL AGENTE 
+	}	
+
+	private void añadeCono(double x, double y, double z, TransformGroup circulito){
 		float radio= 5;
 		float altura= 10;
 		Appearance app = new Appearance();
@@ -169,37 +271,12 @@ public class Java3d extends Java3dApplet{
 		*/
 		coneTg.addChild(comportamiento);
 	
-	}
+	}	
 	
-	private void añadeCirculoPequeñoDelCono(BranchGroup objRoot, double x, double y, double z, TransformGroup tgAgente, Orientation orientacion){
-		Appearance app = new Appearance();
-		TransformGroup sphereTg = new TransformGroup();
-		sphereTg.setName(tgAgente.getName()+" circulito");
-		Transform3D t3d = new Transform3D();
-		
-		//t3d.set(new Vector3d(x,y,z));
-		
-		//¡¡PRIMERO HACER LA ROTACIÓN Y DESPUÉS LA TRASLACIÓN, SINO NO HACE LA TRASLACIÓN!!
-		orientaCono(orientacion,t3d);//FUNCIÓN QUE SE ENCARGA DE ORIENTAR EL CONO.
-		t3d.setTranslation(new Vector3d(x, y, z));
-		//t3d.rotZ(0); //Parámetro en radianes.		
-		//t3d.setRotation(new AxisAngle4d(0.0,0.0,1.0,Math.PI/2));
-		//System.out.println("Coordenadas de la punta del cono (circulito): x " + x + " ,y " + y + " ,z "+ z);
-		//Vector3d coordenadas= new Vector3d(x, y, z);
-		//t3d.get(coordenadas);
-		//System.out.println("Coordenadas de la punta del cono (circulito).......: x " + coordenadas.x + " ,y " + coordenadas.y + " ,z "+ coordenadas.z);
-		
-		sphereTg.setTransform(t3d);
-		
-		sphereTg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-		sphereTg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-		
-		sphereTg.addChild(new Sphere(1,app));//he cambiado el 1 por 0 y ya no pinta ni detecta el circulo pequeño-->OK!		
-		recursiveSetUserData(sphereTg, sphereTg.getName());		
-		//this.addCone(bg, sphereTg, x, y-2.5, z, incVector, "CONO", 2, 5);//5 es la altura del cono, y 2 el radio.		
-		
-		añadeCono(objRoot,x,y,z,sphereTg);//AÑADIMOS EL CONO AL CIRCULO PEQUEÑO
-		tgAgente.addChild(sphereTg);//AÑADIMOS EL CONO AL AGENTE 
+	private void updateCono(double x, double y, double z, TransformGroup conoTg) {					
+		J3dCollisionDetectionBehaviour comportamiento= (J3dCollisionDetectionBehaviour)conoTg.getChild(1);
+		comportamiento.setPositionObject(new Vector3d(x,y,z));
+				
 	}
 	
 	//method to recursively set the user data for objects in the scenegraph
@@ -219,7 +296,6 @@ public class Java3d extends Java3dApplet{
 			while (enumKids.hasMoreElements() != false)
 				recursiveSetUserData((SceneGraphObject) enumKids.nextElement(), value);
 		}
-	}	
-
-
+	}
+	
 }

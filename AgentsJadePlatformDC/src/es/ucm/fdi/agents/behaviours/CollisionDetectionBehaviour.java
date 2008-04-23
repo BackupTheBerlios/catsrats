@@ -3,6 +3,8 @@ package es.ucm.fdi.agents.behaviours;
 import java.util.ArrayList;
 
 import com.sun.j3d.utils.applet.MainFrame;
+
+import es.ucm.fdi.agents.CollisionDetectionAgent;
 import es.ucm.fdi.agents.yellowPages.YellowPages;
 import es.ucm.fdi.collisionDetection.InfoAgent;
 import es.ucm.fdi.collisionDetection.InfoCollision;
@@ -11,10 +13,11 @@ import es.ucm.fdi.collisionDetection.Java3d;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
+import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
 
-public class CollisionDetectionBehaviour extends OneShotBehaviour{
+public class CollisionDetectionBehaviour extends TickerBehaviour{
 
 	//the branch that we check for collisions
 	//private BranchGroup pickRoot = null;
@@ -27,24 +30,22 @@ public class CollisionDetectionBehaviour extends OneShotBehaviour{
 	private ArrayList<InfoAgent> listaAgentes;	
 	private YellowPages paginasAmarillas;
 	private AID[] listaAgentesGeneradores;
-	private Java3d j3d;
 	
-	private static int m_kWidth = 400;	
-	private static int m_kHeight = 400;
 	
 	private boolean generaCoordenadasPrimeraVez;
+	private boolean rellenaArbol;
 
 
-	public CollisionDetectionBehaviour(Agent arg0) {
-		super(arg0);				
+	public CollisionDetectionBehaviour(Agent arg0, long tiempo) {
+		super(arg0, tiempo);				
 		this.listaAgentes = new ArrayList<InfoAgent>();		
 		paginasAmarillas= new YellowPages();
-		j3d= null;
 		generaCoordenadasPrimeraVez= true;
+		rellenaArbol= true;
 	}
-
-	public void action() {			
-
+	
+	public void onTick() {	
+		
 		listaAgentesGeneradores= paginasAmarillas.buscarServicio("generacion-coordenadas", myAgent);
 		int numAgentes= listaAgentesGeneradores.length;
 		System.out.println("Numero de agentes generadores: "+ numAgentes);
@@ -79,13 +80,14 @@ public class CollisionDetectionBehaviour extends OneShotBehaviour{
 						this.listaAgentes.add(info);
 
 					if(this.listaAgentes.size()== numAgentes){
-						j3d= new Java3d(listaAgentes);
-						//j3d.createSceneBranchGroup();
-						j3d.initJava3d();
-						
-						MainFrame v= new MainFrame(j3d, m_kWidth, m_kHeight);
+						if(rellenaArbol){//Es necesario crear la estructura del arbol al menos una vez:
+							((CollisionDetectionAgent)myAgent).getJ3d().rellenaArbol(listaAgentes);
+							rellenaArbol= false;
+						}							
+						else
+							((CollisionDetectionAgent)myAgent).getJ3d().updateArbol(listaAgentes);
 
-						ArrayList<InfoCollision> ic= j3d.infoColisiones;//((CollisionDetectionAgent) myAgent).getIc();
+						ArrayList<InfoCollision> ic= Java3d.infoColisiones;//((CollisionDetectionAgent) myAgent).getIc();
 						//J3dCollisionDetectionBehaviour comportamiento= new J3dCollisionDetectionBehaviour(pickRoot, circulito, new Vector3d(x, y, z));
 						//detectaColisiones();
 						//((CollisionDetectionAgent) myAgent).setIc(((CollisionDetectionAgent) myAgent).getJ3d().infoColisiones);
@@ -107,7 +109,12 @@ public class CollisionDetectionBehaviour extends OneShotBehaviour{
 							String localName = listaAgentesGeneradores[i].getLocalName();
 							mensaje.addReceiver(new AID(localName,AID.ISLOCALNAME));
 							myAgent.send(mensaje);					
-						}	
+						}
+						
+						//Limpiamos la lista de infoAgent para tratar el nuevo caso:
+						int longitudListaAgentes= this.listaAgentes.size(); 
+						for(int i= 0; i< longitudListaAgentes; i++)
+								this.listaAgentes.remove(i);
 						
 					}
 
@@ -119,10 +126,6 @@ public class CollisionDetectionBehaviour extends OneShotBehaviour{
 		else {  //Permanecemos a la espera de que llegue el mensaje de activacion
 			block();
 		}
-	}
-
-	public Java3d getJ3d() {
-		return j3d;
 	}
 
 	/*private void detectaColisiones(){

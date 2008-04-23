@@ -118,18 +118,7 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 				pickTool4.setMode(PickTool.BOUNDS);
 				PickTool pickTool5 = new PickTool(pickRoot);
 				pickTool5.setMode(PickTool.BOUNDS);
-				/*
-				//BoundingBox bounds = (BoundingBox) collisionObject.getBounds();
-				//Caja de abajo (la mas grande):
-				pickBounds1 = new PickBounds(new BoundingBox(new Point3d(positionObject.x-4, positionObject.y-5, positionObject.z-4),
-						new Point3d(positionObject.x+4, positionObject.y-3, positionObject.z+4)));
-				//Caja de en medio:
-				pickBounds2 = new PickBounds(new BoundingBox(new Point3d(positionObject.x-2, positionObject.y-3, positionObject.z-2),
-						new Point3d(positionObject.x+2, positionObject.y-1, positionObject.z+2)));
-				//Caja de arriba:
-				pickBounds3 = new PickBounds(new BoundingBox(new Point3d(positionObject.x-1, positionObject.y-1, positionObject.z-1),
-						new Point3d(positionObject.x+1, positionObject.y+3, positionObject.z+1)));				
-				*/
+				
 				//Caja de abajo (la mas grande):
 				pickBounds1 = new PickBounds(new BoundingBox(new Point3d(positionObject.x-4, positionObject.y-5, positionObject.z-4),
 						new Point3d(positionObject.x+4, positionObject.y-3, positionObject.z+4)));
@@ -311,6 +300,9 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 		else if(d >= d2)			
 			resultado= (1/(sigma * Math.sqrt(2 * Math.PI)))* Math.exp(-(Math.pow(d-d2,2)/(2*Math.pow(sigma,2))));
 		return resultado;//devolvemos un valor entre 0 y 1
+	}
+	public void setPositionObject(Vector3d positionObject) {
+		this.positionObject = positionObject;
 	}
 
 

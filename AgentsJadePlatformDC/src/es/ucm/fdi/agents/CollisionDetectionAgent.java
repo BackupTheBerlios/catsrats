@@ -1,7 +1,10 @@
 package es.ucm.fdi.agents;
 
 
+import com.sun.j3d.utils.applet.MainFrame;
+
 import es.ucm.fdi.agents.behaviours.CollisionDetectionBehaviour;
+import es.ucm.fdi.collisionDetection.Java3d;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -13,6 +16,10 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
  */
 public class CollisionDetectionAgent extends Agent{	
 	
+	private static int m_kWidth = 400;	
+	private static int m_kHeight = 400;
+	
+	private Java3d j3d;
 	
 	//ArrayList<InfoCollision> ic= null;
 	
@@ -50,11 +57,15 @@ public class CollisionDetectionAgent extends Agent{
 		
 		System.out.println("Agente "+getAID().getName()+" está listo");
 		
-		cdb= new CollisionDetectionBehaviour(this);		
+		cdb= new CollisionDetectionBehaviour(this, 500);		
 		
 		addBehaviour(cdb);//añadimos el comportamiento JADE.
 		
-		//MainFrame v= new MainFrame(cdb.getJ3d(), m_kWidth, m_kHeight);		
+		j3d= new Java3d(null);//Este null es para la lista de agentes, que al principio es vacia.
+		//j3d.createSceneBranchGroup();
+		j3d.initJava3d();
+		
+		MainFrame v= new MainFrame(j3d, m_kWidth, m_kHeight);		
 	}		
 		
 	protected void takeDown(){
@@ -65,5 +76,9 @@ public class CollisionDetectionAgent extends Agent{
 			e.printStackTrace();
 		}
 		System.out.println("SE HA MATADO AL AGENTE DE DETECCION DE COLISIONES");
+	}
+
+	public Java3d getJ3d() {
+		return j3d;
 	}
 }
