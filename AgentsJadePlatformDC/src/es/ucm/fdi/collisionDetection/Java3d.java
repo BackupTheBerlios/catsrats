@@ -21,19 +21,22 @@ import com.sun.j3d.utils.geometry.Sphere;
 
 public class Java3d extends Java3dApplet{
 	private ArrayList<InfoAgent> agentes;
-	public static ArrayList<InfoCollision> infoColisiones;
+	private ArrayList<InfoCollision> infoColisiones;
 	
 	BranchGroup objRoot;
 
 	public Java3d(ArrayList<InfoAgent> agentes) {
 		super();		
 		this.agentes= agentes;
-		//Java3d.infoColisiones= new ArrayList<InfoCollision>(); 
+		infoColisiones= new ArrayList<InfoCollision>(); 
 		this.objRoot= new BranchGroup();
+		objRoot.setCapability(Group.ALLOW_CHILDREN_WRITE);
+		objRoot.setCapability(Group.ALLOW_CHILDREN_READ);
+		objRoot.setCapability(Group.ALLOW_CHILDREN_EXTEND);
 	}
 	
 	protected BranchGroup createSceneBranchGroup() {
-		BranchGroup objRoot = new BranchGroup();
+		//BranchGroup objRoot = new BranchGroup();
 		
 		Bounds lightBounds = getApplicationBounds();
 		
@@ -46,7 +49,7 @@ public class Java3d extends Java3dApplet{
 		headLight.setInfluencingBounds(lightBounds);
 		objRoot.addChild(headLight);
 		
-		this.objRoot= objRoot;
+		//this.objRoot= objRoot;
 		
 		//rellenaArbol(objRoot,agentes);
 		rellenaArbol(agentes);
@@ -76,7 +79,11 @@ public class Java3d extends Java3dApplet{
 				//añadimos la esfera:
 				añadeEsfera(agentes.get(i).getX(), agentes.get(i).getY(), agentes.get(i).getZ(), tgAgente);
 				System.out.println("Añadida ESFERA del agente: "+agentes.get(i).getNombreAgente());
-				objRoot.addChild(tgAgente);
+				BranchGroup bg = new BranchGroup();
+				bg.addChild(tgAgente);
+				
+				objRoot.addChild(bg);
+				
 			}		
 		}
 	}
@@ -258,7 +265,7 @@ public class Java3d extends Java3dApplet{
 		recursiveSetUserData(coneTg, coneTg.getName());
 		
 		// create the collision behaviour:
-		J3dCollisionDetectionBehaviour comportamiento= new J3dCollisionDetectionBehaviour(objRoot, circulito, app, new Vector3d(x, y, z));
+		J3dCollisionDetectionBehaviour comportamiento= new J3dCollisionDetectionBehaviour(this, objRoot, circulito, app, new Vector3d(x, y, z));
 		//CollisionBehavior collisionBehavior = new CollisionBehavior(bg, sphereTg, app, new Vector3d(x, y, z), incVector);
 		comportamiento.setSchedulingBounds(getApplicationBounds());// Pone la región de planificación del comportamiento a los límites especificados.
 		
@@ -296,6 +303,10 @@ public class Java3d extends Java3dApplet{
 			while (enumKids.hasMoreElements() != false)
 				recursiveSetUserData((SceneGraphObject) enumKids.nextElement(), value);
 		}
+	}
+
+	public ArrayList<InfoCollision> getInfoColisiones() {
+		return infoColisiones;
 	}
 	
 }

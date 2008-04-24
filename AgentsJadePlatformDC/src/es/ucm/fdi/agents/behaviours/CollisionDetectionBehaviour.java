@@ -87,16 +87,19 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 						else
 							((CollisionDetectionAgent)myAgent).getJ3d().updateArbol(listaAgentes);
 
-						ArrayList<InfoCollision> ic= Java3d.infoColisiones;//((CollisionDetectionAgent) myAgent).getIc();
+						
+						ArrayList<InfoCollision> ic= ((CollisionDetectionAgent)myAgent).getJ3d().getInfoColisiones();//((CollisionDetectionAgent) myAgent).getIc();
 						//J3dCollisionDetectionBehaviour comportamiento= new J3dCollisionDetectionBehaviour(pickRoot, circulito, new Vector3d(x, y, z));
 						//detectaColisiones();
 						//((CollisionDetectionAgent) myAgent).setIc(((CollisionDetectionAgent) myAgent).getJ3d().infoColisiones);
-
-						for(int i= 0; i< ic.size(); i++){
-							System.out.println("SE HA PRODUCIDO UNA COLISIÓN");
-							System.out.println("nombre del agente que ve: "+ic.get(i).getAgenteQueVe());
-							System.out.println("nombre del agente que es visto: "+ic.get(i).getAgenteQueEsVisto());
-							System.out.println("Claridad de percepción: "+ic.get(i).getClaridadPercepcion());
+						
+						if(ic!= null){
+							for(int i= 0; i< ic.size(); i++){
+								System.out.println("SE HA PRODUCIDO UNA COLISIÓN");
+								System.out.println("nombre del agente que ve: "+ic.get(i).getAgenteQueVe());
+								System.out.println("nombre del agente que es visto: "+ic.get(i).getAgenteQueEsVisto());
+								System.out.println("Claridad de percepción: "+ic.get(i).getClaridadPercepcion());
+							}
 						}
 						
 						//Volvemos a decir a los agentes gato y ratón que generen coordenadas:
@@ -111,10 +114,9 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 							myAgent.send(mensaje);					
 						}
 						
-						//Limpiamos la lista de infoAgent para tratar el nuevo caso:
-						int longitudListaAgentes= this.listaAgentes.size(); 
-						for(int i= 0; i< longitudListaAgentes; i++)
-								this.listaAgentes.remove(i);
+						//Limpiamos la lista de infoAgent para tratar el nuevo caso:												
+						while(this.listaAgentes.size()>0)
+								this.listaAgentes.remove(0);
 						
 					}
 

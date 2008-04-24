@@ -49,16 +49,18 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 	private PickBounds pickBounds5 = null;
 	//the current position of the object
 	private Vector3d positionObject = null;	
+	private Java3d j3d;
 	//En esta estructura guardaremos las colisiones que se han producido,
 	//entre qué agentes y cual ha sido la claridad de percepción:
 	
 	//public InfoColision infoColision= null;
 
-	public J3dCollisionDetectionBehaviour(BranchGroup pickRoot, TransformGroup collisionObject, Appearance app, Vector3d positionObject){
+	public J3dCollisionDetectionBehaviour(Java3d java3d, BranchGroup pickRoot, TransformGroup collisionObject, Appearance app, Vector3d positionObject){
 		//save references to the objects
 		this.pickRoot = pickRoot;	
 		this.collisionObject= collisionObject;
 		this.objectAppearance = app;	
+		this.j3d= java3d;
 		
 		String[] nombreObjetoClase= this.collisionObject.getName().split(" ");
 		//Por como he puesto el nombre de cada agente, las posiciones 2, 4 y 6 corresponden a las coordenadas.
@@ -150,19 +152,19 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 				
 				//TODO No consigo que me guarde lo que tenía el arrayList infoColisiones la proxima vez que entra aquí
 				InfoCollision infoAgente= isCollision(resultArray);
-				if(infoAgente != null) Java3d.infoColisiones.add(infoAgente);
+				if(infoAgente != null) j3d.getInfoColisiones().add(infoAgente);
 				else{
 					infoAgente= isCollision(resultArray2);
-					if(infoAgente != null) Java3d.infoColisiones.add(infoAgente);
+					if(infoAgente != null) j3d.getInfoColisiones().add(infoAgente);
 					else{
 						infoAgente= isCollision(resultArray3);
-						if(infoAgente != null) Java3d.infoColisiones.add(infoAgente);
+						if(infoAgente != null) j3d.getInfoColisiones().add(infoAgente);
 						else{
 							infoAgente= isCollision(resultArray4);
-							if(infoAgente != null) Java3d.infoColisiones.add(infoAgente);
+							if(infoAgente != null) j3d.getInfoColisiones().add(infoAgente);
 							else{
 								infoAgente= isCollision(resultArray5);
-								if(infoAgente != null) Java3d.infoColisiones.add(infoAgente);
+								if(infoAgente != null) j3d.getInfoColisiones().add(infoAgente);
 								else {
 									onMiss();//No ha habido colisión.
 									System.out.println("NO HA HABIDO COLISIÓN");

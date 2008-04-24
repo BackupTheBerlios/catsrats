@@ -29,7 +29,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 		super(agente, tiempo);	
 		punto= new Point(Math.random()*10, Math.random()*10, 0.0);
 		this.nombre= myAgent.getLocalName();
-		this.orientacion = Orientation.E;
+		this.orientacion = Orientation.O;
 		paginasAmarillas= new YellowPages();
 		this.trayectoria = Math.round((Math.random()*10)%2);
 		this.radioCircunferencia = Math.random()*10;
@@ -91,13 +91,14 @@ public class RatAgentBehaviour extends TickerBehaviour{
 			if(contenidoMensaje.contains("morir")){ //Matamos a los agentes
 				myAgent.doDelete();
 			}	
-			if(contenidoMensaje.contains("comunicacion-lista")){	//Permitimos que empiecen a generar coordenadas				
+			else if(contenidoMensaje.contains("comunicacion-lista")){	//Permitimos que empiecen a generar coordenadas				
 				activado= true;
 			}
-			if(contenidoMensaje.contains("genera")){	//Permitimos que sigan generando coordenadas
-				for(int i = 0; i<listaAgentesComunicacion.length; i++){
+			else if(contenidoMensaje.contains("genera")){	//Permitimos que sigan generando coordenadas
+				for(int i = 0; i<listaAgentesComunicacion.length && listaAgentesDeteccionColisiones.length>0; i++){
 					if(activado) nuevoMensaje(listaAgentesComunicacion[i].getLocalName());
 					mensajeInfoAgente(listaAgentesDeteccionColisiones[i].getLocalName());
+					System.out.println("RATON EN "+punto.getX()+" "+punto.getY()+" "+punto.getZ());
 				}
 			}
 		}		
