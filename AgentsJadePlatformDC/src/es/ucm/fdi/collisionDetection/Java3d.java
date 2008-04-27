@@ -94,25 +94,39 @@ public class Java3d extends Java3dApplet{
 		Enumeration hijosArbol= objRoot.getAllChildren();
 		while(hijosArbol.hasMoreElements()){
 			Object hijo= hijosArbol.nextElement();
-			if(hijo.getClass().isInstance(TransformGroup.class)){//TODO ¿¿??
-				for(int i= 0; i< listaAgentes.size(); i++){
-					InfoAgent agenteI= listaAgentes.get(i);
-					if(((TransformGroup)hijo).getName().contains(agenteI.getNombreAgente())){
-						((TransformGroup)hijo).setName(agenteI.getNombreAgente()+" x "+agenteI.getX()+" y "+agenteI.getY()+" z "+agenteI.getZ());
-						if(agenteI.getNombreAgente().contains("gato")||
-								agenteI.getNombreAgente().contains("raton")){								
-							if(((TransformGroup)hijo).getName().contains("circulito")){
-								//Es un circulito:
-								TransformGroup circulito= (TransformGroup)hijo;
-								this.updateCirculoPequeñoDelCono(agenteI.getX(), agenteI.getY(), agenteI.getZ(), circulito, agenteI.getOrientacion());
-								System.out.println("Realizado update del CIRCULITO del agente: "+agenteI.getNombreAgente());
+			System.out.println(hijo.getClass());
+			System.out.println(BranchGroup.class);
+			if(hijo.getClass().equals(BranchGroup.class)){//TODO ¿¿??
+				Enumeration hijosBG= ((BranchGroup)hijo).getAllChildren();
+				while(hijosBG.hasMoreElements()){
+					Object hijoTG= hijosBG.nextElement();
+					System.out.println(hijoTG.getClass());
+					System.out.println(TransformGroup.class);					 				
+					if(hijoTG.getClass().equals(TransformGroup.class)){//TODO ¿¿??
+						for(int i= 0; i< listaAgentes.size(); i++){
+							InfoAgent agenteI= listaAgentes.get(i);
+							if(((TransformGroup)hijoTG).getName().contains(agenteI.getNombreAgente())){
+								((TransformGroup)hijoTG).setName(agenteI.getNombreAgente()+" x "+agenteI.getX()+" y "+agenteI.getY()+" z "+agenteI.getZ());
+								Enumeration hijosTG= ((TransformGroup)hijoTG).getAllChildren();
+								while(hijosTG.hasMoreElements()){
+									Object hijoTG2= hijosTG.nextElement();
+									if(agenteI.getNombreAgente().contains("gato")||
+									   agenteI.getNombreAgente().contains("raton")){								
+										if(((TransformGroup)hijoTG2).getName().contains("circulito")){
+										//Es un circulito:
+											TransformGroup circulito= (TransformGroup)hijoTG2;
+											this.updateCirculoPequeñoDelCono(agenteI.getX(), agenteI.getY(), agenteI.getZ(), circulito, agenteI.getOrientacion());
+											System.out.println("Realizado update del CIRCULITO del agente: "+agenteI.getNombreAgente());
+										}
+									}
+									if(((TransformGroup)hijoTG2).getName().contains("esfera")){
+									//Es una esfera:
+										TransformGroup esfera= (TransformGroup)hijoTG2;
+										this.updateEsfera(agenteI.getX(), agenteI.getY(), agenteI.getZ(), esfera);
+										System.out.println("Realizado update de la ESFERA del agente: "+agenteI.getNombreAgente());
+									}
+								}
 							}
-						}
-						if(((TransformGroup)hijo).getName().contains("esfera")){
-							//Es una esfera:
-							TransformGroup esfera= (TransformGroup)hijo;
-							this.updateEsfera(agenteI.getX(), agenteI.getY(), agenteI.getZ(), esfera);
-							System.out.println("Realizado update de la ESFERA del agente: "+agenteI.getNombreAgente());
 						}
 					}
 				}
@@ -280,10 +294,30 @@ public class Java3d extends Java3dApplet{
 	
 	}	
 	
-	private void updateCono(double x, double y, double z, TransformGroup conoTg) {					
-		J3dCollisionDetectionBehaviour comportamiento= (J3dCollisionDetectionBehaviour)conoTg.getChild(1);
-		comportamiento.setPositionObject(new Vector3d(x,y,z));
-				
+	private void updateCono(double x, double y, double z, TransformGroup conoTg) {
+		Enumeration hijosConoTg= ((TransformGroup)conoTg).getAllChildren();
+		while(hijosConoTg.hasMoreElements()){
+			Object hijo= hijosConoTg.nextElement();
+			System.out.println(hijo.getClass());
+			System.out.println(TransformGroup.class);
+			if(hijo.getClass().equals(TransformGroup.class)){
+				Enumeration hijosTg= ((TransformGroup)hijo).getAllChildren();
+				while(hijosTg.hasMoreElements()){
+					Object hijoTg= hijosTg.nextElement();
+					System.out.println(hijoTg.getClass());
+					System.out.println(J3dCollisionDetectionBehaviour.class);					 				
+					if(hijoTg.getClass().equals(J3dCollisionDetectionBehaviour.class)){						
+						J3dCollisionDetectionBehaviour comportamiento= (J3dCollisionDetectionBehaviour)hijoTg;
+						//Appearance app= new Appearance();
+						//Java3d j3d= comportamiento.getJ3d();
+						//J3dCollisionDetectionBehaviour comportamiento2= new J3dCollisionDetectionBehaviour(j3d, objRoot, conoTg, app, new Vector3d(x,y,z));
+						//comportamiento2.setSchedulingBounds(getApplicationBounds());// Pone la región de planificación del comportamiento a los límites especificados.
+						//comportamiento= comportamiento2;
+						comportamiento.setPositionObject(new Vector3d(x,y,z));
+					}					
+				}
+			}			
+		}				
 	}
 	
 	//method to recursively set the user data for objects in the scenegraph

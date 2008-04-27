@@ -71,6 +71,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 	}
 	
 	private void mensajeInfoAgente(String destinatario) {
+		generaCoordenadas();//TODO quitar esta linea cuando probemos con la parte C
 		InfoAgent info = new InfoAgent(nombre,punto.getX(),punto.getY(),punto.getZ(),orientacion);
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
