@@ -34,6 +34,8 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 	
 	private boolean generaCoordenadasPrimeraVez;
 	private boolean rellenaArbol;
+	
+	private boolean activado;//TODO Esta variable inicializar a FALSE para hacer pruebas con el entorno gráfico.
 
 
 	public CollisionDetectionBehaviour(Agent arg0, long tiempo) {
@@ -42,6 +44,7 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 		paginasAmarillas= new YellowPages();
 		generaCoordenadasPrimeraVez= true;
 		rellenaArbol= true;
+		activado= true;
 	}
 	
 	public void onTick() {	
@@ -50,7 +53,7 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 		int numAgentes= listaAgentesGeneradores.length;
 		System.out.println("Numero de agentes generadores: "+ numAgentes);
 		
-		if(generaCoordenadasPrimeraVez){
+		if(generaCoordenadasPrimeraVez && activado){
 			System.out.println("Mandamos mensaje 'genera'por primera vez");
 			ACLMessage mensaje = new ACLMessage(ACLMessage.INFORM);
 			//agrega contenido: generar coordenadas para la primera vez
@@ -71,7 +74,10 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 				String contenidoMensaje = mensajeEntrante.getContent();
 				if(contenidoMensaje.contains("morir")){ //Matamos a los agentes
 					myAgent.doDelete();
-				}				
+				}
+				else if(contenidoMensaje.contains("comunicacion-lista")){ //Matamos a los agentes
+					activado= true;
+				}
 			}
 			else if(mensajeEntrante.getPerformative()==ACLMessage.REQUEST){  //Aqui tratamos los mensajes objeto InfoAgent enviados por gato y ratón
 				try {

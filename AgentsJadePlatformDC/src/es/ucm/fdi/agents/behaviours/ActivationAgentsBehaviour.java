@@ -25,8 +25,12 @@ public class ActivationAgentsBehaviour extends OneShotBehaviour{
 			for(int i = 0; i<cab.getAgentesGeneradores().length; i++){
 				String localName = cab.getAgentesGeneradores()[i].getLocalName();
 				mensajeActivacion.addReceiver(new AID(localName,AID.ISLOCALNAME));
-				myAgent.send(mensajeActivacion);
-				
+				myAgent.send(mensajeActivacion);				
+			}
+			for(int i = 0; i<cab.getAgentesDeteccionColisiones().length; i++){
+				String localName = cab.getAgentesDeteccionColisiones()[i].getLocalName();
+				mensajeActivacion.addReceiver(new AID(localName,AID.ISLOCALNAME));
+				myAgent.send(mensajeActivacion);				
 			}
 			
 			cab.setEstablecerComunicacion(false);
