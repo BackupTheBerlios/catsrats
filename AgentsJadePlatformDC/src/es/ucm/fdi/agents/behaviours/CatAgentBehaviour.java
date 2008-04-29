@@ -1,8 +1,6 @@
 package es.ucm.fdi.agents.behaviours;
 
 import java.io.IOException;
-import java.io.Serializable;
-
 import es.ucm.fdi.agents.coordinates.Point;
 import es.ucm.fdi.agents.yellowPages.YellowPages;
 import es.ucm.fdi.collisionDetection.InfoAgent;
@@ -14,6 +12,9 @@ import jade.lang.acl.ACLMessage;
 
 public class CatAgentBehaviour extends TickerBehaviour{
 	
+	public static final double distancia = 5.0;
+	
+	private double distanciaRecorrida;
 	private Point punto;
 	private String nombre;
 	private AID[] listaAgentesComunicacion;
@@ -24,18 +25,17 @@ public class CatAgentBehaviour extends TickerBehaviour{
 
 	public CatAgentBehaviour(Agent agente, long tiempo) {
 		super(agente, tiempo);
-		punto= new Point(Math.random()*10, Math.random()*10, 0.0);
+		this.distanciaRecorrida = 0.0;
+		this.punto= new Point(Math.random()*10, Math.random()*10, 0.0);
 		this.nombre= myAgent.getLocalName();
-		this.orientacion = Orientation.O;
-		paginasAmarillas= new YellowPages();
+		this.orientacion = Orientation.NE;
+		this.paginasAmarillas= new YellowPages();
 		this.activado= false;
 	}
 
 	public String generaCoordenadas(){
-		
-		punto.setX(punto.getX()- Math.random()/10);
-		punto.setY(punto.getY() - Math.random()/10);
-		
+	
+		myAgent.addBehaviour(new DiamondPathBehaviour(this));
 	    String mensaje= nombre+","+punto.getX()+","+punto.getY()+","+punto.getZ();
 	    
 	    return mensaje;			
@@ -71,7 +71,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 	}
 	
 	private void mensajeInfoAgente(String destinatario) {
-		generaCoordenadas();//TODO quitar esta linea cuando probemos con la parte C
+		//generaCoordenadas();//TODO quitar esta linea cuando probemos con la parte C
 		InfoAgent info = new InfoAgent(nombre,punto.getX(),punto.getY(),punto.getZ(),orientacion);
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
@@ -99,6 +99,30 @@ public class CatAgentBehaviour extends TickerBehaviour{
 		msg.addReceiver( new AID(destinatario, AID.ISLOCALNAME) );
 		//envia mensaje
 		myAgent.send(msg);
+	}
+
+	public double getDistanciaRecorrida() {
+		return distanciaRecorrida;
+	}
+
+	public void setDistanciaRecorrida(double distanciaRecorrida) {
+		this.distanciaRecorrida = distanciaRecorrida;
+	}
+
+	public Orientation getOrientacion() {
+		return orientacion;
+	}
+
+	public void setOrientacion(Orientation orientacion) {
+		this.orientacion = orientacion;
+	}
+
+	public Point getPunto() {
+		return punto;
+	}
+
+	public void setPunto(Point punto) {
+		this.punto = punto;
 	}
 
 	

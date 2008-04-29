@@ -44,7 +44,7 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 		paginasAmarillas= new YellowPages();
 		generaCoordenadasPrimeraVez= true;
 		rellenaArbol= true;
-		activado= true;
+		activado= false;
 	}
 	
 	public void onTick() {	
@@ -75,7 +75,7 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 				if(contenidoMensaje.contains("morir")){ //Matamos a los agentes
 					myAgent.doDelete();
 				}
-				else if(contenidoMensaje.contains("comunicacion-lista")){ //Matamos a los agentes
+				else if(contenidoMensaje.contains("comunicacion-lista")){ //Activamos al agente
 					activado= true;
 				}
 			}
