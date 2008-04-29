@@ -14,7 +14,10 @@ import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 
 public class RatAgentBehaviour extends TickerBehaviour{
+		
+	private static final double distancia = 5.0;
 	
+	private double distanciaRecorrida;
 	private Point punto;
 	private String nombre;
 	private AID[] listaAgentesComunicacion;
@@ -27,10 +30,11 @@ public class RatAgentBehaviour extends TickerBehaviour{
 	private boolean activado;
 	
 	public RatAgentBehaviour(Agent agente, long tiempo) {
-		super(agente, tiempo);	
+		super(agente, tiempo);
+		this.distanciaRecorrida = 0.0;
 		punto= new Point(Math.random()*10, Math.random()*10, 0.0);
 		this.nombre= myAgent.getLocalName();
-		this.orientacion = Orientation.O;
+		this.orientacion = Orientation.E;
 		paginasAmarillas= new YellowPages();
 		this.trayectoria = Math.round((Math.random()*10)%2);
 		this.radioCircunferencia = Math.random()*10;
@@ -40,10 +44,11 @@ public class RatAgentBehaviour extends TickerBehaviour{
 
 	protected String generaCoordenadas() {
 		
-		if(trayectoria==0)
+		/*if(trayectoria==0)
 			trayectoriaCircular();  //Movimiento en circulo
 		else
-			trayectoriaZigZag();  //Movimiento en zigzag??
+			trayectoriaZigZag();  //Movimiento en zigzag??*/
+		trayectoriaOctogonal();
 		
 		String mensaje= nombre+","+punto.getX()+","+punto.getY()+","+punto.getZ();
 		
@@ -81,6 +86,55 @@ public class RatAgentBehaviour extends TickerBehaviour{
 		punto.setX(radioCircunferencia*Math.cos(anguloTrayectoriaCircular));
 		punto.setY(radioCircunferencia*Math.sin(anguloTrayectoriaCircular));
 		anguloTrayectoriaCircular += incrementoAngulo;
+	}
+	
+	private void trayectoriaOctogonal(){
+		
+		if(distanciaRecorrida<distancia && orientacion == Orientation.E){
+			punto.setX(punto.getX() + 0.1);
+		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.E){
+			distanciaRecorrida = 0.0;
+			orientacion = Orientation.NE;
+		}else if(distanciaRecorrida<distancia && orientacion == Orientation.NE){
+			punto.setX(punto.getX() + 0.1);
+			punto.setY(punto.getY() + 0.1);
+		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.NE){
+			distanciaRecorrida = 0.0;
+			orientacion = Orientation.N;
+		}else if(distanciaRecorrida<distancia && orientacion == Orientation.N){
+			punto.setY(punto.getY() + 0.1);
+		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.N){
+			distanciaRecorrida = 0.0;
+			orientacion = Orientation.NO;
+		}else if(distanciaRecorrida<distancia && orientacion == Orientation.NO){
+			punto.setX(punto.getX() - 0.1);
+			punto.setY(punto.getY() + 0.1);
+		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.NO){
+			distanciaRecorrida = 0.0;
+			orientacion = Orientation.O;
+		}else if(distanciaRecorrida<distancia && orientacion == Orientation.O){
+			punto.setX(punto.getX() - 0.1);
+		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.O){
+			distanciaRecorrida = 0.0;
+			orientacion = Orientation.SO;
+		}else if(distanciaRecorrida<distancia && orientacion == Orientation.SO){
+			punto.setX(punto.getX() - 0.1);
+			punto.setY(punto.getY() - 0.1);
+		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.SO){
+			distanciaRecorrida = 0.0;
+			orientacion = Orientation.S;
+		}else if(distanciaRecorrida<distancia && orientacion == Orientation.S){
+			punto.setY(punto.getY() - 0.1);
+		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.S){
+			distanciaRecorrida = 0.0;
+			orientacion = Orientation.SE;
+		}else if(distanciaRecorrida<distancia && orientacion == Orientation.SE){
+			punto.setX(punto.getX() + 0.1);
+			punto.setY(punto.getY() - 0.1);
+		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.SE){
+			distanciaRecorrida = 0.0;
+			orientacion = Orientation.E;
+		}
 	}
 
 	protected void onTick() {
