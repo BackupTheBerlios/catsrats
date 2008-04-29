@@ -1,7 +1,8 @@
 package es.ucm.fdi.agents.behaviours;
 
 import java.io.IOException;
-import java.io.Serializable;
+
+import javax.print.attribute.standard.OrientationRequested;
 
 import es.ucm.fdi.agents.coordinates.Point;
 import es.ucm.fdi.agents.yellowPages.YellowPages;
@@ -52,19 +53,23 @@ public class RatAgentBehaviour extends TickerBehaviour{
 	private void trayectoriaZigZag() {
 		double direccion = Math.round((Math.random()*10)%4);
 		
-		if(direccion == 0){
+		if(direccion == 0){//Al fondo de la pantalla a la derecha
 			punto.setX(punto.getX()+ 0.5);
 			punto.setY(punto.getY()+ 0.5);
+			orientacion = Orientation.NE;
 		}
-		else if(direccion == 1){
+		else if(direccion == 1){//hacia fuera de la pantalla a la derecha
 			punto.setX(punto.getX()+ 0.5);
 			punto.setY(punto.getY()- 0.5);
-		}else if(direccion == 2){
+			orientacion = Orientation.SE;
+		}else if(direccion == 2){//Al fondo de la pantalla a la izquierda
 			punto.setX(punto.getX()- 0.5);
 			punto.setY(punto.getY()+ 0.5);
-		}else if(direccion == 3){
+			orientacion = Orientation.NO;
+		}else if(direccion == 3){//Hacia fuera de la pantalla a la izquierda
 			punto.setX(punto.getX()- 0.5);
 			punto.setY(punto.getY()- 0.5);
+			orientacion = Orientation.SO;
 		}
 		
 	}
