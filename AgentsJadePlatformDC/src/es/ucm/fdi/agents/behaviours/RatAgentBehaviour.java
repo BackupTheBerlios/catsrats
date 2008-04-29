@@ -42,7 +42,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 		this.activado= false;
 	}
 
-	protected String generaCoordenadas() {
+	private String generaCoordenadas() {
 		
 		/*if(trayectoria==0)
 			trayectoriaCircular();  //Movimiento en circulo
@@ -92,45 +92,53 @@ public class RatAgentBehaviour extends TickerBehaviour{
 		
 		if(distanciaRecorrida<distancia && orientacion == Orientation.E){
 			punto.setX(punto.getX() + 0.1);
+			distanciaRecorrida += 0.1;
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.E){
 			distanciaRecorrida = 0.0;
 			orientacion = Orientation.NE;
 		}else if(distanciaRecorrida<distancia && orientacion == Orientation.NE){
 			punto.setX(punto.getX() + 0.1);
 			punto.setY(punto.getY() + 0.1);
+			distanciaRecorrida += 0.1;
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.NE){
 			distanciaRecorrida = 0.0;
 			orientacion = Orientation.N;
 		}else if(distanciaRecorrida<distancia && orientacion == Orientation.N){
 			punto.setY(punto.getY() + 0.1);
+			distanciaRecorrida += 0.1;
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.N){
 			distanciaRecorrida = 0.0;
 			orientacion = Orientation.NO;
 		}else if(distanciaRecorrida<distancia && orientacion == Orientation.NO){
 			punto.setX(punto.getX() - 0.1);
 			punto.setY(punto.getY() + 0.1);
+			distanciaRecorrida += 0.1;
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.NO){
 			distanciaRecorrida = 0.0;
 			orientacion = Orientation.O;
 		}else if(distanciaRecorrida<distancia && orientacion == Orientation.O){
 			punto.setX(punto.getX() - 0.1);
+			distanciaRecorrida += 0.1;
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.O){
 			distanciaRecorrida = 0.0;
 			orientacion = Orientation.SO;
 		}else if(distanciaRecorrida<distancia && orientacion == Orientation.SO){
 			punto.setX(punto.getX() - 0.1);
 			punto.setY(punto.getY() - 0.1);
+			distanciaRecorrida += 0.1;
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.SO){
 			distanciaRecorrida = 0.0;
 			orientacion = Orientation.S;
 		}else if(distanciaRecorrida<distancia && orientacion == Orientation.S){
 			punto.setY(punto.getY() - 0.1);
+			distanciaRecorrida += 0.1;
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.S){
 			distanciaRecorrida = 0.0;
 			orientacion = Orientation.SE;
 		}else if(distanciaRecorrida<distancia && orientacion == Orientation.SE){
 			punto.setX(punto.getX() + 0.1);
 			punto.setY(punto.getY() - 0.1);
+			distanciaRecorrida += 0.1;
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.SE){
 			distanciaRecorrida = 0.0;
 			orientacion = Orientation.E;
@@ -167,7 +175,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 	}
 	
 	private void mensajeInfoAgente(String destinatario) {
-		generaCoordenadas();//TODO quitar esta linea cuando probemos con la parte C
+		//generaCoordenadas();//TODO quitar esta linea cuando probemos con la parte C
 		InfoAgent info = new InfoAgent(nombre,punto.getX(),punto.getY(),punto.getZ(),orientacion);
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
@@ -184,7 +192,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 		
 	}
 
-	protected void nuevoMensaje(String destinatario){
+	private void nuevoMensaje(String destinatario){
 		//Realizamos las acciones necesarias cada cierto tiempo
 		//Construye mensaje de tipo INFORM
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
