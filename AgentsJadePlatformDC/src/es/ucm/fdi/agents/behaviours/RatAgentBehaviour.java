@@ -63,7 +63,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 				for(int i = 0; i<listaAgentesComunicacion.length && listaAgentesDeteccionColisiones.length>0; i++){
 					if(activado) nuevoMensaje(listaAgentesComunicacion[i].getLocalName());
 					mensajeInfoAgente(listaAgentesDeteccionColisiones[i].getLocalName());
-					System.out.println("RATON EN "+punto.getX()+" "+punto.getY()+" "+punto.getZ());
+					System.out.println("RATON EN "+punto.getX()+" "+punto.getY()+" "+punto.getZ()+" "+orientacion);
 				}
 			}
 		}		
@@ -73,7 +73,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 	}
 	
 	private void mensajeInfoAgente(String destinatario) {
-		//generaCoordenadas();//TODO quitar esta linea cuando probemos con la parte C
+		generaCoordenadas();//TODO quitar esta linea cuando probemos con la parte C
 		InfoAgent info = new InfoAgent(nombre,punto.getX(),punto.getY(),punto.getZ(),orientacion);
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);

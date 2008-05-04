@@ -31,6 +31,8 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 	private YellowPages paginasAmarillas;
 	private AID[] listaAgentesGeneradores;
 	
+	int contador;
+	
 	
 	private boolean generaCoordenadasPrimeraVez;
 	private boolean rellenaArbol;
@@ -44,7 +46,8 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 		paginasAmarillas= new YellowPages();
 		generaCoordenadasPrimeraVez= true;
 		rellenaArbol= true;
-		activado= false;
+		activado= true;
+		contador= 0;
 	}
 	
 	public void onTick() {	
@@ -98,7 +101,8 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 						//J3dCollisionDetectionBehaviour comportamiento= new J3dCollisionDetectionBehaviour(pickRoot, circulito, new Vector3d(x, y, z));
 						//detectaColisiones();
 						//((CollisionDetectionAgent) myAgent).setIc(((CollisionDetectionAgent) myAgent).getJ3d().infoColisiones);
-						
+						contador++;
+						System.out.println("El contador de veces que se pasa es: "+contador);
 						if(ic!= null){
 							for(int i= 0; i< ic.size(); i++){
 								System.out.println("SE HA PRODUCIDO UNA COLISIÓN");

@@ -12,6 +12,9 @@ import javax.media.j3d.PickBounds;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.WakeupCondition;
 import javax.media.j3d.WakeupCriterion;
+import javax.media.j3d.WakeupOnCollisionEntry;
+import javax.media.j3d.WakeupOnCollisionExit;
+import javax.media.j3d.WakeupOnCollisionMovement;
 import javax.media.j3d.WakeupOnElapsedFrames;
 import javax.media.j3d.WakeupOr;
 import javax.vecmath.Color3f;
@@ -31,7 +34,7 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 	private BranchGroup pickRoot = null;
 	private WakeupCondition m_WakeupCondition= null;
 	//how often we check for a collision
-	private static final int ELAPSED_FRAME_COUNT = 1;		
+	public static final int ELAPSED_FRAME_COUNT = 1;		
 	//the collision object that we are controlling
 	private TransformGroup collisionObject = null;
 	private String nombreAgenteClase= "";//NOMBRE DEL AGENTE AL QUE CORRESPONDE ESTE OBJETO.
@@ -73,20 +76,34 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 		this.positionObject= positionObject; 
 			
 		// create the WakeupCriterion for the behavior
+		//WakeupCriterion criterionArray[] = new WakeupCriterion[1];
+		//criterionArray[0] = new WakeupOnElapsedFrames(ELAPSED_FRAME_COUNT);
+		//criterionArray[1] = new WakeupOnCollisionEntry(collisionObject);
+		//criterionArray[2] = new WakeupOnCollisionMovement(collisionObject);
+		
 		WakeupCriterion criterionArray[] = new WakeupCriterion[1];
-		criterionArray[0] = new WakeupOnElapsedFrames(ELAPSED_FRAME_COUNT);
+		criterionArray[0] = new WakeupOnCollisionMovement(collisionObject);
+		//criterionArray[1] = new WakeupOnCollisionEntry(collisionObject);
+		//criterionArray[2] = new WakeupOnCollisionExit(collisionObject);
+		
+		
 		
 		objectAppearance.setCapability(Appearance.ALLOW_MATERIAL_WRITE);
 		
-		collisionObject.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-		collisionObject.setCapability(Node.ALLOW_BOUNDS_READ);
+		this.collisionObject.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		this.collisionObject.setCapability(Node.ALLOW_BOUNDS_READ);
 		
 		// save the WakeupCriterion for the behavior
 		m_WakeupCondition = new WakeupOr(criterionArray);
-	}
+		
+		
+		
+		
+	}	
+	
 	public void initialize() {
 		//apply the initial WakeupCriterion
-		wakeupOn(m_WakeupCondition);		
+			
 		
 		Color3f objColor = new Color3f(0.0f, 0.0f, 0.0f);//new Color3f(1.0f, 0.1f, 0.2f);
 		Color3f black = new Color3f(0.0f, 0.0f, 0.0f);
@@ -96,6 +113,8 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 		missMaterial = new Material(objColor, black, objColor, black, 80.0f);
 		
 		objectAppearance.setMaterial(missMaterial);
+		
+		wakeupOn(m_WakeupCondition);//TODO Cambio dicho por Gonzalo	
 	}
 
 	/*
@@ -108,7 +127,7 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 			WakeupCriterion wakeUp = (WakeupCriterion) criteria.nextElement();
 			
 			// every N frames, check for a collision
-			if (wakeUp instanceof WakeupOnElapsedFrames) {
+			//if (wakeUp instanceof WakeupOnElapsedFrames) {
 				// create a PickBounds
 				PickTool pickTool = new PickTool(pickRoot);
 				pickTool.setMode(PickTool.BOUNDS);
@@ -172,7 +191,7 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 							}
 						}						
 					}
-				}
+				//}
 				
 				/*if ((isCollision(resultArray)!= null)||(isCollision(resultArray2)!= null)||(isCollision(resultArray3)!= null)){//YA NO MIRAMOS SI ES TRUE, VEMOS QUE SEA !=NULL
 					if((isCollision(resultArray)!= null)){
@@ -192,7 +211,7 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 		}//fin del while
 		
 		// assign the next WakeUpCondition, so we are notified again
-		//wakeupOn(m_WakeupCondition);//TODO QUITANDO ESTA LINEA, ESTA FUNCIÓN SOLO LE EJECUTA UNA VEZ QUE ES LO QUE QUIERO!!
+		wakeupOn(m_WakeupCondition);//TODO QUITANDO ESTA LINEA, ESTA FUNCIÓN SOLO LE EJECUTA UNA VEZ QUE ES LO QUE QUIERO!!
 	}
 	
 	//FUNCIÓN QUE DETECTA SI HA HABIDO UNA COLISIÓN:
@@ -220,9 +239,9 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 					   (!this.nombreAgenteClase.equals(nombreAgenteConElQueColisiona))) { //Ignora la colisión con él mismo.		
 						
 						//System.out.println("He chocado con: "+userData.toString());		
-						System.out.println("SE HA PRODUCIDO UNA COLISIÓN");
-						System.out.println("nombreAgenteClase------------->"+this.nombreAgenteClase);
-						System.out.println("nombreAgenteConElQueColisiona-------->"+nombreAgenteConElQueColisiona);									
+						//System.out.println("SE HA PRODUCIDO UNA COLISIÓN");
+						//System.out.println("nombreAgenteClase------------->"+this.nombreAgenteClase);
+						//System.out.println("nombreAgenteConElQueColisiona-------->"+nombreAgenteConElQueColisiona);									
 						//return userData;//MODIFICAMOS LA FUNCIÓN PARA EN VEZ DE DEVOLVER TRUE DEVUELVA EL OBJETO CON EL QUE HA COLISIONADO.
 						
 						//TODO Las siguientes diez lineas (hasta el return) corresponden a lo que se hacía dentro de la función "onCollide":
@@ -305,6 +324,12 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 	}
 	public void setPositionObject(Vector3d positionObject) {
 		this.positionObject = positionObject;
+	}
+	public void setM_WakeupCondition(WakeupCondition wakeupCondition) {
+		m_WakeupCondition = wakeupCondition;
+	}	
+	public Appearance getObjectAppearance() {
+		return objectAppearance;
 	}
 
 

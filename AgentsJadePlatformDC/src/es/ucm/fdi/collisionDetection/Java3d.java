@@ -9,9 +9,16 @@ import javax.media.j3d.Bounds;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.DirectionalLight;
 import javax.media.j3d.Group;
+import javax.media.j3d.Node;
 import javax.media.j3d.SceneGraphObject;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
+import javax.media.j3d.WakeupCriterion;
+import javax.media.j3d.WakeupOnCollisionEntry;
+import javax.media.j3d.WakeupOnCollisionExit;
+import javax.media.j3d.WakeupOnCollisionMovement;
+import javax.media.j3d.WakeupOnElapsedFrames;
+import javax.media.j3d.WakeupOr;
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector3d;
 
@@ -71,8 +78,7 @@ public class Java3d extends Java3dApplet{
 				if(agentes.get(i).getNombreAgente().contains("gato")||
 						agentes.get(i).getNombreAgente().contains("raton")){
 					//añadimos el cono:				
-					Vector3d nuevasCoord= cambiaCoordendas(agentes.get(i).getOrientacion(),agentes.get(i).getX(),agentes.get(i).getY(),agentes.get(i).getZ());					
-							
+					Vector3d nuevasCoord= cambiaCoordendas(agentes.get(i).getOrientacion(),agentes.get(i).getX(),agentes.get(i).getY(),agentes.get(i).getZ());							
 					añadeCirculoPequeñoDelCono(nuevasCoord.x, nuevasCoord.y, nuevasCoord.z, tgAgente, agentes.get(i).getOrientacion());
 					System.out.println("Añadido CIRCULITO del agente: "+agentes.get(i).getNombreAgente());
 				}
@@ -94,15 +100,15 @@ public class Java3d extends Java3dApplet{
 		Enumeration hijosArbol= objRoot.getAllChildren();
 		while(hijosArbol.hasMoreElements()){
 			Object hijo= hijosArbol.nextElement();
-			System.out.println(hijo.getClass());
-			System.out.println(BranchGroup.class);
-			if(hijo.getClass().equals(BranchGroup.class)){//TODO ¿¿??
+			//System.out.println(hijo.getClass());
+			//System.out.println(BranchGroup.class);
+			if(hijo.getClass().equals(BranchGroup.class)){
 				Enumeration hijosBG= ((BranchGroup)hijo).getAllChildren();
 				while(hijosBG.hasMoreElements()){
 					Object hijoTG= hijosBG.nextElement();
-					System.out.println(hijoTG.getClass());
-					System.out.println(TransformGroup.class);					 				
-					if(hijoTG.getClass().equals(TransformGroup.class)){//TODO ¿¿??
+					//System.out.println(hijoTG.getClass());
+					//System.out.println(TransformGroup.class);					 				
+					if(hijoTG.getClass().equals(TransformGroup.class)){
 						for(int i= 0; i< listaAgentes.size(); i++){
 							InfoAgent agenteI= listaAgentes.get(i);
 							if(((TransformGroup)hijoTG).getName().contains(agenteI.getNombreAgente())){
@@ -113,15 +119,18 @@ public class Java3d extends Java3dApplet{
 									if(agenteI.getNombreAgente().contains("gato")||
 									   agenteI.getNombreAgente().contains("raton")){								
 										if(((TransformGroup)hijoTG2).getName().contains("circulito")){
-										//Es un circulito:
+										//Es un circulito:											
 											TransformGroup circulito= (TransformGroup)hijoTG2;
-											this.updateCirculoPequeñoDelCono(agenteI.getX(), agenteI.getY(), agenteI.getZ(), circulito, agenteI.getOrientacion());
+											circulito.setName(((TransformGroup)hijoTG).getName()+" circulito");
+											Vector3d nuevasCoord= cambiaCoordendas(agenteI.getOrientacion(),agenteI.getX(), agenteI.getY(), agenteI.getZ());
+											this.updateCirculoPequeñoDelCono(nuevasCoord.x, nuevasCoord.y, nuevasCoord.z, circulito, agenteI.getOrientacion());
 											System.out.println("Realizado update del CIRCULITO del agente: "+agenteI.getNombreAgente());
 										}
 									}
 									if(((TransformGroup)hijoTG2).getName().contains("esfera")){
 									//Es una esfera:
 										TransformGroup esfera= (TransformGroup)hijoTG2;
+										esfera.setName(((TransformGroup)hijoTG).getName()+" esfera");
 										this.updateEsfera(agenteI.getX(), agenteI.getY(), agenteI.getZ(), esfera);
 										System.out.println("Realizado update de la ESFERA del agente: "+agenteI.getNombreAgente());
 									}
@@ -191,13 +200,13 @@ public class Java3d extends Java3dApplet{
 		recursiveSetUserData(sphereTg, sphereTg.getName());
 	}
 	
-	private void updateEsfera(double x, double y, double z, TransformGroup esferaTg){
+	private void updateEsfera(double x, double y, double z, TransformGroup sphereTg){
 		//Appearance app = new Appearance();
 		//TransformGroup sphereTg = new TransformGroup();
 		//sphereTg.setName(tgAgente.getName()+" esfera");
 		Transform3D t3d = new Transform3D();
 		t3d.setTranslation(new Vector3d(x, y, z));
-		esferaTg.setTransform(t3d);
+		sphereTg.setTransform(t3d);
 		
 		//sphereTg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		//sphereTg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
@@ -259,18 +268,7 @@ public class Java3d extends Java3dApplet{
 				
 		TransformGroup coneTg = new TransformGroup();
 		coneTg.setName(circulito.getName()+" cono");
-		
-		//Al ser hijo del circulito, se situa en las mismas coordenadas, por lo que no es necesario el Transform3D aquí:
-		//Transform3D t3d = new Transform3D();
-		//orientaCono(orientacion,t3d);//FUNCIÓN QUE SE ENCARGA DE ORIENTAR EL CONO.
-		//t3d.setTranslation(new Vector3d(x, y, z));
-		
-		//t3d.rotX(Math.PI); //Parámetro en radianes.
-		//t3d.rotY(Math.PI/2); //Parámetro en radianes.
-		//t3d.rotZ(Math.PI/2); //Parámetro en radianes.
-		
-		//coneTg.setTransform(t3d);
-		
+				
 		coneTg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);//Specifies that the node allows writing its object's transform information.		 
 		coneTg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);//Specifies that the node allows access to its object's transform information.
 	
@@ -283,37 +281,53 @@ public class Java3d extends Java3dApplet{
 		//CollisionBehavior collisionBehavior = new CollisionBehavior(bg, sphereTg, app, new Vector3d(x, y, z), incVector);
 		comportamiento.setSchedulingBounds(getApplicationBounds());// Pone la región de planificación del comportamiento a los límites especificados.
 		
-		//TODO prueba que hice pero no funciona: en este momento infoColision es NULL!!
-		/*if(comportamiento.infoColision!=null){
-			System.out.print("Agente que ve: "+comportamiento.infoColision.getAgenteQueVe());
-			System.out.print("Agente que es visto: "+comportamiento.infoColision.getAgenteQueEsVisto());
-			System.out.println("Claridad de percepción: "+comportamiento.infoColision.getClaridadPercepcion());
-		}else System.out.println("infoColision es NULL");
-		*/
-		coneTg.addChild(comportamiento);
-	
+		coneTg.addChild(comportamiento);	
 	}	
 	
-	private void updateCono(double x, double y, double z, TransformGroup conoTg) {
-		Enumeration hijosConoTg= ((TransformGroup)conoTg).getAllChildren();
-		while(hijosConoTg.hasMoreElements()){
-			Object hijo= hijosConoTg.nextElement();
-			System.out.println(hijo.getClass());
-			System.out.println(TransformGroup.class);
-			if(hijo.getClass().equals(TransformGroup.class)){
-				Enumeration hijosTg= ((TransformGroup)hijo).getAllChildren();
+	private void updateCono(double x, double y, double z, TransformGroup circulitoTg) {
+		Enumeration hijosCirculitoTg= ((TransformGroup)circulitoTg).getAllChildren();
+		while(hijosCirculitoTg.hasMoreElements()){
+			Object coneTg= hijosCirculitoTg.nextElement();
+			//System.out.println(coneTg.getClass());
+			//System.out.println(TransformGroup.class);
+			if(coneTg.getClass().equals(TransformGroup.class)){
+				((TransformGroup)coneTg).setName(circulitoTg.getName()+" cono");
+				Enumeration hijosTg= ((TransformGroup)coneTg).getAllChildren();
 				while(hijosTg.hasMoreElements()){
 					Object hijoTg= hijosTg.nextElement();
-					System.out.println(hijoTg.getClass());
-					System.out.println(J3dCollisionDetectionBehaviour.class);					 				
+					//System.out.println(hijoTg.getClass());
+					//System.out.println(J3dCollisionDetectionBehaviour.class);					 				
 					if(hijoTg.getClass().equals(J3dCollisionDetectionBehaviour.class)){						
 						J3dCollisionDetectionBehaviour comportamiento= (J3dCollisionDetectionBehaviour)hijoTg;
+						comportamiento.setPositionObject(new Vector3d(x,y,z));
+						// create the WakeupCriterion for the behavior
+						//WakeupCriterion criterionArray[] = new WakeupCriterion[3];
+						//criterionArray[0] = new WakeupOnElapsedFrames(J3dCollisionDetectionBehaviour.ELAPSED_FRAME_COUNT);
+						//criterionArray[0] = new WakeupOnCollisionMovement(circulitoTg);
+						//criterionArray[1] = new WakeupOnCollisionEntry(circulitoTg);
+						//criterionArray[2] = new WakeupOnCollisionExit(circulitoTg);
+						
+						//comportamiento.getObjectAppearance().setCapability(Appearance.ALLOW_MATERIAL_WRITE);
+						
+						//circulitoTg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+						//circulitoTg.setCapability(Node.ALLOW_BOUNDS_READ);
+						
+						//comportamiento.setM_WakeupCondition(new WakeupOr(criterionArray));
+						
+						comportamiento.setSchedulingBounds(getApplicationBounds());
+						
+						/*J3dCollisionDetectionBehaviour comportamiento= (J3dCollisionDetectionBehaviour)hijoTg;
+						//((TransformGroup)coneTg).removeChild(1);
+						
+						J3dCollisionDetectionBehaviour comportamientoNuevo= new J3dCollisionDetectionBehaviour(this, objRoot, circulitoTg, new Vector3d(x, y, z));
+						comportamientoNuevo.setSchedulingBounds(getApplicationBounds());						
+						((TransformGroup)coneTg).setChild(comportamientoNuevo,1);*/
 						//Appearance app= new Appearance();
 						//Java3d j3d= comportamiento.getJ3d();
 						//J3dCollisionDetectionBehaviour comportamiento2= new J3dCollisionDetectionBehaviour(j3d, objRoot, conoTg, app, new Vector3d(x,y,z));
 						//comportamiento2.setSchedulingBounds(getApplicationBounds());// Pone la región de planificación del comportamiento a los límites especificados.
 						//comportamiento= comportamiento2;
-						comportamiento.setPositionObject(new Vector3d(x,y,z));
+						
 					}					
 				}
 			}			
