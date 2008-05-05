@@ -16,7 +16,7 @@ import jade.lang.acl.ACLMessage;
 public class RatAgentBehaviour extends TickerBehaviour{
 		
 	public static final double DISTANCIA = 5.0;
-	public static final int NUMERO_TRAYECTORIAS = 2;
+	public static final int NUMERO_TRAYECTORIAS = 3;
 	
 	private Point punto;
 	private String nombre;
@@ -56,6 +56,13 @@ public class RatAgentBehaviour extends TickerBehaviour{
 				comportamientoTrayectorias = new PathsBehaviour(PathsBehaviour.DIAMANTE, camino);
 			}
 		}break;
+		case PathsBehaviour.CUADRADA:{
+			if(comportamientoTrayectorias == null){
+				Orientation orientacion = Orientation.E;
+				camino = new Path(0.0, DISTANCIA, orientacion, punto);
+				comportamientoTrayectorias = new PathsBehaviour(PathsBehaviour.CUADRADA, camino);
+			}
+		}
 		}
 
 		myAgent.addBehaviour(comportamientoTrayectorias);

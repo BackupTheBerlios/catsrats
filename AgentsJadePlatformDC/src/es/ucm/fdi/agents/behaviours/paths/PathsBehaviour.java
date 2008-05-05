@@ -7,6 +7,7 @@ public class PathsBehaviour extends OneShotBehaviour{
 	
 	public static final int OCTOGONAL = 0;
 	public static final int DIAMANTE = 1;
+	public static final int CUADRADA = 2;
 	
 	private Trayectorias trayectoria;
 	private Path camino;
@@ -21,6 +22,7 @@ public class PathsBehaviour extends OneShotBehaviour{
 		switch(tipoTrayectoria){
 		case OCTOGONAL: this.trayectoria = new OctogonalPath();break;
 		case DIAMANTE: this.trayectoria = new DiamondPath();break;
+		case CUADRADA: this.trayectoria = new SquarePath();break;
 		}
 	}
 

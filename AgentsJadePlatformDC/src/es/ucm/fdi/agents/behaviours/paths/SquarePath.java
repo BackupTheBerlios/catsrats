@@ -14,6 +14,28 @@ public class SquarePath implements Trayectorias {
 		
 		if(distanciaRecorrida < distancia && orientacion == Orientation.E){
 			punto.setX(punto.getX()+0.1);
+			camino.setDistanciaRecorrida(distanciaRecorrida + 0.1);
+		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.E){
+			camino.setDistanciaRecorrida(0.0);
+			camino.setOrientacion(Orientation.N);
+		}else if(distanciaRecorrida < distancia && orientacion == Orientation.N){
+			punto.setY(punto.getY()+0.1);
+			camino.setDistanciaRecorrida(distanciaRecorrida+0.1);
+		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.N){
+			camino.setDistanciaRecorrida(0.0);
+			camino.setOrientacion(Orientation.O);
+		}else if(distanciaRecorrida < distancia && orientacion == Orientation.O ){
+			punto.setX(punto.getX()-0.1);
+			camino.setDistanciaRecorrida(distanciaRecorrida+0.1);
+		}else if(distanciaRecorrida >= distancia && orientacion == Orientation.O){
+			camino.setDistanciaRecorrida(0.0);
+			camino.setOrientacion(Orientation.S);
+		}else if(distanciaRecorrida < distancia && orientacion == Orientation.S){
+			punto.setY(punto.getY()-0.1);
+			camino.setDistanciaRecorrida(distanciaRecorrida+0.1);
+		}else if(distanciaRecorrida >= distancia && orientacion == Orientation.S){
+			camino.setDistanciaRecorrida(0.0);
+			camino.setOrientacion(Orientation.E);
 		}
 
 	}
