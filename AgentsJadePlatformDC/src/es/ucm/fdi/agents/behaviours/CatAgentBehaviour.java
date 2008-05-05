@@ -18,7 +18,7 @@ import jade.lang.acl.UnreadableException;
 public class CatAgentBehaviour extends TickerBehaviour{
 	
 	public static final double DISTANCIA = 5.0;
-	public static final int NUMERO_TRAYECTORIAS = 4;
+	public static final int NUMERO_TRAYECTORIAS = 5;
 	
 	private Point punto;
 	private String nombre;
@@ -73,11 +73,18 @@ public class CatAgentBehaviour extends TickerBehaviour{
 				comportamientoTrayectorias = new PathsBehaviour(PathsBehaviour.TRIANGULAR, camino);
 			}
 		}break;
+		case PathsBehaviour.ZIGZAG:{
+			if(comportamientoTrayectorias == null){
+				Orientation orientacion = Orientation.NO;
+				camino = new Path(0.0, DISTANCIA, orientacion, punto);
+				comportamientoTrayectorias = new PathsBehaviour(PathsBehaviour.ZIGZAG, camino);
+			}
+		}break;
 		}
 
 		myAgent.addBehaviour(comportamientoTrayectorias);
 		
-	    String mensaje= nombre+","+punto.getX()+","+punto.getY()+","+punto.getZ();
+	    String mensaje= nombre+","+camino.getPunto().getX()+","+camino.getPunto().getY()+","+camino.getPunto().getZ();
 	    
 	    return mensaje;			
 	}

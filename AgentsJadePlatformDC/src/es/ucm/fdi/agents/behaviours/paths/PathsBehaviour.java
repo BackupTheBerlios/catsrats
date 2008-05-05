@@ -9,6 +9,7 @@ public class PathsBehaviour extends OneShotBehaviour{
 	public static final int DIAMANTE = 1;
 	public static final int CUADRADA = 2;
 	public static final int TRIANGULAR = 3;
+	public static final int ZIGZAG = 4;
 	
 	private Trayectorias trayectoria;
 	private Path camino;
@@ -25,6 +26,7 @@ public class PathsBehaviour extends OneShotBehaviour{
 		case DIAMANTE: this.trayectoria = new DiamondPath();break;
 		case CUADRADA: this.trayectoria = new SquarePath();break;
 		case TRIANGULAR: this.trayectoria = new TrianglePath();break;
+		case ZIGZAG: this.trayectoria = new ZigzagPath();break;
 		}
 	}
 
