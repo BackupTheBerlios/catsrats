@@ -4,13 +4,21 @@ public class InfoCollision {
 	
 	private String agenteQueVe;
 	private String agenteQueEsVisto;
+	
+	private String tipoAgente;
+	private Orientation orientacion;
 	private double claridadPercepcion;
+	private double distancia;
+	
 	
 	//Constructora con parámetros:
-	public InfoCollision(String agenteQueVe, String agenteQueEsVisto, double claridadPercepcion) {		
+	public InfoCollision(String agenteQueVe, String agenteQueEsVisto, String tipoAgente, Orientation orientacion, double claridadPercepcion, double distancia) {		
 		this.agenteQueVe = agenteQueVe;
 		this.agenteQueEsVisto = agenteQueEsVisto;
+		this.tipoAgente= tipoAgente;
+		this.orientacion= orientacion;
 		this.claridadPercepcion = claridadPercepcion;
+		this.distancia= distancia;
 	}
 	
 	//Getter y setter:
@@ -31,6 +39,30 @@ public class InfoCollision {
 	}
 	public void setClaridadPercepcion(double claridadPercepcion) {
 		this.claridadPercepcion = claridadPercepcion;
+	}
+
+	public double getDistancia() {
+		return distancia;
+	}
+
+	public void setDistancia(double distancia) {
+		this.distancia = distancia;
+	}
+
+	public String getTipoAgente() {
+		return tipoAgente;
+	}
+
+	public void setTipoAgente(String tipoAgente) {
+		this.tipoAgente = tipoAgente;
+	}
+
+	public Orientation getOrientacion() {
+		return orientacion;
+	}
+
+	public void setOrientacion(Orientation orientacion) {
+		this.orientacion = orientacion;
 	}
 	
 	
