@@ -1,6 +1,9 @@
 package es.ucm.fdi.agents.behaviours;
 
 import java.io.IOException;
+
+import es.ucm.fdi.agents.behaviours.paths.PathsBehaviour;
+import es.ucm.fdi.agents.coordinates.Path;
 import es.ucm.fdi.agents.coordinates.Point;
 import es.ucm.fdi.agents.yellowPages.YellowPages;
 import es.ucm.fdi.collisionDetection.InfoAgent;
@@ -12,30 +15,52 @@ import jade.lang.acl.ACLMessage;
 
 public class CatAgentBehaviour extends TickerBehaviour{
 	
-	public static final double distancia = 5.0;
+	public static final double DISTANCIA = 5.0;
+	public static final int NUMERO_TRAYECTORIAS = 2;
 	
-	private double distanciaRecorrida;
 	private Point punto;
 	private String nombre;
 	private AID[] listaAgentesComunicacion;
 	private AID[] listaAgentesDeteccionColisiones;
 	private YellowPages paginasAmarillas;
-	private Orientation orientacion;
 	private boolean activado;
+	private Path camino;
+	private PathsBehaviour comportamientoTrayectorias;
+	private int tipoTrayectoria;
 
 	public CatAgentBehaviour(Agent agente, long tiempo) {
 		super(agente, tiempo);
-		this.distanciaRecorrida = 0.0;
 		this.punto= new Point(Math.random()*10, Math.random()*10, 0.0);
 		this.nombre= myAgent.getLocalName();
-		this.orientacion = Orientation.NE;
 		this.paginasAmarillas= new YellowPages();
 		this.activado= false;
+		this.camino = null;
+		this.tipoTrayectoria = (int)((Math.random()*10)%NUMERO_TRAYECTORIAS); //Generamos una trayectoria aleatoria
+		this.comportamientoTrayectorias = null;
+		
 	}
 
 	public String generaCoordenadas(){
-	
-		myAgent.addBehaviour(new DiamondPathBehaviour(this));
+
+		switch(tipoTrayectoria){
+		case PathsBehaviour.OCTOGONAL:{
+			if(comportamientoTrayectorias == null){
+				Orientation orientacion = Orientation.E;
+				camino = new Path(0.0, DISTANCIA, orientacion, punto);
+				comportamientoTrayectorias = new PathsBehaviour(PathsBehaviour.OCTOGONAL, camino);
+			}
+		}break;
+		case PathsBehaviour.DIAMANTE:{
+			if(comportamientoTrayectorias == null){
+				Orientation orientacion = Orientation.NE;
+				camino = new Path(0.0, DISTANCIA, orientacion, punto);
+				comportamientoTrayectorias = new PathsBehaviour(PathsBehaviour.DIAMANTE, camino);
+			}
+		}break;
+		}
+
+		myAgent.addBehaviour(comportamientoTrayectorias);
+		
 	    String mensaje= nombre+","+punto.getX()+","+punto.getY()+","+punto.getZ();
 	    
 	    return mensaje;			
@@ -61,7 +86,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 				for(int i = 0; i<listaAgentesComunicacion.length && listaAgentesDeteccionColisiones.length>0; i++){
 					if(activado) nuevoMensaje(listaAgentesComunicacion[i].getLocalName());
 					mensajeInfoAgente(listaAgentesDeteccionColisiones[i].getLocalName());
-					System.out.println("GATO EN "+punto.getX()+" "+punto.getY()+" "+punto.getZ()+" "+orientacion);
+					System.out.println("GATO EN "+camino.getPunto().getX()+" "+camino.getPunto().getY()+" "+camino.getPunto().getZ()+" "+camino.getOrientacion());
 				}
 			}
 		}		
@@ -72,7 +97,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 	
 	private void mensajeInfoAgente(String destinatario) {
 		generaCoordenadas();//TODO quitar esta linea cuando probemos con la parte C
-		InfoAgent info = new InfoAgent(nombre,punto.getX(),punto.getY(),punto.getZ(),orientacion);
+		InfoAgent info = new InfoAgent(nombre,camino.getPunto().getX(),camino.getPunto().getY(),camino.getPunto().getZ(),camino.getOrientacion());
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		//agrega contenido
@@ -100,30 +125,5 @@ public class CatAgentBehaviour extends TickerBehaviour{
 		//envia mensaje
 		myAgent.send(msg);
 	}
-
-	public double getDistanciaRecorrida() {
-		return distanciaRecorrida;
-	}
-
-	public void setDistanciaRecorrida(double distanciaRecorrida) {
-		this.distanciaRecorrida = distanciaRecorrida;
-	}
-
-	public Orientation getOrientacion() {
-		return orientacion;
-	}
-
-	public void setOrientacion(Orientation orientacion) {
-		this.orientacion = orientacion;
-	}
-
-	public Point getPunto() {
-		return punto;
-	}
-
-	public void setPunto(Point punto) {
-		this.punto = punto;
-	}
-
 	
 }

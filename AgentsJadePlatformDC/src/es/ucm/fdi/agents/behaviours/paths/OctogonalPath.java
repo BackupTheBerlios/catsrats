@@ -1,77 +1,73 @@
-package es.ucm.fdi.agents.behaviours;
+package es.ucm.fdi.agents.behaviours.paths;
 
+import es.ucm.fdi.agents.coordinates.Path;
 import es.ucm.fdi.agents.coordinates.Point;
 import es.ucm.fdi.collisionDetection.Orientation;
-import jade.core.behaviours.OneShotBehaviour;
 
 /*
- * Trayectoria octogonal
+ * Traycetoria en forma octogonal con sentido antihorario
  */
-public class OctogonalPathBehaviour extends OneShotBehaviour{
+public class OctogonalPath implements Trayectorias {
 
-	private RatAgentBehaviour rab;
-	
-	public OctogonalPathBehaviour(RatAgentBehaviour rab){
-		this.rab = rab;
-	}
-	public void action() {
-		double distanciaRecorrida = rab.getDistanciaRecorrida();
-		double distancia = RatAgentBehaviour.distancia;
-		Orientation orientacion = rab.getOrientacion();
-		Point punto = rab.getPunto();
+	public void movimento(Path camino) {
+		
+		double distanciaRecorrida = camino.getDistanciaRecorrida();
+		double distancia = camino.getDistancia();
+		Orientation orientacion = camino.getOrientacion();
+		Point punto = camino.getPunto();
 		
 		if(distanciaRecorrida<distancia && orientacion == Orientation.E){
 			punto.setX(punto.getX() + 0.1);
-			rab.setDistanciaRecorrida(distanciaRecorrida + 0.1);
+			camino.setDistanciaRecorrida(distanciaRecorrida + 0.1);
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.E){
-			rab.setDistanciaRecorrida(0.0);
-			rab.setOrientacion(Orientation.NE);
+			camino.setDistanciaRecorrida(0.0);
+			camino.setOrientacion(Orientation.NE);
 		}else if(distanciaRecorrida<distancia && orientacion == Orientation.NE){
 			punto.setX(punto.getX() + 0.1);
 			punto.setY(punto.getY() + 0.1);
-			rab.setDistanciaRecorrida(distanciaRecorrida +0.1);
+			camino.setDistanciaRecorrida(distanciaRecorrida +0.1);
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.NE){
-			rab.setDistanciaRecorrida(0.0);
-			rab.setOrientacion(Orientation.N);
+			camino.setDistanciaRecorrida(0.0);
+			camino.setOrientacion(Orientation.N);
 		}else if(distanciaRecorrida<distancia && orientacion == Orientation.N){
 			punto.setY(punto.getY() + 0.1);
-			rab.setDistanciaRecorrida(distanciaRecorrida +0.1);
+			camino.setDistanciaRecorrida(distanciaRecorrida +0.1);
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.N){
-			rab.setDistanciaRecorrida(0.0);
-			rab.setOrientacion(Orientation.NO);
+			camino.setDistanciaRecorrida(0.0);
+			camino.setOrientacion(Orientation.NO);
 		}else if(distanciaRecorrida<distancia && orientacion == Orientation.NO){
 			punto.setX(punto.getX() - 0.1);
 			punto.setY(punto.getY() + 0.1);
-			rab.setDistanciaRecorrida(distanciaRecorrida +0.1);
+			camino.setDistanciaRecorrida(distanciaRecorrida +0.1);
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.NO){
-			rab.setDistanciaRecorrida(0.0);
-			rab.setOrientacion(Orientation.O);
+			camino.setDistanciaRecorrida(0.0);
+			camino.setOrientacion(Orientation.O);
 		}else if(distanciaRecorrida<distancia && orientacion == Orientation.O){
 			punto.setX(punto.getX() - 0.1);
-			rab.setDistanciaRecorrida(distanciaRecorrida +0.1);
+			camino.setDistanciaRecorrida(distanciaRecorrida +0.1);
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.O){
-			rab.setDistanciaRecorrida(0.0);
-			rab.setOrientacion(Orientation.SO);
+			camino.setDistanciaRecorrida(0.0);
+			camino.setOrientacion(Orientation.SO);
 		}else if(distanciaRecorrida<distancia && orientacion == Orientation.SO){
 			punto.setX(punto.getX() - 0.1);
 			punto.setY(punto.getY() - 0.1);
-			rab.setDistanciaRecorrida(distanciaRecorrida +0.1);
+			camino.setDistanciaRecorrida(distanciaRecorrida +0.1);
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.SO){
-			rab.setDistanciaRecorrida(0.0);
-			rab.setOrientacion(Orientation.S);
+			camino.setDistanciaRecorrida(0.0);
+			camino.setOrientacion(Orientation.S);
 		}else if(distanciaRecorrida<distancia && orientacion == Orientation.S){
 			punto.setY(punto.getY() - 0.1);
-			rab.setDistanciaRecorrida(distanciaRecorrida +0.1);
+			camino.setDistanciaRecorrida(distanciaRecorrida +0.1);
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.S){
-			rab.setDistanciaRecorrida(0.0);
-			rab.setOrientacion(Orientation.SE);
+			camino.setDistanciaRecorrida(0.0);
+			camino.setOrientacion(Orientation.SE);
 		}else if(distanciaRecorrida<distancia && orientacion == Orientation.SE){
 			punto.setX(punto.getX() + 0.1);
 			punto.setY(punto.getY() - 0.1);
-			rab.setDistanciaRecorrida(distanciaRecorrida +0.1);
+			camino.setDistanciaRecorrida(distanciaRecorrida +0.1);
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.SE){
-			rab.setDistanciaRecorrida(0.0);
-			rab.setOrientacion(Orientation.E);
+			camino.setDistanciaRecorrida(0.0);
+			camino.setOrientacion(Orientation.E);
 		}
 		
 	}
