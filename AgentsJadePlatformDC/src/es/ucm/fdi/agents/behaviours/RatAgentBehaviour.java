@@ -7,11 +7,13 @@ import es.ucm.fdi.agents.coordinates.Path;
 import es.ucm.fdi.agents.coordinates.Point;
 import es.ucm.fdi.agents.yellowPages.YellowPages;
 import es.ucm.fdi.collisionDetection.InfoAgent;
+import es.ucm.fdi.collisionDetection.InfoCollision;
 import es.ucm.fdi.collisionDetection.Orientation;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.UnreadableException;
 
 public class RatAgentBehaviour extends TickerBehaviour{
 		
@@ -62,7 +64,14 @@ public class RatAgentBehaviour extends TickerBehaviour{
 				camino = new Path(0.0, DISTANCIA, orientacion, punto);
 				comportamientoTrayectorias = new PathsBehaviour(PathsBehaviour.CUADRADA, camino);
 			}
-		}
+		}break;
+		case PathsBehaviour.TRIANGULAR:{
+			if(comportamientoTrayectorias == null){
+				Orientation orientacion = Orientation.O;
+				camino = new Path(0.0, DISTANCIA, orientacion, punto);
+				comportamientoTrayectorias = new PathsBehaviour(PathsBehaviour.TRIANGULAR, camino);
+			}
+		}break;
 		}
 
 		myAgent.addBehaviour(comportamientoTrayectorias);
@@ -80,19 +89,31 @@ public class RatAgentBehaviour extends TickerBehaviour{
 		//Estamos a la escucha para recibir algun mansaje procedente del Agente Servidor
 		ACLMessage mensajeEntrante = myAgent.receive();
 		if(mensajeEntrante != null){
-			System.out.println("Mensaje entrante del raton: "+mensajeEntrante.getContent());
-			String contenidoMensaje = mensajeEntrante.getContent();
-			if(contenidoMensaje.contains("morir")){ //Matamos a los agentes
-				myAgent.doDelete();
-			}	
-			else if(contenidoMensaje.contains("comunicacion-lista")){	//Permitimos que empiecen a generar coordenadas				
-				activado= true;
+			if(mensajeEntrante.getPerformative() == ACLMessage.REQUEST){ //Recibimos un mensaje InfoCollision
+				try {
+					InfoCollision info = (InfoCollision)mensajeEntrante.getContentObject();
+					//TODO Aqui habra que tomar una decision
+					
+					
+				} catch (UnreadableException e) {
+					e.printStackTrace();
+				}
 			}
-			else if(contenidoMensaje.contains("genera")){	//Permitimos que sigan generando coordenadas
-				for(int i = 0; i<listaAgentesComunicacion.length && listaAgentesDeteccionColisiones.length>0; i++){
-					if(activado) nuevoMensaje(listaAgentesComunicacion[i].getLocalName());
-					mensajeInfoAgente(listaAgentesDeteccionColisiones[i].getLocalName());
-					System.out.println("RATON EN "+camino.getPunto().getX()+" "+camino.getPunto().getY()+" "+camino.getPunto().getZ()+" "+camino.getOrientacion());
+			else{
+				System.out.println("Mensaje entrante del raton: "+mensajeEntrante.getContent());
+				String contenidoMensaje = mensajeEntrante.getContent();
+				if(contenidoMensaje.contains("morir")){ //Matamos a los agentes
+					myAgent.doDelete();
+				}	
+				else if(contenidoMensaje.contains("comunicacion-lista")){	//Permitimos que empiecen a generar coordenadas				
+					activado= true;
+				}
+				else if(contenidoMensaje.contains("genera")){	//Permitimos que sigan generando coordenadas
+					for(int i = 0; i<listaAgentesComunicacion.length && listaAgentesDeteccionColisiones.length>0; i++){
+						if(activado) nuevoMensaje(listaAgentesComunicacion[i].getLocalName());
+						mensajeInfoAgente(listaAgentesDeteccionColisiones[i].getLocalName());
+						System.out.println("RATON EN "+camino.getPunto().getX()+" "+camino.getPunto().getY()+" "+camino.getPunto().getZ()+" "+camino.getOrientacion());
+					}
 				}
 			}
 		}		

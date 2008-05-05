@@ -4,6 +4,9 @@ import es.ucm.fdi.agents.coordinates.Path;
 import es.ucm.fdi.agents.coordinates.Point;
 import es.ucm.fdi.collisionDetection.Orientation;
 
+/*
+ * Trayectoria con forma cuadrada en sentido antihorario
+ */
 public class SquarePath implements Trayectorias {
 
 	public void movimento(Path camino) {
