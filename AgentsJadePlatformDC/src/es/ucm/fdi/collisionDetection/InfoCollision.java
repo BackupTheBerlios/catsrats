@@ -1,18 +1,22 @@
 package es.ucm.fdi.collisionDetection;
 
-public class InfoCollision {
+import java.io.Serializable;
+
+import es.ucm.fdi.mcdm.OrientacionAgenteVisto;
+
+public class InfoCollision implements Serializable {
 	
 	private String agenteQueVe;
 	private String agenteQueEsVisto;
 	
 	private String tipoAgente;
-	private Orientation orientacion;
+	private OrientacionAgenteVisto orientacion;
 	private double claridadPercepcion;
 	private double distancia;
 	
 	
 	//Constructora con parámetros:
-	public InfoCollision(String agenteQueVe, String agenteQueEsVisto, String tipoAgente, Orientation orientacion, double claridadPercepcion, double distancia) {		
+	public InfoCollision(String agenteQueVe, String agenteQueEsVisto, String tipoAgente, OrientacionAgenteVisto orientacion, double claridadPercepcion, double distancia) {		
 		this.agenteQueVe = agenteQueVe;
 		this.agenteQueEsVisto = agenteQueEsVisto;
 		this.tipoAgente= tipoAgente;
@@ -57,11 +61,11 @@ public class InfoCollision {
 		this.tipoAgente = tipoAgente;
 	}
 
-	public Orientation getOrientacion() {
+	public OrientacionAgenteVisto getOrientacion() {
 		return orientacion;
 	}
 
-	public void setOrientacion(Orientation orientacion) {
+	public void setOrientacion(OrientacionAgenteVisto orientacion) {
 		this.orientacion = orientacion;
 	}
 	

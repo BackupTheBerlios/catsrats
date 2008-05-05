@@ -73,7 +73,7 @@ public class Java3d extends Java3dApplet{
 		if (agentes != null){
 			for(int i= 0; i< agentes.size(); i++){
 				TransformGroup tgAgente= new TransformGroup();
-				tgAgente.setName(agentes.get(i).getNombreAgente()+" x "+agentes.get(i).getX()+" y "+agentes.get(i).getY()+" z "+agentes.get(i).getZ());
+				tgAgente.setName(agentes.get(i).getNombreAgente()+" x "+agentes.get(i).getX()+" y "+agentes.get(i).getY()+" z "+agentes.get(i).getZ()+" orientacion "+agentes.get(i).getOrientacion());
 				System.out.println(tgAgente.getName()+" ; Orientación(null si no es gato ni ratón): "+agentes.get(i).getOrientacion());//Imprimimos el nombre del agente.
 				if(agentes.get(i).getNombreAgente().contains("gato")||
 						agentes.get(i).getNombreAgente().contains("raton")){
@@ -112,7 +112,7 @@ public class Java3d extends Java3dApplet{
 						for(int i= 0; i< listaAgentes.size(); i++){
 							InfoAgent agenteI= listaAgentes.get(i);
 							if(((TransformGroup)hijoTG).getName().contains(agenteI.getNombreAgente())){
-								((TransformGroup)hijoTG).setName(agenteI.getNombreAgente()+" x "+agenteI.getX()+" y "+agenteI.getY()+" z "+agenteI.getZ());
+								((TransformGroup)hijoTG).setName(agenteI.getNombreAgente()+" x "+agenteI.getX()+" y "+agenteI.getY()+" z "+agenteI.getZ()+" orientacion "+agenteI.getOrientacion());
 								Enumeration hijosTG= ((TransformGroup)hijoTG).getAllChildren();
 								while(hijosTG.hasMoreElements()){
 									Object hijoTG2= hijosTG.nextElement();
@@ -243,7 +243,7 @@ public class Java3d extends Java3dApplet{
 		recursiveSetUserData(sphereTg, sphereTg.getName());		
 		//this.addCone(bg, sphereTg, x, y-2.5, z, incVector, "CONO", 2, 5);//5 es la altura del cono, y 2 el radio.		
 		
-		añadeCono(x,y,z,sphereTg);//AÑADIMOS EL CONO AL CIRCULO PEQUEÑO
+		añadeCono(x,y,z,orientacion,sphereTg);//AÑADIMOS EL CONO AL CIRCULO PEQUEÑO
 		tgAgente.addChild(sphereTg);//AÑADIMOS EL CONO AL AGENTE 
 	}
 	
@@ -256,11 +256,11 @@ public class Java3d extends Java3dApplet{
 		
 		circulitoTg.setTransform(t3d);		
 		
-		updateCono(x,y,z,circulitoTg);//MODIFICAMOS EL CONO AL CIRCULO PEQUEÑO
+		updateCono(x,y,z,orientacion,circulitoTg);//MODIFICAMOS EL CONO AL CIRCULO PEQUEÑO
 		//tgAgente.addChild(sphereTg);//AÑADIMOS EL CONO AL AGENTE 
 	}	
 
-	private void añadeCono(double x, double y, double z, TransformGroup circulito){
+	private void añadeCono(double x, double y, double z, Orientation orientacion, TransformGroup circulito){
 		float radio= 5;
 		float altura= 10;
 		Appearance app = new Appearance();
@@ -277,14 +277,14 @@ public class Java3d extends Java3dApplet{
 		recursiveSetUserData(coneTg, coneTg.getName());
 		
 		// create the collision behaviour:
-		J3dCollisionDetectionBehaviour comportamiento= new J3dCollisionDetectionBehaviour(this, objRoot, circulito, app, new Vector3d(x, y, z));
+		J3dCollisionDetectionBehaviour comportamiento= new J3dCollisionDetectionBehaviour(this, objRoot, circulito, app, new Vector3d(x, y, z), orientacion);
 		//CollisionBehavior collisionBehavior = new CollisionBehavior(bg, sphereTg, app, new Vector3d(x, y, z), incVector);
 		comportamiento.setSchedulingBounds(getApplicationBounds());// Pone la región de planificación del comportamiento a los límites especificados.
 		
 		coneTg.addChild(comportamiento);	
 	}	
 	
-	private void updateCono(double x, double y, double z, TransformGroup circulitoTg) {
+	private void updateCono(double x, double y, double z, Orientation orientacion, TransformGroup circulitoTg) {
 		Enumeration hijosCirculitoTg= ((TransformGroup)circulitoTg).getAllChildren();
 		while(hijosCirculitoTg.hasMoreElements()){
 			Object coneTg= hijosCirculitoTg.nextElement();
@@ -300,6 +300,7 @@ public class Java3d extends Java3dApplet{
 					if(hijoTg.getClass().equals(J3dCollisionDetectionBehaviour.class)){						
 						J3dCollisionDetectionBehaviour comportamiento= (J3dCollisionDetectionBehaviour)hijoTg;
 						comportamiento.setPositionObject(new Vector3d(x,y,z));
+						comportamiento.setOrientacion(orientacion);
 						// create the WakeupCriterion for the behavior
 						//WakeupCriterion criterionArray[] = new WakeupCriterion[3];
 						//criterionArray[0] = new WakeupOnElapsedFrames(J3dCollisionDetectionBehaviour.ELAPSED_FRAME_COUNT);

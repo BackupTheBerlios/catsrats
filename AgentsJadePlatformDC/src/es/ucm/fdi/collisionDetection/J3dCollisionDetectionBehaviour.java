@@ -24,6 +24,8 @@ import javax.vecmath.Vector3d;
 import com.sun.j3d.utils.picking.PickResult;
 import com.sun.j3d.utils.picking.PickTool;
 
+import es.ucm.fdi.mcdm.OrientacionAgenteVisto;
+
 
 //¡¡ESTE COMPORTAMIENTO NO ES UN COMPORTAMIENTO JADE!!
 //------------------------------------------------------
@@ -52,13 +54,14 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 	private PickBounds pickBounds5 = null;
 	//the current position of the object
 	private Vector3d positionObject = null;	
+	private Orientation orientacion;
 	private Java3d j3d;
 	//En esta estructura guardaremos las colisiones que se han producido,
 	//entre qué agentes y cual ha sido la claridad de percepción:
 	
 	//public InfoColision infoColision= null;
 
-	public J3dCollisionDetectionBehaviour(Java3d java3d, BranchGroup pickRoot, TransformGroup collisionObject, Appearance app, Vector3d positionObject){
+	public J3dCollisionDetectionBehaviour(Java3d java3d, BranchGroup pickRoot, TransformGroup collisionObject, Appearance app, Vector3d positionObject, Orientation orientacion){
 		//save references to the objects
 		this.pickRoot = pickRoot;	
 		this.collisionObject= collisionObject;
@@ -74,7 +77,7 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 		*/
 		this.nombreAgenteClase= nombreObjetoClase[0];
 		this.positionObject= positionObject; 
-			
+		this.orientacion= orientacion;
 		// create the WakeupCriterion for the behavior
 		//WakeupCriterion criterionArray[] = new WakeupCriterion[1];
 		//criterionArray[0] = new WakeupOnElapsedFrames(ELAPSED_FRAME_COUNT);
@@ -250,13 +253,23 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 						//Por como he puesto el nombre de cada agente, las posiciones 2, 4 y 6 corresponden a las coordenadas.
 						double cX2= Double.parseDouble(nombreObjetoColisionado[2]);
 						double cY2= Double.parseDouble(nombreObjetoColisionado[4]);
-						double cZ2= Double.parseDouble(nombreObjetoColisionado[6]);								
+						double cZ2= Double.parseDouble(nombreObjetoColisionado[6]);		
+						String orientacionObjetoVisto=  nombreObjetoColisionado[8];
 						Vector3d v1= new Vector3d(this.positionObject.x,this.positionObject.y,this.positionObject.z);
 						Vector3d v2= new Vector3d(cX2,cY2,cZ2);								
-						double resultado= claridadDePercepcion(v1,v2,1,5);
-						System.out.println("Claridad de percepción: "+resultado);						
+						double cp= claridadDePercepcion(v1,v2,1,5);
+						//System.out.println("Claridad de percepción: "+cp);						
 						
-						InfoCollision infoAgente= new InfoCollision(this.nombreAgenteClase, nombreAgenteConElQueColisiona, resultado);						
+						String tipoAgente= "";
+						if(nombreAgenteConElQueColisiona.contains("gato"))
+							tipoAgente= "gato";
+						else if(nombreAgenteConElQueColisiona.contains("raton"))
+							tipoAgente= "raton";
+						
+						double distancia= calculaDistancia(v1, v2);
+						
+						OrientacionAgenteVisto orientacion= calculaOrientacion(this.orientacion, orientacionObjetoVisto);
+						InfoCollision infoAgente= new InfoCollision(this.nombreAgenteClase, nombreAgenteConElQueColisiona, tipoAgente, orientacion, cp, distancia);						
 						return infoAgente;
 					}
 					//else System.out.println("NO HA HABIDO COLISIÓN");       
@@ -266,6 +279,87 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 		
 		return null;
 	}
+	
+	private OrientacionAgenteVisto calculaOrientacion(Orientation orientacion, String ov) {
+		OrientacionAgenteVisto res= null;
+		switch(orientacion){
+		case N: {if(ov.equals("N")) res= OrientacionAgenteVisto.ESPALDAS; 
+		else if(ov.equals("NE")) res= OrientacionAgenteVisto.ESPALDAS_DERECHA; 
+		else if(ov.equals("E")) res= OrientacionAgenteVisto.LADO_DERECHA;
+		else if(ov.equals("SE")) res= OrientacionAgenteVisto.FRENTE_DERECHA;
+		else if(ov.equals("S")) res= OrientacionAgenteVisto.FRENTE;
+		else if(ov.equals("SO")) res= OrientacionAgenteVisto.FRENTE_IZQUIERDA;
+		else if(ov.equals("O")) res= OrientacionAgenteVisto.LADO_IZQUIERDA;
+		else if(ov.equals("NO")) res= OrientacionAgenteVisto.ESPALDAS_IZQUIERDA;
+		break;}
+		case NE: {if(ov.equals("NE")) res= OrientacionAgenteVisto.ESPALDAS; 
+		else if(ov.equals("E")) res= OrientacionAgenteVisto.ESPALDAS_DERECHA; 
+		else if(ov.equals("SE")) res= OrientacionAgenteVisto.LADO_DERECHA;
+		else if(ov.equals("S")) res= OrientacionAgenteVisto.FRENTE_DERECHA;
+		else if(ov.equals("SO")) res= OrientacionAgenteVisto.FRENTE;
+		else if(ov.equals("O")) res= OrientacionAgenteVisto.FRENTE_IZQUIERDA;
+		else if(ov.equals("NO")) res= OrientacionAgenteVisto.LADO_IZQUIERDA;
+		else if(ov.equals("N")) res= OrientacionAgenteVisto.ESPALDAS_IZQUIERDA;
+		break;} 
+		case E: {if(ov.equals("E")) res= OrientacionAgenteVisto.ESPALDAS; 
+		else if(ov.equals("SE")) res= OrientacionAgenteVisto.ESPALDAS_DERECHA; 
+		else if(ov.equals("S")) res= OrientacionAgenteVisto.LADO_DERECHA;
+		else if(ov.equals("SO")) res= OrientacionAgenteVisto.FRENTE_DERECHA;
+		else if(ov.equals("O")) res= OrientacionAgenteVisto.FRENTE;
+		else if(ov.equals("NO")) res= OrientacionAgenteVisto.FRENTE_IZQUIERDA;
+		else if(ov.equals("N")) res= OrientacionAgenteVisto.LADO_IZQUIERDA;
+		else if(ov.equals("NE")) res= OrientacionAgenteVisto.ESPALDAS_IZQUIERDA;
+		break;} 
+		case SE: {if(ov.equals("SE")) res= OrientacionAgenteVisto.ESPALDAS; 
+		else if(ov.equals("S")) res= OrientacionAgenteVisto.ESPALDAS_DERECHA; 
+		else if(ov.equals("SO")) res= OrientacionAgenteVisto.LADO_DERECHA;
+		else if(ov.equals("O")) res= OrientacionAgenteVisto.FRENTE_DERECHA;
+		else if(ov.equals("NO")) res= OrientacionAgenteVisto.FRENTE;
+		else if(ov.equals("N")) res= OrientacionAgenteVisto.FRENTE_IZQUIERDA;
+		else if(ov.equals("NE")) res= OrientacionAgenteVisto.LADO_IZQUIERDA;
+		else if(ov.equals("E")) res= OrientacionAgenteVisto.ESPALDAS_IZQUIERDA;
+		break;} 
+		case S: {if(ov.equals("S")) res= OrientacionAgenteVisto.ESPALDAS; 
+		else if(ov.equals("SO")) res= OrientacionAgenteVisto.ESPALDAS_DERECHA; 
+		else if(ov.equals("O")) res= OrientacionAgenteVisto.LADO_DERECHA;
+		else if(ov.equals("NO")) res= OrientacionAgenteVisto.FRENTE_DERECHA;
+		else if(ov.equals("N")) res= OrientacionAgenteVisto.FRENTE;
+		else if(ov.equals("NE")) res= OrientacionAgenteVisto.FRENTE_IZQUIERDA;
+		else if(ov.equals("E")) res= OrientacionAgenteVisto.LADO_IZQUIERDA;
+		else if(ov.equals("SE")) res= OrientacionAgenteVisto.ESPALDAS_IZQUIERDA;
+		break;} 
+		case SO: {if(ov.equals("SO")) res= OrientacionAgenteVisto.ESPALDAS; 
+		else if(ov.equals("O")) res= OrientacionAgenteVisto.ESPALDAS_DERECHA; 
+		else if(ov.equals("NO")) res= OrientacionAgenteVisto.LADO_DERECHA;
+		else if(ov.equals("N")) res= OrientacionAgenteVisto.FRENTE_DERECHA;
+		else if(ov.equals("NE")) res= OrientacionAgenteVisto.FRENTE;
+		else if(ov.equals("E")) res= OrientacionAgenteVisto.FRENTE_IZQUIERDA;
+		else if(ov.equals("SE")) res= OrientacionAgenteVisto.LADO_IZQUIERDA;
+		else if(ov.equals("S")) res= OrientacionAgenteVisto.ESPALDAS_IZQUIERDA;
+		break;} 
+		case O: {if(ov.equals("O")) res= OrientacionAgenteVisto.ESPALDAS; 
+		else if(ov.equals("NO")) res= OrientacionAgenteVisto.ESPALDAS_DERECHA; 
+		else if(ov.equals("N")) res= OrientacionAgenteVisto.LADO_DERECHA;
+		else if(ov.equals("NE")) res= OrientacionAgenteVisto.FRENTE_DERECHA;
+		else if(ov.equals("E")) res= OrientacionAgenteVisto.FRENTE;
+		else if(ov.equals("SE")) res= OrientacionAgenteVisto.FRENTE_IZQUIERDA;
+		else if(ov.equals("S")) res= OrientacionAgenteVisto.LADO_IZQUIERDA;
+		else if(ov.equals("SO")) res= OrientacionAgenteVisto.ESPALDAS_IZQUIERDA;
+		break;} 
+		default: {if(ov.equals("NO")) res= OrientacionAgenteVisto.ESPALDAS; 
+		else if(ov.equals("N")) res= OrientacionAgenteVisto.ESPALDAS_DERECHA; 
+		else if(ov.equals("NE")) res= OrientacionAgenteVisto.LADO_DERECHA;
+		else if(ov.equals("E")) res= OrientacionAgenteVisto.FRENTE_DERECHA;
+		else if(ov.equals("SE")) res= OrientacionAgenteVisto.FRENTE;
+		else if(ov.equals("S")) res= OrientacionAgenteVisto.FRENTE_IZQUIERDA;
+		else if(ov.equals("SO")) res= OrientacionAgenteVisto.LADO_IZQUIERDA;
+		else if(ov.equals("O")) res= OrientacionAgenteVisto.ESPALDAS_IZQUIERDA;
+		break;} //NO
+		}
+
+		return res;
+	}
+
 	/*
 	//FUNCIÓN A LA QUE SE LLAMA CUANDO SE HA PRODUCIDO UNA COLISIÓN:	
 	protected void onCollide(Object objColision) {		
@@ -313,7 +407,8 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 		double lambda= 1;		
 		double sigma= 0.4;
 		double resultado= 0.0;
-		double d= Math.sqrt(Math.pow(v2.x - v1.x,2) + Math.pow(v2.y - v1.y,2) + Math.pow(v2.z - v1.z,2));
+		double d=  calculaDistancia(v1,v2);
+		//Math.sqrt(Math.pow(v2.x - v1.x,2) + Math.pow(v2.y - v1.y,2) + Math.pow(v2.z - v1.z,2));
 		if((0.0 <= d)&&(d <= d1))
 			resultado= lambda * d;
 		else if((d1 <= d)&&(d <= d2))
@@ -322,14 +417,29 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 			resultado= (1/(sigma * Math.sqrt(2 * Math.PI)))* Math.exp(-(Math.pow(d-d2,2)/(2*Math.pow(sigma,2))));
 		return resultado;//devolvemos un valor entre 0 y 1
 	}
+	
+	/*
+	 * Funcion que se encarga de calcular la distancia euclídea entre dos vectores:
+	 */
+	private static double calculaDistancia(Vector3d v1, Vector3d v2){
+		double d= Math.sqrt(Math.pow(v2.x - v1.x,2) + Math.pow(v2.y - v1.y,2) + Math.pow(v2.z - v1.z,2));
+		return d;
+	}
+	
 	public void setPositionObject(Vector3d positionObject) {
 		this.positionObject = positionObject;
 	}
+	
 	public void setM_WakeupCondition(WakeupCondition wakeupCondition) {
 		m_WakeupCondition = wakeupCondition;
-	}	
+	}
+	
 	public Appearance getObjectAppearance() {
 		return objectAppearance;
+	}
+
+	public void setOrientacion(Orientation orientacion) {
+		this.orientacion = orientacion;
 	}
 
 

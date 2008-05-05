@@ -1,5 +1,6 @@
 package es.ucm.fdi.agents.behaviours;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import com.sun.j3d.utils.applet.MainFrame;
@@ -99,13 +100,36 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 						//((CollisionDetectionAgent) myAgent).setIc(((CollisionDetectionAgent) myAgent).getJ3d().infoColisiones);
 						
 						if(ic!= null){
+							System.out.println("...............................................................................");
+							System.out.println("TAMAÑO DEL ARRAYLIST: "+ic.size());
 							for(int i= 0; i< ic.size(); i++){
-								System.out.println("SE HA PRODUCIDO UNA COLISIÓN");
+								System.out.println("SE HA PRODUCIDO UNA COLISIÓN "+i);
 								System.out.println("nombre del agente que ve: "+ic.get(i).getAgenteQueVe());
 								System.out.println("nombre del agente que es visto: "+ic.get(i).getAgenteQueEsVisto());
+								System.out.println("Tipo de agente: "+ic.get(i).getTipoAgente());
+								System.out.println("Orientación con la que lo ve: "+ic.get(i).getOrientacion());
 								System.out.println("Claridad de percepción: "+ic.get(i).getClaridadPercepcion());
-							}
+								System.out.println("Distancia: "+ic.get(i).getDistancia());
+								
+								//Mandamos el mensaje a cada agente que ha detectado una colision:
+								ACLMessage mensaje = new ACLMessage(ACLMessage.REQUEST);
+								
+								InfoCollision contenido = ic.get(i);
+								try {
+									mensaje.setContentObject(contenido);
+								} catch (IOException e) {									
+									e.printStackTrace();
+								}
+								//agrega la dirección del destinatario:
+								mensaje.addReceiver(new AID(contenido.getAgenteQueVe(),AID.ISLOCALNAME));
+								//envía el mensaje:
+								myAgent.send(mensaje);
+																
+							}							
 						}
+						
+						
+						
 						
 						//Volvemos a decir a los agentes gato y ratón que generen coordenadas:
 						System.out.println("Mandamos mensaje 'genera'de nuevo...");
@@ -138,6 +162,39 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 		}
 	}
 
+	private void quitaRepetidos(ArrayList<InfoCollision> ic) {
+		
+		int i= 0;
+		int tam= ic.size();
+		int j= ic.size();
+		while(i< tam){
+			while(i<j){
+				String agenteI= ic.get(i).getAgenteQueVe();
+				String agenteJ= ic.get(j).getAgenteQueVe();
+				if(agenteI.equals(agenteJ))
+					ic.remove(j);
+				else j--;
+			}
+			i++;
+		}
+			
+		/*ArrayList<InfoCollision> ic2= new ArrayList<InfoCollision>();
+		for(int i= 0; i< ic.size(); i++)
+			ic2.add(ic.get(i));		
+		for(int i= 0; i< ic2.size(); i++){
+			int j= ic.size();
+			while(j> i){
+				String agenteI= ic2.get(i).getAgenteQueVe();
+				String agenteJ= ic.get(j).getAgenteQueVe();
+				if(agenteI.equals(agenteJ))
+					ic.remove(j);
+				j--;
+			}
+		}*/	
+	}
+
+	
+	
 	/*private void detectaColisiones(){
 		System.out.println("Dentro del método onTick");
 		Enumeration agentes= this.pickRoot.getAllChildren();

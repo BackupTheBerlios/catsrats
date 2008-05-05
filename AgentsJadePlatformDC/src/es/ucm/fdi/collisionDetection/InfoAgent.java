@@ -3,7 +3,6 @@ package es.ucm.fdi.collisionDetection;
 import java.io.Serializable;
 
 public class InfoAgent implements Serializable {
-	//public enum Orientacion {N, NE, E, SE, S, SO, O, NO};
 	
 	private String nombreAgente;
 	private double x;
