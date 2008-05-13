@@ -21,6 +21,7 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.picking.PickResult;
 import com.sun.j3d.utils.picking.PickTool;
 
@@ -43,9 +44,10 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 	//the appearance object that we are controlling
 	private Appearance objectAppearance = null;
 	//cached Material objects that define the collided and missed colors
-	private Material collideMaterial = null;
-	
-	private Material missMaterial = null;
+	private Material collideMaterialNegro = null;	
+	private Material missMaterialAzul = null;
+	private Material missMaterialBlanco = null;
+	private Material collideMaterialRojo = null; //NUEVO!!
 	//PARA LAS 5 CAJITAS QUE ESTARÁN DENTRO DEL CONO Y QUE DETECTARÁN LAS COLISIONES:
 	private PickBounds pickBounds1 = null;
 	private PickBounds pickBounds2 = null;
@@ -86,8 +88,8 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 		
 		WakeupCriterion criterionArray[] = new WakeupCriterion[1];
 		criterionArray[0] = new WakeupOnCollisionMovement(collisionObject);
-		//criterionArray[1] = new WakeupOnCollisionEntry(collisionObject);
-		//criterionArray[2] = new WakeupOnCollisionExit(collisionObject);
+		//criterionArray[0] = new WakeupOnCollisionEntry(collisionObject);
+		//criterionArray[1] = new WakeupOnCollisionExit(collisionObject);
 		
 		
 		
@@ -109,13 +111,19 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 			
 		
 		Color3f objColor = new Color3f(0.0f, 0.0f, 0.0f);//new Color3f(1.0f, 0.1f, 0.2f);
-		Color3f black = new Color3f(0.0f, 0.0f, 0.0f);
-		collideMaterial = new Material(objColor, black, objColor, black, 80.0f);
+		Color3f black = new Color3f(0.0f, 0.0f, 0.0f);//color negro para los conos
+		collideMaterialNegro = new Material(objColor, black, objColor, black, 80.0f);
 		
-		objColor = new Color3f(0.0f, 0.1f, 0.8f);
-		missMaterial = new Material(objColor, black, objColor, black, 80.0f);
+		objColor = new Color3f(0.0f, 0.1f, 0.8f);//color azul para los conos
+		missMaterialAzul = new Material(objColor, black, objColor, black, 80.0f);
 		
-		objectAppearance.setMaterial(missMaterial);
+		objColor = new Color3f(1f, 0f, 0f);//color rojo para las esferas
+		collideMaterialRojo = new Material(objColor, black, objColor, black, 80.0f);
+		
+		objColor = new Color3f(1f, 1f, 1f);//color blanco para las esferas
+		missMaterialBlanco = new Material(objColor, black, objColor, black, 80.0f);
+		
+		objectAppearance.setMaterial(missMaterialAzul);
 		
 		wakeupOn(m_WakeupCondition);//TODO Cambio dicho por Gonzalo	
 	}
@@ -125,6 +133,7 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 	 * TANTAS VECES COMO COLISIONES SE HAYAN PRODUCIDO EN EL ESCENARIO.
 	 */
 	public void processStimulus(Enumeration criteria) {
+		boolean exito= false;
 		//System.out.println("Posición del cono: "+ this.positionObject.x +", "+ (this.positionObject.y + 5) +", "+ this.positionObject.z);
 		while (criteria.hasMoreElements()) {
 			WakeupCriterion wakeUp = (WakeupCriterion) criteria.nextElement();
@@ -174,19 +183,19 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 				
 				//TODO No consigo que me guarde lo que tenía el arrayList infoColisiones la proxima vez que entra aquí
 				InfoCollision infoAgente= isCollision(resultArray);
-				if(infoAgente != null) j3d.getInfoColisiones().add(infoAgente);
+				if(infoAgente != null){ j3d.getInfoColisiones().add(infoAgente); exito= true;}
 				else{
 					infoAgente= isCollision(resultArray2);
-					if(infoAgente != null) j3d.getInfoColisiones().add(infoAgente);
+					if(infoAgente != null){ j3d.getInfoColisiones().add(infoAgente); exito= true;}
 					else{
 						infoAgente= isCollision(resultArray3);
-						if(infoAgente != null) j3d.getInfoColisiones().add(infoAgente);
+						if(infoAgente != null){ j3d.getInfoColisiones().add(infoAgente); exito= true;}
 						else{
 							infoAgente= isCollision(resultArray4);
-							if(infoAgente != null) j3d.getInfoColisiones().add(infoAgente);
+							if(infoAgente != null){ j3d.getInfoColisiones().add(infoAgente); exito= true;}
 							else{
 								infoAgente= isCollision(resultArray5);
-								if(infoAgente != null) j3d.getInfoColisiones().add(infoAgente);
+								if(infoAgente != null){ j3d.getInfoColisiones().add(infoAgente); exito= true;}
 								else {
 									onMiss();//No ha habido colisión.
 									System.out.println("NO HA HABIDO COLISIÓN");
@@ -194,8 +203,10 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 							}
 						}						
 					}
-				//}
-				
+				}
+				inicializaColoresEsferas();
+				if(exito) 
+					cambiaColorObjetoColisionado(infoAgente.getAgenteQueEsVisto());
 				/*if ((isCollision(resultArray)!= null)||(isCollision(resultArray2)!= null)||(isCollision(resultArray3)!= null)){//YA NO MIRAMOS SI ES TRUE, VEMOS QUE SEA !=NULL
 					if((isCollision(resultArray)!= null)){
 						Object objColision=  isCollision(resultArray);						
@@ -210,7 +221,6 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 				}
 				else{onMiss();}*/				
 				
-			}
 		}//fin del while
 		
 		// assign the next WakeUpCondition, so we are notified again
@@ -248,7 +258,7 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 						//return userData;//MODIFICAMOS LA FUNCIÓN PARA EN VEZ DE DEVOLVER TRUE DEVUELVA EL OBJETO CON EL QUE HA COLISIONADO.
 						
 						//TODO Las siguientes diez lineas (hasta el return) corresponden a lo que se hacía dentro de la función "onCollide":
-						objectAppearance.setMaterial(collideMaterial);//SE CAMBIA EL COLOR CUANDO HAY COLISION
+						objectAppearance.setMaterial(collideMaterialNegro);//SE CAMBIA EL COLOR CUANDO HAY COLISION
 						String[] nombreObjetoColisionado= userData.toString().split(" ");
 						//Por como he puesto el nombre de cada agente, las posiciones 2, 4 y 6 corresponden a las coordenadas.
 						double cX2= Double.parseDouble(nombreObjetoColisionado[2]);
@@ -269,7 +279,8 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 						double distancia= calculaDistancia(v1, v2);
 						
 						OrientacionAgenteVisto orientacion= calculaOrientacion(this.orientacion, orientacionObjetoVisto);
-						InfoCollision infoAgente= new InfoCollision(this.nombreAgenteClase, nombreAgenteConElQueColisiona, tipoAgente, orientacion, cp, distancia);						
+						InfoCollision infoAgente= new InfoCollision(this.nombreAgenteClase, nombreAgenteConElQueColisiona, tipoAgente, orientacion, cp, distancia);
+						
 						return infoAgente;
 					}
 					//else System.out.println("NO HA HABIDO COLISIÓN");       
@@ -280,6 +291,115 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 		return null;
 	}
 	
+	/**
+	 * Método que se encarga de colorear las esferas con las que se colisiona.
+	 * @param nombreAgenteQueEsVisto
+	 */
+	private void cambiaColorObjetoColisionado(String nombreAgenteQueEsVisto) {
+		//String[] nombreObjetoConElQueColisiona= userData.toString().split(" ");
+		//String nombreAgenteConElQueColisiona= nombreObjetoConElQueColisiona[0];
+
+		Enumeration hijosArbol= pickRoot.getAllChildren();
+		while(hijosArbol.hasMoreElements()){
+			Object hijo= hijosArbol.nextElement();
+			if(hijo.getClass().equals(BranchGroup.class)){
+				Enumeration hijosBG= ((BranchGroup)hijo).getAllChildren();
+				while(hijosBG.hasMoreElements()){
+					Object hijoTG= hijosBG.nextElement();
+					if(hijoTG.getClass().equals(TransformGroup.class)){
+						if(((TransformGroup)hijoTG).getName().contains(nombreAgenteQueEsVisto)){							
+							Enumeration hijosTG= ((TransformGroup)hijoTG).getAllChildren();
+							while(hijosTG.hasMoreElements()){
+								Object hijoTG2= hijosTG.nextElement();									
+								if(((TransformGroup)hijoTG2).getName().contains("esfera")){
+									//Es una esfera:
+									TransformGroup esfera= (TransformGroup)hijoTG2;
+									Enumeration hijosEsferaTG= esfera.getAllChildren();
+									while(hijosEsferaTG.hasMoreElements()){
+										Object hijoEsferaTG= hijosEsferaTG.nextElement();
+										if(hijoEsferaTG.getClass().equals(Sphere.class)){
+											Sphere esferitaDeMisAmores= (Sphere) hijoEsferaTG;
+											//Appearance app= new Appearance();
+											//app.setMaterial(collideMaterial);
+											//esferitaDeMisAmores.setAppearance(app);
+											esferitaDeMisAmores.getAppearance().setMaterial(collideMaterialRojo);
+										}
+									}
+									
+								}
+							}
+						}
+						/*else{//Pintamos de blanco resto de esferas:
+							Enumeration hijosTGb= ((TransformGroup)hijoTG).getAllChildren();
+							while(hijosTGb.hasMoreElements()){
+								Object hijoTG2= hijosTGb.nextElement();									
+								if(((TransformGroup)hijoTG2).getName().contains("esfera")){
+									//Es una esfera:
+									TransformGroup esferab= (TransformGroup)hijoTG2;
+									Enumeration hijosEsferaTGb= esferab.getAllChildren();
+									while(hijosEsferaTGb.hasMoreElements()){
+										Object hijoEsferaTGb= hijosEsferaTGb.nextElement();
+										if(hijoEsferaTGb.getClass().equals(Sphere.class)){
+											Sphere esferitaDeMisAmoresb= (Sphere) hijoEsferaTGb;
+											//Appearance app= new Appearance();
+											//app.setMaterial(collideMaterial);
+											//esferitaDeMisAmores.setAppearance(app);
+											esferitaDeMisAmoresb.getAppearance().setMaterial(missMaterialBlanco);
+										}
+									}
+									
+								}
+							}
+						}*/
+					}
+				}
+			}
+		}		
+
+	}
+	
+	
+	/**
+	 * Método que se encarga de inicializar el color de las esferas.
+	 */
+	private void inicializaColoresEsferas() {
+		Enumeration hijosArbol= pickRoot.getAllChildren();
+		while(hijosArbol.hasMoreElements()){
+			Object hijo= hijosArbol.nextElement();
+			if(hijo.getClass().equals(BranchGroup.class)){
+				Enumeration hijosBG= ((BranchGroup)hijo).getAllChildren();
+				while(hijosBG.hasMoreElements()){
+					Object hijoTG= hijosBG.nextElement();
+					if(hijoTG.getClass().equals(TransformGroup.class)){
+						//if(nombreAgenteQueEsVisto!= null){
+							//if(!((TransformGroup)hijoTG).getName().contains(nombreAgenteQueEsVisto)){
+								//Pintamos de blanco resto de esferas:
+								Enumeration hijosTGb= ((TransformGroup)hijoTG).getAllChildren();
+								while(hijosTGb.hasMoreElements()){
+									Object hijoTG2= hijosTGb.nextElement();									
+									if(((TransformGroup)hijoTG2).getName().contains("esfera") &&
+										!((TransformGroup)hijoTG2).getName().contains(nombreAgenteClase)){
+										//Es una esfera:
+										TransformGroup esferab= (TransformGroup)hijoTG2;
+										Enumeration hijosEsferaTGb= esferab.getAllChildren();
+										while(hijosEsferaTGb.hasMoreElements()){
+											Object hijoEsferaTGb= hijosEsferaTGb.nextElement();
+											if(hijoEsferaTGb.getClass().equals(Sphere.class)){
+												Sphere esferitaDeMisAmoresb= (Sphere) hijoEsferaTGb;
+												esferitaDeMisAmoresb.getAppearance().setMaterial(missMaterialBlanco);
+											}
+										}
+									}
+								}
+							//}
+						//}
+					}
+				}
+			}
+		}		
+
+	}
+
 	private OrientacionAgenteVisto calculaOrientacion(Orientation orientacion, String ov) {
 		OrientacionAgenteVisto res= null;
 		switch(orientacion){
@@ -386,7 +506,7 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 	}*/
 	
 	protected void onMiss() {
-		objectAppearance.setMaterial(missMaterial);
+		objectAppearance.setMaterial(missMaterialAzul);
 	}
 	
 	/*

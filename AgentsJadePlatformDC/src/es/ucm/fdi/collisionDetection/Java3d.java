@@ -195,6 +195,8 @@ public class Java3d extends Java3dApplet{
 		sphereTg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		sphereTg.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 		
+		app.setCapability(Appearance.ALLOW_MATERIAL_WRITE);//NUEVO!! Coloreamos las esferas cuando se colisiona con ellas
+		
 		sphereTg.addChild(new Sphere(5,app));//TODO Radio de la esfera es 5
 		tgAgente.addChild(sphereTg);		
 		recursiveSetUserData(sphereTg, sphereTg.getName());
@@ -302,12 +304,11 @@ public class Java3d extends Java3dApplet{
 						comportamiento.setPositionObject(new Vector3d(x,y,z));
 						comportamiento.setOrientacion(orientacion);
 						// create the WakeupCriterion for the behavior
-						//WakeupCriterion criterionArray[] = new WakeupCriterion[3];
+						//WakeupCriterion criterionArray[] = new WakeupCriterion[1];
 						//criterionArray[0] = new WakeupOnElapsedFrames(J3dCollisionDetectionBehaviour.ELAPSED_FRAME_COUNT);
 						//criterionArray[0] = new WakeupOnCollisionMovement(circulitoTg);
-						//criterionArray[1] = new WakeupOnCollisionEntry(circulitoTg);
-						//criterionArray[2] = new WakeupOnCollisionExit(circulitoTg);
-						
+						//criterionArray[0] = new WakeupOnCollisionEntry(circulitoTg);
+						//criterionArray[1] = new WakeupOnCollisionExit(circulitoTg);
 						//comportamiento.getObjectAppearance().setCapability(Appearance.ALLOW_MATERIAL_WRITE);
 						
 						//circulitoTg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
