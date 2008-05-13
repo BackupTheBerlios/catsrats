@@ -5,6 +5,7 @@ import jade.core.behaviours.OneShotBehaviour;
 
 public class PathsBehaviour extends OneShotBehaviour{
 	
+	public static final int NUMERO_TRAYECTORIAS = 5;
 	public static final int OCTOGONAL = 0;
 	public static final int DIAMANTE = 1;
 	public static final int CUADRADA = 2;

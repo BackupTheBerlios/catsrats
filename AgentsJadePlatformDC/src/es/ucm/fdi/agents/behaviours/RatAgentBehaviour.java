@@ -18,7 +18,6 @@ import jade.lang.acl.UnreadableException;
 public class RatAgentBehaviour extends TickerBehaviour{
 		
 	public static final double DISTANCIA = 5.0;
-	public static final int NUMERO_TRAYECTORIAS = 5;
 	
 	private Point punto;
 	private String nombre;
@@ -37,7 +36,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 		this.paginasAmarillas= new YellowPages();
 		this.activado= false;
 		this.camino = null;
-		this.tipoTrayectoria = (int)((Math.random()*10)%NUMERO_TRAYECTORIAS); //Generamos una trayectoria aleatoria
+		this.tipoTrayectoria = (int)((Math.random()*10)%PathsBehaviour.NUMERO_TRAYECTORIAS); //Generamos una trayectoria aleatoria
 		this.comportamientoTrayectorias = null;
 	}
 
