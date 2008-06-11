@@ -9,6 +9,8 @@ import es.ucm.fdi.collisionDetection.Orientation;
  */
 public class DiamondPath implements Trayectorias {
 
+	private final double AVANCE = 10.0; //0.1
+	
 	public void movimento(Path camino) {
 		
 		double distanciaRecorrida = camino.getDistanciaRecorrida();
@@ -17,30 +19,30 @@ public class DiamondPath implements Trayectorias {
 		Point punto = camino.getPunto();
 		
 		if(distanciaRecorrida<distancia && orientacion == Orientation.NE){
-			punto.setX(punto.getX() + 0.1);
-			punto.setY(punto.getY() + 0.1);
-			camino.setDistanciaRecorrida(distanciaRecorrida + 0.1);
+			punto.setX(punto.getX() + AVANCE);
+			punto.setY(punto.getY() + AVANCE);
+			camino.setDistanciaRecorrida(distanciaRecorrida + AVANCE);
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.NE){
 			camino.setDistanciaRecorrida(0.0);
 			camino.setOrientacion(Orientation.SE);
 		}else if(distanciaRecorrida<distancia && orientacion == Orientation.SE){
-			punto.setX(punto.getX() + 0.1);
-			punto.setY(punto.getY() - 0.1);
-			camino.setDistanciaRecorrida(distanciaRecorrida +0.1);
+			punto.setX(punto.getX() + AVANCE);
+			punto.setY(punto.getY() - AVANCE);
+			camino.setDistanciaRecorrida(distanciaRecorrida +AVANCE);
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.SE){
 			camino.setDistanciaRecorrida(0.0);
 			camino.setOrientacion(Orientation.SO);
 		}else if(distanciaRecorrida<distancia && orientacion == Orientation.SO){
-			punto.setX(punto.getX() - 0.1);
-			punto.setY(punto.getY() - 0.1);
-			camino.setDistanciaRecorrida(distanciaRecorrida +0.1);
+			punto.setX(punto.getX() - AVANCE);
+			punto.setY(punto.getY() - AVANCE);
+			camino.setDistanciaRecorrida(distanciaRecorrida +AVANCE);
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.SO){
 			camino.setDistanciaRecorrida(0.0);
 			camino.setOrientacion(Orientation.NO);
 		}else if(distanciaRecorrida<distancia && orientacion == Orientation.NO){
-			punto.setX(punto.getX() - 0.1);
-			punto.setY(punto.getY() + 0.1);
-			camino.setDistanciaRecorrida(distanciaRecorrida +0.1);
+			punto.setX(punto.getX() - AVANCE);
+			punto.setY(punto.getY() + AVANCE);
+			camino.setDistanciaRecorrida(distanciaRecorrida +AVANCE);
 		}else if(distanciaRecorrida>=distancia && orientacion == Orientation.NO){
 			camino.setDistanciaRecorrida(0.0);
 			camino.setOrientacion(Orientation.NE);

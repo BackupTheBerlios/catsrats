@@ -35,6 +35,7 @@ public class FormatAndSendBehaviour extends OneShotBehaviour{
 			double cx= Double.parseDouble(msjACL[1]);
 			double cy= Double.parseDouble(msjACL[2]);
 			double cz= Double.parseDouble(msjACL[3]);
+			String orientacion = msjACL[4];
 			
 			DecimalFormat coordenada = (DecimalFormat)NumberFormat.getNumberInstance(Locale.ENGLISH);
 			cab.setCoordenada(coordenada); 
@@ -58,7 +59,7 @@ public class FormatAndSendBehaviour extends OneShotBehaviour{
 			}
 
 			// Se preparan los datos para enviar.
-			DatoSocket x = new DatoSocket(":"+numGatos+":"+numRatones+":"+objetoAMover+"("+xFormateada+",");
+			DatoSocket x = new DatoSocket(":"+numGatos+":"+numRatones+":"+objetoAMover+":"+orientacion+"("+xFormateada+",");
 			DatoSocket y = new DatoSocket(yFormateada+",");
 			DatoSocket z = new DatoSocket(zFormateada+")*"); //Con el * indicamos a C el final de la cadena
 

@@ -17,7 +17,7 @@ import jade.lang.acl.UnreadableException;
 
 public class RatAgentBehaviour extends TickerBehaviour{
 		
-	public static final double DISTANCIA = 5.0;
+	public static final double DISTANCIA = 2000.0;
 	
 	private Point punto;
 	private String nombre;
@@ -31,7 +31,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 	
 	public RatAgentBehaviour(Agent agente, long tiempo) {
 		super(agente, tiempo);
-		this.punto= new Point(Math.random()*10, Math.random()*10, 0.0);
+		this.punto= new Point(Math.random()*2000, Math.random()*2000, 0.0);
 		this.nombre= myAgent.getLocalName();
 		this.paginasAmarillas= new YellowPages();
 		this.activado= false;
@@ -82,7 +82,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 
 		myAgent.addBehaviour(comportamientoTrayectorias);
 		
-		String mensaje= nombre+","+camino.getPunto().getX()+","+camino.getPunto().getY()+","+camino.getPunto().getZ();
+		String mensaje= nombre+","+camino.getPunto().getX()+","+camino.getPunto().getY()+","+camino.getPunto().getZ()+","+camino.getOrientacion();
 		
 		return mensaje;	
 	}
@@ -129,7 +129,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 	}
 	
 	private void mensajeInfoAgente(String destinatario) {
-		generaCoordenadas();//TODO quitar esta linea cuando probemos con la parte C
+		//generaCoordenadas();//TODO quitar esta linea cuando probemos con la parte C
 		InfoAgent info = new InfoAgent(nombre,camino.getPunto().getX(),camino.getPunto().getY(),camino.getPunto().getZ(),camino.getOrientacion());
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);

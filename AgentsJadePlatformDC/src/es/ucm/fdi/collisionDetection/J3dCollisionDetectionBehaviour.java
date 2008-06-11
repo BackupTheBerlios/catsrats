@@ -12,10 +12,7 @@ import javax.media.j3d.PickBounds;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.WakeupCondition;
 import javax.media.j3d.WakeupCriterion;
-import javax.media.j3d.WakeupOnCollisionEntry;
-import javax.media.j3d.WakeupOnCollisionExit;
 import javax.media.j3d.WakeupOnCollisionMovement;
-import javax.media.j3d.WakeupOnElapsedFrames;
 import javax.media.j3d.WakeupOr;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
@@ -167,7 +164,6 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 				//Quinta caja
 				pickBounds5 = new PickBounds(new BoundingBox(new Point3d(positionObject.x-0.5, positionObject.y+3, positionObject.z-0.5),
 						new Point3d(positionObject.x+0.5, positionObject.y+4, positionObject.z+0.5)));				
-				
 				
 				pickTool.setShape(pickBounds1, new Point3d(positionObject.x, positionObject.y, positionObject.z));
 				pickTool2.setShape(pickBounds2, new Point3d(positionObject.x, positionObject.y, positionObject.z));

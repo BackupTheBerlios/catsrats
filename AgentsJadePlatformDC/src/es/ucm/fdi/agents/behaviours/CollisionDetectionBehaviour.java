@@ -3,17 +3,13 @@ package es.ucm.fdi.agents.behaviours;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.sun.j3d.utils.applet.MainFrame;
-
 import es.ucm.fdi.agents.CollisionDetectionAgent;
 import es.ucm.fdi.agents.yellowPages.YellowPages;
 import es.ucm.fdi.collisionDetection.InfoAgent;
 import es.ucm.fdi.collisionDetection.InfoCollision;
-import es.ucm.fdi.collisionDetection.Java3d;
 
 import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
@@ -44,7 +40,7 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 		paginasAmarillas= new YellowPages();
 		generaCoordenadasPrimeraVez= true;
 		rellenaArbol= true;
-		activado= true;
+		activado= false;
 	}
 	
 	public void onTick() {	
