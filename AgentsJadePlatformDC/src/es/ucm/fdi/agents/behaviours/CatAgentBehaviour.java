@@ -31,12 +31,12 @@ public class CatAgentBehaviour extends TickerBehaviour{
 
 	public CatAgentBehaviour(Agent agente, long tiempo) {
 		super(agente, tiempo);
-		this.punto= new Point(Math.random()*2000, Math.random()*2000, 0.0);
+		this.punto= new Point(0,0,0);//new Point(Math.random()*2000, Math.random()*2000, 0.0);
 		this.nombre= myAgent.getLocalName();
 		this.paginasAmarillas= new YellowPages();
 		this.activado= false;
 		this.camino = null;
-		this.tipoTrayectoria = (int)((Math.random()*10)%PathsBehaviour.NUMERO_TRAYECTORIAS); //Generamos una trayectoria aleatoria
+		this.tipoTrayectoria = PathsBehaviour.CUADRADA;//(int)((Math.random()*10)%PathsBehaviour.NUMERO_TRAYECTORIAS); //Generamos una trayectoria aleatoria
 		this.comportamientoTrayectorias = null;
 		
 	}
