@@ -1,5 +1,0 @@
-Esta nueva version tiene un servicio de paginas amarillas donde se registran los agentes.
-De este modo no es necesario saber el nombre ni el numero de agentes que hay existentes,
-ya que dependiendo del tipo de agente se buscan y se realizan las acciones pertinentes.
-Los nombres de los agentes se generan en funcion del nombre que hayamos puesto en la 
-ejecucion, de esta forma sabemos cuantos agentes hay de cada tipo.
