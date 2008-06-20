@@ -8,6 +8,7 @@ public class InfoCollision implements Serializable {
 	
 	private String agenteQueVe;
 	private String agenteQueEsVisto;
+	private String parteConoColisionada;//Toma los valores: "izquierda", "centro" y "derecha"
 	
 	private String tipoAgente;
 	private OrientacionAgenteVisto orientacion;
@@ -16,9 +17,10 @@ public class InfoCollision implements Serializable {
 	
 	
 	//Constructora con parámetros:
-	public InfoCollision(String agenteQueVe, String agenteQueEsVisto, String tipoAgente, OrientacionAgenteVisto orientacion, double claridadPercepcion, double distancia) {		
+	public InfoCollision(String agenteQueVe, String agenteQueEsVisto, String parteConoColisionada, String tipoAgente, OrientacionAgenteVisto orientacion, double claridadPercepcion, double distancia) {		
 		this.agenteQueVe = agenteQueVe;
 		this.agenteQueEsVisto = agenteQueEsVisto;
+		this.parteConoColisionada= parteConoColisionada;
 		this.tipoAgente= tipoAgente;
 		this.orientacion= orientacion;
 		this.claridadPercepcion = claridadPercepcion;
@@ -69,7 +71,13 @@ public class InfoCollision implements Serializable {
 		this.orientacion = orientacion;
 	}
 	
-	
+	public String getParteConoColisionada() {
+		return parteConoColisionada;
+	}
+
+	public void setParteConoColisionada(String parteConoColisionada) {
+		this.parteConoColisionada = parteConoColisionada;
+	}
 	
 	
 	
