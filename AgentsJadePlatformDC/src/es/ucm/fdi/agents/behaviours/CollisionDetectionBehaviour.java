@@ -40,7 +40,7 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 		paginasAmarillas= new YellowPages();
 		generaCoordenadasPrimeraVez= true;
 		rellenaArbol= true;
-		activado= false;
+		activado= true;
 	}
 	
 	public void onTick() {	
