@@ -134,16 +134,16 @@ public class MathCollision {
 		Vertice v3= new Vertice(3, (float)res[2].x, (float)res[2].y);
 		
 		//Construyo las 3 rectas que unen los 3 vertices:
-		Recta r1= new Recta(v1, v2);
-		Recta r2= new Recta(v2, v3);
-		Recta r3= new Recta(v3, v1);
+		Recta r1= new Recta(v1, v2, or);
+		Recta r2= new Recta(v2, v3, or);
+		Recta r3= new Recta(v3, v1, or);
 		
 		//Guardo el centro del cono y el del circulo en objetos Vertice:
 		Vertice cco= new Vertice(4, (float)centroCono.x, (float)centroCono.y);
 		Vertice cci= new Vertice(5, (float)centroCirculo.x, (float)centroCirculo.y);
 		
 		//Construyo la recta que une los dos centros:
-		Recta rectaUneCentros = new Recta(cco, cci);
+		Recta rectaUneCentros = new Recta(cco, cci, or);
 		
 		//Ahora miro si esta recta intersecta con alguna de las aristas del triangulo (r1, r2, r3):
 		Float interseccionR1= rectaUneCentros.interseccionRectas(r1);

@@ -6,6 +6,8 @@ import java.awt.geom.*;
 import java.awt.geom.Line2D.*;
 import java.awt.geom.Point2D.*;
 
+import es.ucm.fdi.collisionDetection.Orientation;
+
 
 /**
  *
@@ -28,10 +30,10 @@ public class Recta{
 	 * Constructor de la clase Recta()
 	 *
 	 */
-	public Recta(){
+	public Recta(Orientation or){
 		origen = new Vertice();
 		destino = new Vertice();
-		ecuacionGeneral();
+		ecuacionGeneral(or);
 	}
 	
 	
@@ -41,10 +43,10 @@ public class Recta{
 	 * Recta a copiar
 	 *
 	 */
-	public Recta(Recta r){
+	public Recta(Recta r, Orientation or){
 		origen = new Vertice(r.getP1().getID(), r.getP1().getPX(), r.getP1().getPY());
 		destino = new Vertice(r.getP2().getID(), r.getP2().getPX(), r.getP2().getPY());
-		ecuacionGeneral();
+		ecuacionGeneral(or);
 	}
 	
 	
@@ -56,10 +58,10 @@ public class Recta{
 	 * Vertice destino de la Recta
 	 *
 	 */
-	public Recta(Vertice porigen, Vertice pdestino){
+	public Recta(Vertice porigen, Vertice pdestino, Orientation or){
 		origen = new Vertice(porigen);
 		destino = new Vertice(pdestino);
-		ecuacionGeneral();
+		ecuacionGeneral(or);
 	}
 	
 	
@@ -67,8 +69,13 @@ public class Recta{
 	 * ecuacionGeneral(). Calcula los valores para m y n de la Recta
 	 *
 	 */
-	public void ecuacionGeneral(){
-		x = (float)((destino.getPY() - origen.getPY()) / (destino.getPX() - origen.getPX()));
+	public void ecuacionGeneral(Orientation or){
+		if(or == Orientation.E)
+			x = (float)((destino.getPY() - origen.getPY()) / (destino.getPX()!=origen.getPX()?(destino.getPX() - origen.getPX()):-0.000001f));
+		else if(or == Orientation.O)
+			x = (float)((destino.getPY() - origen.getPY()) / (destino.getPX()!=origen.getPX()?(destino.getPX() - origen.getPX()):+0.000001f));
+		else 
+			x = (float)((destino.getPY() - origen.getPY()) / (destino.getPX()!=origen.getPX()?(destino.getPX() - origen.getPX()):-0.000001f));
 		y = -1;
 		c = (float)(origen.getPY() - origen.getPX()*x);
 	}
@@ -81,14 +88,14 @@ public class Recta{
 	 * recta perpendicular a la dada que pasa por el punto especificado
 	 *
 	 */
-	public Recta perpendicular(Point2D.Float p){
+	/*public Recta perpendicular(Point2D.Float p){
 		Recta r = new Recta();
 		r.x = -1/this.x;
 		r.y = -1;
 		r.c = (float)p.getY() - r.x*(float)p.getX();
 		//System.out.println(r.x+"X +"+r.y+"Y +"+r.c);
 		return r;
-	}
+	}*/
 	
 	
 	/**
@@ -102,7 +109,7 @@ public class Recta{
 	public Point2D.Float interseccionRectas(Recta r){
 		float puntox,puntoy;
 		
-		puntox = (this.c - r.c) / (r.x - this.x);
+		puntox = (this.c - r.c) / ((r.x!=this.x)?(r.x - this.x):0.001f);
 		puntoy = (this.x * puntox) + this.c;
 		//System.out.println("Las rectas intersectan en ("+puntox+","+puntoy+")");
 		

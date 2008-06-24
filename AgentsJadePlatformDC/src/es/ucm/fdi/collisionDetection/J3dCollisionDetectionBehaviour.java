@@ -143,7 +143,7 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 	//Ahora devuelve el objeto con el que ha colisionado o null si no ha colisionado con nadie.
 	public InfoCollision isCollision(PickResult[] resultArray) {
 
-		InfoCollision ic= null;
+		//InfoCollision ic= null;
 
 		if (resultArray != null && resultArray.length != 0){
 
@@ -161,40 +161,50 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 					if((((String)userData).contains("esfera"))&&
 							(!this.nombreAgenteClase.equals(nombreAgenteConElQueColisiona))) { //Ignora la colisión con él mismo.		
 
-						String[] nombreObjetoColisionado= userData.toString().split(" ");
+						//String[] nombreObjetoColisionado= userData.toString().split(" ");
 						//Por como he puesto el nombre de cada agente, las posiciones 2, 4 y 6 corresponden a las coordenadas.
-						double cX2= Double.parseDouble(nombreObjetoColisionado[2]);
-						double cY2= Double.parseDouble(nombreObjetoColisionado[4]);
-						double cZ2= Double.parseDouble(nombreObjetoColisionado[6]);		
-						String orientacionObjetoVisto=  nombreObjetoColisionado[8];
+						double cX2= Double.parseDouble(nombreObjetoConElQueColisiona[2]);
+						double cY2= Double.parseDouble(nombreObjetoConElQueColisiona[4]);
+						double cZ2= Double.parseDouble(nombreObjetoConElQueColisiona[6]);		
+						String orientacionObjetoVisto=  nombreObjetoConElQueColisiona[8];
 						Vector3d cono= new Vector3d(this.positionObject.x,this.positionObject.y,this.positionObject.z);
 						Vector3d esfera= new Vector3d(cX2,cY2,cZ2);	
 
 						MathCollision mc= new MathCollision();
 						String res= mc.detectaColision(orientacion, cono, esfera);
-						if(res != null){						
-							objectAppearance.setMaterial(collideMaterialNegro);//SE CAMBIA EL COLOR CUANDO HAY COLISION
-							double cp= claridadDePercepcion(cono, esfera, 1, 5);
-							//System.out.println("Claridad de percepción: "+cp);
-							String tipoAgente= "";
-							if(nombreAgenteConElQueColisiona.contains("gato"))
-								tipoAgente= "gato";
-							else if(nombreAgenteConElQueColisiona.contains("raton"))
-								tipoAgente= "raton";
+						System.out.println("........................................");
+						System.out.println(userData.toString());
+						System.out.println(orientacion);
+						System.out.println(cono.x+", "+cono.y+", "+cono.z);
+						System.out.println(esfera.x+", "+esfera.y+", "+esfera.z);
+						System.out.println("........................................");
+						if(res != null){
+							if(res.equals("centro")||res.equals("izquierda")||res.equals("derecha")){
+								objectAppearance.setMaterial(collideMaterialNegro);//SE CAMBIA EL COLOR CUANDO HAY COLISION
+								double cp= claridadDePercepcion(cono, esfera, 1, 5);
+								//System.out.println("Claridad de percepción: "+cp);
+								String tipoAgente= "";
+								if(nombreAgenteConElQueColisiona.contains("gato"))
+									tipoAgente= "gato";
+								else if(nombreAgenteConElQueColisiona.contains("raton"))
+									tipoAgente= "raton";
 
-							double distancia= calculaDistancia(cono, esfera);
+								double distancia= calculaDistancia(cono, esfera);
 
-							OrientacionAgenteVisto orientacion= calculaOrientacion(this.orientacion, orientacionObjetoVisto);
-							InfoCollision infoAgente= new InfoCollision(this.nombreAgenteClase, nombreAgenteConElQueColisiona, "centro", tipoAgente, orientacion, cp, distancia);
+								OrientacionAgenteVisto orientacion= calculaOrientacion(this.orientacion, orientacionObjetoVisto);
+								InfoCollision infoAgente= new InfoCollision(this.nombreAgenteClase, nombreAgenteConElQueColisiona, res, tipoAgente, orientacion, cp, distancia);
 
-							ic= infoAgente;
+								//ic= infoAgente;
+								return infoAgente;
+							}
 						}
 					}				       
 				}			
 			}
 		}
 
-		return ic;
+		//return ic;
+		return null;
 	}
 
 	private OrientacionAgenteVisto calculaOrientacion(Orientation orientacion, String ov) {

@@ -15,26 +15,27 @@ public class DecisionMaker {
 	/*
 	 * Toma de decisiones del gato.
 	 */
-	public String tomaDeDecisionesGato(String tipoAgente, OrientacionAgenteVisto orientacion, double claridad_percepcion, double distancia, double w1, double w2, double w3, double w4){
+	public static String tomaDeDecisionesGato(String tipoAgente, OrientacionAgenteVisto orientacion, double claridad_percepcion, double distancia, String decisionAnt, double w1, double w2, double w3, double w4, double w5){
 		/*System.out.println("TOMA DE DECISIONES DEL GATO");
 		System.out.println("Tres criterios:");
 		System.out.println("Criterio 1: Tipo de agente (beneficio)");
 		System.out.println("Criterio 2: Orientación (beneficio)");
 		System.out.println("Criterio 3: Claridad de percepción (beneficio)");
 		System.out.println("Criterio 4: Distancia (coste)");*/
-		int numCriterios= 4;
+		int numCriterios= 5;
 		String decision= "";
 		//Normalizamos las entradas entre 0 y 1:
 		double tipoAgenteN= normalizaTipoAgenteG(tipoAgente);
 		double orientacionN= normalizaOrientacion(orientacion); 
 		double claridad_percepcionN= claridad_percepcion;
 		double distanciaN= normalizaDistancia(distancia);
+		double decisionAntN= normalizaDecisionAnt(decisionAnt);
 		
-		int[] modeloA1= {0, 0, 0, 1};//Alternativa 1: no hacer nada
+		int[] modeloA1= {0, 0, 0, 1, 0};//Alternativa 1: no hacer nada
 		//System.out.println("Modelo para la alternativa 1, NO HACER NADA: "+modeloA1[0]+" "+modeloA1[1]+" "+modeloA1[2]+" "+modeloA1[3]);
-		int[] modeloA2= {1, 1, 1, 0};//Alternativa 2: perseguir
+		int[] modeloA2= {1, 1, 1, 0, 1};//Alternativa 2: perseguir
 		//System.out.println("Modelo para la alternativa 2, PERSEGUIR:     "+modeloA2[0]+" "+modeloA2[1]+" "+modeloA2[2]+" "+modeloA2[3]);
-		int[] modeloA3= {0, 0, 1, 0};//Alternativa 2: esquivar (esquivo si no es ratón, me da igual la orientación, le veo bien y está muy cerca)
+		int[] modeloA3= {0, 0, 1, 0, 1/2};//Alternativa 2: esquivar (esquivo si no es ratón, me da igual la orientación, le veo bien y está muy cerca)
 		//System.out.println("Modelo para la alternativa 3, ESQUIVAR:      "+modeloA3[0]+" "+modeloA3[1]+" "+modeloA3[2]+" "+modeloA3[3]);
 		
 		
@@ -47,6 +48,8 @@ public class DecisionMaker {
 		double[] _claridad_percepcion= generaNumAleatorio(claridad_percepcionN);
 		//System.out.print("Números fuzzy triangulares para el criterio 4: ");
 		double[] _distancia= generaNumAleatorio(distanciaN);
+		//System.out.print("Números fuzzy triangulares para el criterio 4: ");
+		double[] _decisionAnt= generaNumAleatorio(decisionAntN);
 		
 		//Rellenamos la tabla:
 		//Alternativa 1:
@@ -54,16 +57,19 @@ public class DecisionMaker {
 		double[] a1_orientacion= new double[3];
 		double[] a1_claridad_percepcion= new double[3];
 		double[] a1_distancia= new double[3];
+		double[] a1_decisionAnt= new double[3];
 		//Alternativa 2:
 		double[] a2_tipoAgente= new double[3];
 		double[] a2_orientacion= new double[3];
 		double[] a2_claridad_percepcion= new double[3];
 		double[] a2_distancia= new double[3];
+		double[] a2_decisionAnt= new double[3];
 		//Alternativa 3:
 		double[] a3_tipoAgente= new double[3];
 		double[] a3_orientacion= new double[3];
 		double[] a3_claridad_percepcion= new double[3];
 		double[] a3_distancia= new double[3];
+		double[] a3_decisionAnt= new double[3];
 		
 		for(int k= 0; k< 4; k++){//Recorremos los criterios:
 			if(k==0){//Son criterios de beneficio: Tipo de agente
@@ -116,7 +122,7 @@ public class DecisionMaker {
 					}			
 					
 			}
-			else{//k==3. Son criterios de coste: Distancia
+			else if(k==3){// Son criterios de coste: Distancia
 				if(modeloA1[k] == 1){//entonces (modeloA2[k] == 0)
 					for(int i= 0; i< 3; i++){ 
 						a1_distancia[i]= 1- _distancia[i];
@@ -131,6 +137,23 @@ public class DecisionMaker {
 						a3_distancia[i]= 1- _distancia[i];
 					}
 				}	
+			}
+			else{//k=4. Criterio de beneficio: Decision anterior
+				if(modeloA1[k] == 1){//entonces (modeloA2[k] == 0)
+					for(int i= 0; i< 3; i++){
+						a1_decisionAnt[i]= _decisionAnt[i];
+						a2_decisionAnt[i]= 1 - _decisionAnt[i];
+						a3_decisionAnt[i]= 0.5 - _decisionAnt[i];
+					}
+				
+				}
+				else{//modeloA1[k] == 0	entonces (modeloA2[k] == 1)
+					for(int i= 0; i< 3; i++){
+						a1_decisionAnt[i]= 1 - _decisionAnt[i];
+						a2_decisionAnt[i]= _decisionAnt[i];
+						a3_decisionAnt[i]= 0.5 - _decisionAnt[i];
+					}
+				}		
 			}
 		}
 		/*System.out.println("Mostramos la tabla rellena (ANTES de aplicar los pesos): ");
@@ -163,6 +186,9 @@ public class DecisionMaker {
 			a1_distancia[i]= w4 * a1_distancia[i];
 			a2_distancia[i]= w4 * a2_distancia[i];
 			a3_distancia[i]= w4 * a3_distancia[i];
+			a1_decisionAnt[i]= w5 * a1_decisionAnt[i];
+			a2_decisionAnt[i]= w5 * a2_decisionAnt[i];
+			a3_decisionAnt[i]= w5 * a3_decisionAnt[i];
 		}
 		
 		/*System.out.println("Mostramos la tabla rellena (DESPUES de aplicar los pesos): ");
@@ -184,17 +210,17 @@ public class DecisionMaker {
 		
 		
 		//Calculamos d1+, d1-, d2+ y d2-:
-		double[] pMasBeneficio= {1, 1, 1, 1};
-		double[] pMenosBeneficio= {0, 0, 0, 0};
-		double[] pMasCoste= {0, 0, 0, 0};
-		double[] pMenosCoste= {1, 1, 1, 1};
+		double[] pMasBeneficio= {1, 1, 1};
+		double[] pMenosBeneficio= {0, 0, 0};
+		double[] pMasCoste= {0, 0, 0};
+		double[] pMenosCoste= {1, 1, 1};
 		
-		double d1Mas= calculaDistancia(a1_tipoAgente, pMasBeneficio) + calculaDistancia(a1_orientacion, pMasBeneficio) + calculaDistancia(a1_claridad_percepcion, pMasBeneficio) + calculaDistancia(a1_distancia, pMasCoste);
-		double d1Menos= calculaDistancia(a1_tipoAgente, pMenosBeneficio) + calculaDistancia(a1_orientacion, pMenosBeneficio) + calculaDistancia(a1_claridad_percepcion, pMenosBeneficio) + calculaDistancia(a1_distancia, pMenosCoste);
-		double d2Mas= calculaDistancia(a2_tipoAgente, pMasBeneficio) + calculaDistancia(a2_orientacion, pMasBeneficio) + calculaDistancia(a2_claridad_percepcion, pMasBeneficio) + calculaDistancia(a2_distancia, pMasCoste);
-		double d2Menos= calculaDistancia(a2_tipoAgente, pMenosBeneficio) + calculaDistancia(a2_orientacion, pMenosBeneficio) + calculaDistancia(a2_claridad_percepcion, pMenosBeneficio) + calculaDistancia(a2_distancia, pMenosCoste);
-		double d3Mas= calculaDistancia(a3_tipoAgente, pMasBeneficio) + calculaDistancia(a3_orientacion, pMasBeneficio) + calculaDistancia(a3_claridad_percepcion, pMasBeneficio) + calculaDistancia(a3_distancia, pMasCoste);
-		double d3Menos= calculaDistancia(a3_tipoAgente, pMenosBeneficio) + calculaDistancia(a3_orientacion, pMenosBeneficio) + calculaDistancia(a3_claridad_percepcion, pMenosBeneficio) + calculaDistancia(a3_distancia, pMenosCoste);
+		double d1Mas= calculaDistancia(a1_tipoAgente, pMasBeneficio) + calculaDistancia(a1_orientacion, pMasBeneficio) + calculaDistancia(a1_claridad_percepcion, pMasBeneficio) + calculaDistancia(a1_distancia, pMasCoste) + calculaDistancia(a1_decisionAnt, pMasBeneficio);
+		double d1Menos= calculaDistancia(a1_tipoAgente, pMenosBeneficio) + calculaDistancia(a1_orientacion, pMenosBeneficio) + calculaDistancia(a1_claridad_percepcion, pMenosBeneficio) + calculaDistancia(a1_distancia, pMenosCoste) + calculaDistancia(a1_decisionAnt, pMenosBeneficio);
+		double d2Mas= calculaDistancia(a2_tipoAgente, pMasBeneficio) + calculaDistancia(a2_orientacion, pMasBeneficio) + calculaDistancia(a2_claridad_percepcion, pMasBeneficio) + calculaDistancia(a2_distancia, pMasCoste) + calculaDistancia(a2_decisionAnt, pMasBeneficio);
+		double d2Menos= calculaDistancia(a2_tipoAgente, pMenosBeneficio) + calculaDistancia(a2_orientacion, pMenosBeneficio) + calculaDistancia(a2_claridad_percepcion, pMenosBeneficio) + calculaDistancia(a2_distancia, pMenosCoste) + calculaDistancia(a2_decisionAnt, pMenosBeneficio);
+		double d3Mas= calculaDistancia(a3_tipoAgente, pMasBeneficio) + calculaDistancia(a3_orientacion, pMasBeneficio) + calculaDistancia(a3_claridad_percepcion, pMasBeneficio) + calculaDistancia(a3_distancia, pMasCoste) + calculaDistancia(a3_decisionAnt, pMasBeneficio);
+		double d3Menos= calculaDistancia(a3_tipoAgente, pMenosBeneficio) + calculaDistancia(a3_orientacion, pMenosBeneficio) + calculaDistancia(a3_claridad_percepcion, pMenosBeneficio) + calculaDistancia(a3_distancia, pMenosCoste) + calculaDistancia(a3_decisionAnt, pMenosBeneficio);
 		
 		
 		//Calculamos p1, p2 y p3:
@@ -221,10 +247,22 @@ public class DecisionMaker {
 	}
 	
 	
+	private static double normalizaDecisionAnt(String decisionAnt) {
+		double resultado= 0.0;
+		if(decisionAnt.equals("no hacer nada"))
+			resultado= 0.0;
+		else if(decisionAnt.equals("esquivar"))
+			resultado= 0.5;
+		else if(decisionAnt.equals("perseguir"))
+			resultado= 1;
+
+		return resultado;
+	}
+
 	/*
 	 * Toma de decisiones del ratón.
 	 */
-	public String tomaDeDecisionesRaton(String tipoAgente, OrientacionAgenteVisto orientacion, double claridad_percepcion, double distancia, double w1, double w2, double w3, double w4){
+	public static String tomaDeDecisionesRaton(String tipoAgente, OrientacionAgenteVisto orientacion, double claridad_percepcion, double distancia, double w1, double w2, double w3, double w4){
 		/*System.out.println("TOMA DE DECISIONES DEL RATON");
 		System.out.println("Tres criterios:");
 		System.out.println("Criterio 1: Tipo de agente (beneficio)");
@@ -429,7 +467,7 @@ public class DecisionMaker {
 		return decision;
 	}
 	
-	private double normalizaTipoAgenteG(String tipoAgente) {
+	private static double normalizaTipoAgenteG(String tipoAgente) {
 		double resultado;
 		if(tipoAgente.equals("raton"))
 			resultado= 1;
@@ -440,7 +478,7 @@ public class DecisionMaker {
 		return resultado;
 	}
 	
-	private double normalizaTipoAgenteR(String tipoAgente) {
+	private static double normalizaTipoAgenteR(String tipoAgente) {
 		double resultado;
 		if(tipoAgente.equals("gato"))
 			resultado= 1;
@@ -451,7 +489,7 @@ public class DecisionMaker {
 		return resultado;
 	}
 
-	private double normalizaOrientacion(OrientacionAgenteVisto orientacion){
+	private static double normalizaOrientacion(OrientacionAgenteVisto orientacion){
 		double resultado;
 		switch(orientacion){
 			case FRENTE: resultado= 0; break;
@@ -467,7 +505,7 @@ public class DecisionMaker {
 		return resultado;
 	}
 	
-	private double normalizaDistancia(double distancia){
+	private static double normalizaDistancia(double distancia){
 		double resultado= 0.0;
 		if(distancia >= 0 || distancia<= 15)
 			resultado= distancia / 15;			
@@ -482,7 +520,7 @@ public class DecisionMaker {
 	 * Los 3 número deben estar dentro del rango [0,1]
 	 * El array devuelto está ordenado de menor a mayor.
 	 */	
-	private double[] generaNumAleatorio(double numero){
+	private static double[] generaNumAleatorio(double numero){
 		double[] res= new double[3];
 		double num1= 2;
 		while(!((num1 >= (numero - 0.1))&&(num1 <= (numero + 0.1))&&(num1 != numero))){
@@ -516,7 +554,7 @@ public class DecisionMaker {
 		return res;
 	}
 	
-	private double calculaDistancia(double[] param1, double[] param2){
+	private static double calculaDistancia(double[] param1, double[] param2){
 		//double res= Math.sqrt((1/3) * (Math.pow(param1[0]-param2[0], 2) + Math.pow(param1[1]-param2[1], 2) + Math.pow(param1[2]-param2[2], 2)));
 		double res1= Math.pow((param1[0]-param2[0]), 2);
 		double res2= Math.pow((param1[1]-param2[1]), 2);
