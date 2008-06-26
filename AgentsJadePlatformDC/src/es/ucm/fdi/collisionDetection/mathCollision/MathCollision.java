@@ -174,21 +174,40 @@ public class MathCollision {
 		//System.out.println("Distancia a la recta 1: "+d1);
 		//System.out.println("Distancia a la recta 2: "+d2);
 		//System.out.println("Distancia a la recta 3: "+d3);
+		double dv1cci= calculaDistanciaEuclidea(v1, cci);
+		double dv2cci= calculaDistanciaEuclidea(v2, cci);
+		double dv3cci= calculaDistanciaEuclidea(v3, cci);
 		
-		if(d1 < 5.0) 
-			parteConoColisionada= "centro";
-		else if(d2 < 5.0){			
-			parteConoColisionada= determinaOrientacion(v2, v3, r2, cco, interR2);
+		if((d1 < 5.0) || (dv1cci < 5.0) || (dv2cci < 5.0) ||(dv3cci < 5.0)) 
+			parteConoColisionada= determinaOrientacionR1(v1, v2, interR1);//"centro";
+		else if((d2 < 5.0) || (dv1cci < 5.0) || (dv2cci < 5.0) ||(dv3cci < 5.0)){			
+			parteConoColisionada= determinaOrientacionR2(v2, v3, interR2);
 		}
-		else if(d3 < 5.0) 
-			parteConoColisionada= "centro";
+		else if((d3 < 5.0) || (dv1cci < 5.0) || (dv2cci < 5.0) ||(dv3cci < 5.0)) 
+			parteConoColisionada= determinaOrientacionR3(v1, v3, interR3);//"centro";
 		
 		System.out.println("Colision en: "+parteConoColisionada);
 		
 		return parteConoColisionada;		
 	}
 	
-	private String determinaOrientacion(Vertice v2, Vertice v3, Recta r2, Vertice cco, Vertice interR2){
+	private String determinaOrientacionR1(Vertice v1, Vertice v2, Vertice interR){
+		String res= "centro";
+		Vertice puntoMedio= new Vertice(9, (v1.px+v2.px)/2, (v1.py+v2.py)/2);//no es un vertice
+						
+		double d1= this.calculaDistanciaEuclidea(v1, interR);
+		double d2= this.calculaDistanciaEuclidea(puntoMedio, interR);
+		double d3= this.calculaDistanciaEuclidea(v2, interR);
+		
+		if(d3 < d1 && d3 < d2) 
+			res= "izquierda";
+		else 
+			res= "centro";
+		
+		return res;
+	}
+	
+	private String determinaOrientacionR2(Vertice v2, Vertice v3, Vertice interR2){
 		String res= "centro";
 		Vertice puntoMedio= new Vertice(9, (v2.px+v3.px)/2, (v2.py+v3.py)/2);//no es un vertice
 						
@@ -207,6 +226,22 @@ public class MathCollision {
 		
 		return res;
 	}	
+	
+	private String determinaOrientacionR3(Vertice v1, Vertice v3, Vertice interR){
+		String res= "centro";
+		Vertice puntoMedio= new Vertice(9, (v1.px+v3.px)/2, (v1.py+v3.py)/2);//no es un vertice
+						
+		double d1= this.calculaDistanciaEuclidea(v1, interR);
+		double d2= this.calculaDistanciaEuclidea(puntoMedio, interR);
+		double d3= this.calculaDistanciaEuclidea(v3, interR);
+		
+		if(d3 < d1 && d3 < d2) 
+			res= "derecha";
+		else 
+			res= "centro";
+		
+		return res;
+	}
 	
 	/*
 	 * Funcion que se encarga de calcular la distancia euclídea entre dos vectores:

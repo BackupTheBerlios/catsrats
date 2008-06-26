@@ -38,7 +38,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 		this.paginasAmarillas= new YellowPages();
 		this.activado= false;
 		this.camino = null;
-		this.tipoTrayectoria = PathsBehaviour.NADA;//(int)((Math.random()*10)%PathsBehaviour.NUMERO_TRAYECTORIAS); //Generamos una trayectoria aleatoria
+		this.tipoTrayectoria = PathsBehaviour.CUADRADA;//(int)((Math.random()*10)%PathsBehaviour.NUMERO_TRAYECTORIAS); //Generamos una trayectoria aleatoria
 		this.comportamientoTrayectorias = null;
 		this.decisionAnterior= "no hacer nada";
 	}
@@ -451,7 +451,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 
 	
 	private void mensajeInfoAgente(String destinatario) {
-		//generaCoordenadas();//TODO quitar esta linea cuando probemos con la parte C
+		generaCoordenadas();//TODO quitar esta linea cuando probemos con la parte C
 		InfoAgent info = new InfoAgent(nombre,camino.getPunto().getX(),camino.getPunto().getY(),camino.getPunto().getZ(),camino.getOrientacion());
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);

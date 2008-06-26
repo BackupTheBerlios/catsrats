@@ -40,7 +40,7 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 		paginasAmarillas= new YellowPages();
 		generaCoordenadasPrimeraVez= true;
 		rellenaArbol= true;
-		activado= false;
+		activado= true;
 	}
 	
 	public void onTick() {	
@@ -96,16 +96,16 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 						//((CollisionDetectionAgent) myAgent).setIc(((CollisionDetectionAgent) myAgent).getJ3d().infoColisiones);
 						
 						if(ic!= null){
-							System.out.println("...............................................................................");
-							System.out.println("TAMAÑO DEL ARRAYLIST: "+ic.size());
+							//System.out.println("...............................................................................");
+							//System.out.println("TAMAÑO DEL ARRAYLIST: "+ic.size());
 							for(int i= 0; i< ic.size(); i++){
-								System.out.println("SE HA PRODUCIDO UNA COLISIÓN "+i);
+								/*System.out.println("SE HA PRODUCIDO UNA COLISIÓN "+i);
 								System.out.println("nombre del agente que ve: "+ic.get(i).getAgenteQueVe());
 								System.out.println("nombre del agente que es visto: "+ic.get(i).getAgenteQueEsVisto());
 								System.out.println("Tipo de agente: "+ic.get(i).getTipoAgente());
 								System.out.println("Orientación con la que lo ve: "+ic.get(i).getOrientacion());
 								System.out.println("Claridad de percepción: "+ic.get(i).getClaridadPercepcion());
-								System.out.println("Distancia: "+ic.get(i).getDistancia());
+								System.out.println("Distancia: "+ic.get(i).getDistancia());*/
 								
 								//Mandamos el mensaje a cada agente que ha detectado una colision:
 								ACLMessage mensaje = new ACLMessage(ACLMessage.REQUEST);

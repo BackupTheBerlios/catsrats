@@ -31,7 +31,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 	
 	public RatAgentBehaviour(Agent agente, long tiempo) {
 		super(agente, tiempo);
-		this.punto= new Point(Math.random()*2000, Math.random()*2000, 0.0);
+		this.punto= new Point(-20,8,0);//new Point(Math.random()*2000, Math.random()*2000, 0.0);
 		this.nombre= myAgent.getLocalName();
 		this.paginasAmarillas= new YellowPages();
 		this.activado= false;
