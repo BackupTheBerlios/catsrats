@@ -33,12 +33,12 @@ public class CatAgentBehaviour extends TickerBehaviour{
 
 	public CatAgentBehaviour(Agent agente, long tiempo) {
 		super(agente, tiempo);
-		this.punto= new Point(0,0,0);//new Point(Math.random()*2000, Math.random()*2000, 0.0);
+		this.punto= new Point(Math.random()*200, Math.random()*200, 0.0);//new Point(0,0,0);//
 		this.nombre= myAgent.getLocalName();
 		this.paginasAmarillas= new YellowPages();
 		this.activado= false;
 		this.camino = null;
-		this.tipoTrayectoria = PathsBehaviour.CUADRADA;//(int)((Math.random()*10)%PathsBehaviour.NUMERO_TRAYECTORIAS); //Generamos una trayectoria aleatoria
+		this.tipoTrayectoria = (int)((Math.random()*10)%PathsBehaviour.NUMERO_TRAYECTORIAS); //Generamos una trayectoria aleatoria //PathsBehaviour.DIAMANTE;
 		this.comportamientoTrayectorias = null;
 		this.decisionAnterior= "no hacer nada";
 	}
@@ -124,8 +124,10 @@ public class CatAgentBehaviour extends TickerBehaviour{
 					
 					System.out.println("--> DECISION TOMADA POR EL GATO: "+decision);
 					String contenido;
-					if(decision.equals("perseguir"))
-						contenido = generaCoordenadasPerseguir(info);						
+					if(decision.equals("perseguir")){
+						contenido = generaCoordenadasPerseguir(info);
+						//comportamientoTrayectorias= null;
+					}
 					else if(decision.equals("esquivar"))
 						contenido = generaCoordenadasEsquivar(info);
 					else{//"no hacer nada"

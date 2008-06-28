@@ -9,7 +9,7 @@ import es.ucm.fdi.collisionDetection.Orientation;
  */
 public class DiamondPath implements Trayectorias {
 
-	private final double AVANCE = 10.0; //0.1
+	private final double AVANCE = 0.5;//10.0; //0.1
 	
 	public void movimento(Path camino) {
 		
