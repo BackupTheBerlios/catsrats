@@ -33,7 +33,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 
 	public CatAgentBehaviour(Agent agente, long tiempo) {
 		super(agente, tiempo);
-		this.punto= new Point(Math.random()*200, Math.random()*200, 0.0);//new Point(0,0,0);//
+		this.punto= new Point(0,0,0);//new Point(Math.random()*200, Math.random()*200, 0.0);
 		this.nombre= myAgent.getLocalName();
 		this.paginasAmarillas= new YellowPages();
 		this.activado= false;
@@ -126,10 +126,12 @@ public class CatAgentBehaviour extends TickerBehaviour{
 					String contenido;
 					if(decision.equals("perseguir")){
 						contenido = generaCoordenadasPerseguir(info);
-						//comportamientoTrayectorias= null;
+						comportamientoTrayectorias= null;
 					}
-					else if(decision.equals("esquivar"))
+					else if(decision.equals("esquivar")){
 						contenido = generaCoordenadasEsquivar(info);
+						comportamientoTrayectorias= null;
+					}
 					else{//"no hacer nada"
 						switch(tipoTrayectoria){
 							case PathsBehaviour.OCTOGONAL: camino.setOrientacion(Orientation.E); break;

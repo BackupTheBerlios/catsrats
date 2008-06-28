@@ -205,7 +205,7 @@ abstract class Java3dApplet extends Applet {
   }
 
   protected double getScale() {
-    return 0.05;//0.3;
+    return 0.1;//0.3;
   }
 
   
