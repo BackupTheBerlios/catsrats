@@ -50,7 +50,7 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 	//the appearance object that we are controlling
 	private Appearance objectAppearance = null;
 	//cached Material objects that define the collided and missed colors
-	//private Material collideMaterialNegro = null;
+	private Material collideMaterialNegro = null;
 	private Material collideMaterialRojo = null;	
 	private Material missMaterialAzul = null;
 	
@@ -93,7 +93,7 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 
 		Color3f objColor = new Color3f(0.0f, 0.0f, 0.0f);//new Color3f(1.0f, 0.1f, 0.2f);
 		Color3f black = new Color3f(0.0f, 0.0f, 0.0f);//color negro para los conos
-		//collideMaterialNegro = new Material(objColor, black, objColor, black, 80.0f);
+		collideMaterialNegro = new Material(objColor, black, objColor, black, 80.0f);
 		
 		Color3f red = new Color3f(255f, 0.0f, 0.0f);//color negro para los conos
 		collideMaterialRojo = new Material(objColor, red, objColor, red, 80.0f);
@@ -199,7 +199,10 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 							System.out.println("........................................");
 							if(res != null){
 								if(res.equals("centro")||res.equals("izquierda")||res.equals("derecha")){
-									objectAppearance.setMaterial(collideMaterialRojo);//SE CAMBIA EL COLOR CUANDO HAY COLISION
+									if(this.nombreAgenteClase.contains("gato"))
+										objectAppearance.setMaterial(collideMaterialNegro);//EL CONO DE COLOR NEGRO SI ES EL GATO
+									else if (this.nombreAgenteClase.contains("raton"))
+										objectAppearance.setMaterial(collideMaterialRojo);//EL CONO DE COLOR ROJO SI ES EL RATÓN
 									double cp= claridadDePercepcion(cono, esfera, 1, 5);
 									//System.out.println("Claridad de percepción: "+cp);
 									String tipoAgente= "";

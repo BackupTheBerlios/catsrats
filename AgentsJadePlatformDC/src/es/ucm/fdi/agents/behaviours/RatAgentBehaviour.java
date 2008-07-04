@@ -118,11 +118,11 @@ public class RatAgentBehaviour extends TickerBehaviour{
 					//Dentro del try está la parte relativa a la toma de decisiones:
 					String decision;
 					if(this.decisionAnterior.equals("huir"))
-						decision= DecisionMaker.tomaDeDecisionesGato(info.getTipoAgente(), info.getOrientacion(), info.getClaridadPercepcion(), info.getDistancia(), this.decisionAnterior, 0.3, 0.1, 0.1, 0.1, 0.4);
+						decision= DecisionMaker.tomaDeDecisionesRaton(info.getTipoAgente(), info.getOrientacion(), info.getClaridadPercepcion(), info.getDistancia(), this.decisionAnterior, 0.3, 0.1, 0.1, 0.1, 0.4);
 					else
-						decision= DecisionMaker.tomaDeDecisionesGato(info.getTipoAgente(), info.getOrientacion(), info.getClaridadPercepcion(), info.getDistancia(), this.decisionAnterior, 0.5, 0.1, 0.1, 0.1, 0.2);
+						decision= DecisionMaker.tomaDeDecisionesRaton(info.getTipoAgente(), info.getOrientacion(), info.getClaridadPercepcion(), info.getDistancia(), this.decisionAnterior, 0.5, 0.1, 0.1, 0.1, 0.2);
 					
-					System.out.println("--> DECISION TOMADA POR EL GATO: "+decision);
+					System.out.println("--> DECISION TOMADA POR EL RATÓN: "+decision);
 					String contenido;
 					if(decision.equals("huir")){
 						contenido = generaCoordenadasHuir(info);
@@ -147,7 +147,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 					for(int i = 0; i<listaAgentesComunicacion.length && listaAgentesDeteccionColisiones.length>0; i++){
 						if(activado) nuevoMensaje(listaAgentesComunicacion[i].getLocalName(),contenido);
 						mensajeInfoAgente(listaAgentesDeteccionColisiones[i].getLocalName());
-						System.out.println("GATO EN "+camino.getPunto().getX()+" "+camino.getPunto().getY()+" "+camino.getPunto().getZ()+" "+camino.getOrientacion());
+						System.out.println("RATÓN EN "+camino.getPunto().getX()+" "+camino.getPunto().getY()+" "+camino.getPunto().getZ()+" "+camino.getOrientacion());
 					}
 					
 					//Almacenamos la decisión para tenerla en cuenta la vez siguiente: es un criterio.
