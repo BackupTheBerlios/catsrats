@@ -24,12 +24,15 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import org.apache.log4j.Logger;
+
 import com.sun.j3d.utils.geometry.Box;
 import com.sun.j3d.utils.geometry.Cone;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.picking.PickResult;
 import com.sun.j3d.utils.picking.PickTool;
 
+import es.ucm.fdi.agents.behaviours.CatAgentBehaviour;
 import es.ucm.fdi.collisionDetection.mathCollision.MathCollision;
 import es.ucm.fdi.mcdm.OrientacionAgenteVisto;
 
@@ -61,7 +64,7 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 	private Vector3d positionObject = null;	
 	private Orientation orientacion;
 	private Java3d j3d;
-	
+	static Logger logger = Logger.getLogger(J3dCollisionDetectionBehaviour.class);
 	
 	public J3dCollisionDetectionBehaviour(Java3d java3d, BranchGroup pickRoot, TransformGroup collisionObject, Appearance app, Vector3d positionObject, Orientation orientacion){
 		//save references to the objects
@@ -130,11 +133,11 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 			if(infoAgente != null){
 				//infoAgente.setParteConoColisionada("derecha");
 				j3d.getInfoColisiones().add(infoAgente);				
-				System.out.println("---->>>EL AGENTE "+this.nombreAgenteClase+" HA COLISIONADO CON ALGO");
+				logger.info("---->>>EL AGENTE "+this.nombreAgenteClase+" HA COLISIONADO CON ALGO");
 			}
 			else{
 				onMiss();//No ha habido colisión.
-				System.out.println("NO HA HABIDO COLISIÓN");
+				logger.info("NO HA HABIDO COLISIÓN");
 			}
 
 		}//fin del while
@@ -169,7 +172,7 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 					if((((String)userData).contains("esfera"))&&
 							(!this.nombreAgenteClase.equals(nombreAgenteConElQueColisiona))) { //Ignora la colisión con él mismo.		
 
-						System.out.println("_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_");
+						logger.info("_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_");
 						Object ob = resultArray[n].getObject();
 						if(ob.getClass().equals(Shape3D.class)){
 							Shape3D sp= (Shape3D)ob; 
@@ -177,8 +180,7 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 							sp.getLocalToVworld(coord);
 							Vector3d v3d= new Vector3d();
 							coord.get(v3d);							
-							//System.out.println(v3d.x+", "+v3d.y+", "+v3d.z);	
-							
+													
 							
 							//Por como he puesto el nombre de cada agente, las posiciones 2, 4 y 6 corresponden a las coordenadas.
 							//double cX2= Double.parseDouble(nombreObjetoConElQueColisiona[2]);
@@ -191,12 +193,12 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 
 							MathCollision mc= new MathCollision();
 							String res= mc.detectaColision(orientacion, cono, esfera);
-							System.out.println("........................................");
-							System.out.println(userData.toString());
-							System.out.println(orientacion);
-							System.out.println(cono.x+", "+cono.y+", "+cono.z);
-							System.out.println(esfera.x+", "+esfera.y+", "+esfera.z);
-							System.out.println("........................................");
+							logger.info("........................................");
+							logger.info(userData.toString());
+							logger.info(orientacion);
+							logger.info(cono.x+", "+cono.y+", "+cono.z);
+							logger.info(esfera.x+", "+esfera.y+", "+esfera.z);
+							logger.info("........................................");
 							if(res != null){
 								if(res.equals("centro")||res.equals("izquierda")||res.equals("derecha")){
 									if(this.nombreAgenteClase.contains("gato"))
@@ -221,7 +223,7 @@ public class J3dCollisionDetectionBehaviour extends Behavior {
 								}
 							}
 						}										
-						System.out.println("_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_");						
+						logger.info("_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_");						
 					}				       
 				}			
 			}

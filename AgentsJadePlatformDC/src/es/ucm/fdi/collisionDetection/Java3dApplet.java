@@ -28,6 +28,8 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import org.apache.log4j.Logger;
+
 import com.sun.j3d.audioengines.javasound.JavaSoundMixer;
 
 /*******************************************************************************
@@ -81,6 +83,8 @@ abstract class Java3dApplet extends Applet {
 
   protected Bounds m_ApplicationBounds = null;
   
+  static Logger logger = Logger.getLogger(Java3d.class);
+  
   //Me creo mi bounds para el cono:
   //protected Bounds conoApplicationBounds = null;
 
@@ -94,12 +98,12 @@ abstract class Java3dApplet extends Applet {
   public boolean isApplet() {
     try {
       System.getProperty("user.dir");
-      System.out.println("Running as Application.");
+      logger.info("Running as Application.");
       return false;
     } catch (Exception e) {
     }
 
-    System.out.println("Running as Applet.");
+    logger.info("Running as Applet.");
     return true;
   }
 
@@ -109,14 +113,14 @@ abstract class Java3dApplet extends Applet {
 
     try {
       File file = new File(System.getProperty("user.dir"));
-      System.out.println("Running as Application:");
-      System.out.println("   " + file.toURL());
+      logger.info("Running as Application:");
+      logger.info("   " + file.toURL());
       return file.toURL();
     } catch (Exception e) {
     }
 
-    System.out.println("Running as Applet:");
-    System.out.println("   " + getCodeBase());
+    logger.info("Running as Applet:");
+    logger.info("   " + getCodeBase());
 
     return getCodeBase();
   }
@@ -151,21 +155,6 @@ abstract class Java3dApplet extends Applet {
     return m_ApplicationBounds;
   }
  
- /* 
-  protected Bounds getConoApplicationBounds() {
-	  if (this.conoApplicationBounds == null)
-		  this.conoApplicationBounds = createConoApplicationBounds();
-	  
-	  return this.conoApplicationBounds;
-  }
-  
-  protected Bounds createConoApplicationBounds() {
-	  this.conoApplicationBounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0),
-			  100.0);
-	  return this.conoApplicationBounds;
-  }
-*/ 
-  
   protected Background createBackground() {
     Background back = new Background(new Color3f(0.9f, 0.9f, 0.9f));
     back.setApplicationBounds(createApplicationBounds());
@@ -190,9 +179,6 @@ abstract class Java3dApplet extends Applet {
 
     if (background != null)
       sceneBranchGroup.addChild(background);
-
-    //    m_Java3dTree.recursiveApplyCapability(sceneBranchGroup);
-    //  m_Java3dTree.recursiveApplyCapability(viewBranchGroup);
 
     locale.addBranchGraph(sceneBranchGroup);
     addViewBranchGroup(locale, viewBranchGroup);
@@ -273,7 +259,7 @@ abstract class Java3dApplet extends Applet {
     JavaSoundMixer javaSoundMixer = new JavaSoundMixer(pe);
 
     if (javaSoundMixer == null)
-      System.out.println("create of audiodevice failed");
+     logger.info("create of audiodevice failed");
 
     return javaSoundMixer;
   }
@@ -361,4 +347,3 @@ abstract class Java3dApplet extends Applet {
     return m_szCommandLineArray;
   }
 }
-//TODO */

@@ -2,6 +2,9 @@ package es.ucm.fdi.agents.behaviours;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+
+import es.ucm.fdi.agents.CatAgent;
 import es.ucm.fdi.agents.behaviours.paths.PathsBehaviour;
 import es.ucm.fdi.agents.coordinates.Path;
 import es.ucm.fdi.agents.coordinates.Point;
@@ -30,6 +33,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 	private PathsBehaviour comportamientoTrayectorias;
 	private int tipoTrayectoria;
 	private String decisionAnterior;
+	static Logger logger = Logger.getLogger(CatAgentBehaviour.class);
 
 	public CatAgentBehaviour(Agent agente, long tiempo) {
 		super(agente, tiempo);
@@ -122,7 +126,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 					else
 						decision= DecisionMaker.tomaDeDecisionesGato(info.getTipoAgente(), info.getOrientacion(), info.getClaridadPercepcion(), info.getDistancia(), this.decisionAnterior, 0.5, 0.1, 0.1, 0.1, 0.2);
 					
-					System.out.println("--> DECISION TOMADA POR EL GATO: "+decision);
+					logger.info("--> DECISION TOMADA POR EL GATO: "+decision);
 					String contenido;
 					if(decision.equals("perseguir")){
 						contenido = generaCoordenadasPerseguir(info);
@@ -147,7 +151,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 					for(int i = 0; i<listaAgentesComunicacion.length && listaAgentesDeteccionColisiones.length>0; i++){
 						if(activado) nuevoMensaje(listaAgentesComunicacion[i].getLocalName(),contenido);
 						mensajeInfoAgente(listaAgentesDeteccionColisiones[i].getLocalName());
-						System.out.println("GATO EN "+camino.getPunto().getX()+" "+camino.getPunto().getY()+" "+camino.getPunto().getZ()+" "+camino.getOrientacion());
+						logger.info("GATO EN "+camino.getPunto().getX()+" "+camino.getPunto().getY()+" "+camino.getPunto().getZ()+" "+camino.getOrientacion());				
 					}
 					
 					//Almacenamos la decisión para tenerla en cuenta la vez siguiente: es un criterio.
@@ -158,7 +162,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 				}
 			}
 			else{
-				System.out.println("Mensaje entrante del gato: "+mensajeEntrante.getContent());
+				logger.info("Mensaje entrante del gato: "+mensajeEntrante.getContent());
 				String contenidoMensaje = mensajeEntrante.getContent();
 				if(contenidoMensaje.contains("morir")){ //Matamos a los agentes
 					myAgent.doDelete();
@@ -171,7 +175,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 					for(int i = 0; i<listaAgentesComunicacion.length && listaAgentesDeteccionColisiones.length>0; i++){
 						if(activado) nuevoMensaje(listaAgentesComunicacion[i].getLocalName(), contenido);
 						mensajeInfoAgente(listaAgentesDeteccionColisiones[i].getLocalName());
-						System.out.println("GATO EN "+camino.getPunto().getX()+" "+camino.getPunto().getY()+" "+camino.getPunto().getZ()+" "+camino.getOrientacion());
+						logger.info("GATO EN "+camino.getPunto().getX()+" "+camino.getPunto().getY()+" "+camino.getPunto().getZ()+" "+camino.getOrientacion());
 					}
 				}
 			}

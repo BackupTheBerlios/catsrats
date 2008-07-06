@@ -3,6 +3,9 @@ import java.awt.geom.Point2D.Float;
 
 import javax.vecmath.Vector3d;
 
+import org.apache.log4j.Logger;
+
+import es.ucm.fdi.agents.behaviours.CatAgentBehaviour;
 import es.ucm.fdi.collisionDetection.Orientation;
 
 
@@ -12,7 +15,7 @@ public class MathCollision {
 	
 	public static final double DISTANCIA2 = 7.07;// valor de la hipotenusa del triangulo rectangulo cuyos vértices son 
 										//el centro del triangulo, el centro de la base y el vértice zurdo de la base
-	
+	static Logger logger = Logger.getLogger(MathCollision.class);
 	
 	/**
 	 * Función que dado el centro del cono (triangulo) te devuelve los vértices.
@@ -154,9 +157,9 @@ public class MathCollision {
 		Vertice interR2 = new Vertice(7, interseccionR2.x, interseccionR2.y);
 		Vertice interR3 = new Vertice(8, interseccionR3.x, interseccionR3.y);
 		
-		//System.out.println("Intersecta con la recta 1 en: "+interseccionR1);
-		//System.out.println("Intersecta con la recta 2 en: "+interseccionR2);
-		//System.out.println("Intersecta con la recta 3 en: "+interseccionR3);
+		logger.info("Intersecta con la recta 1 en: "+interseccionR1);
+		logger.info("Intersecta con la recta 2 en: "+interseccionR2);
+		logger.info("Intersecta con la recta 3 en: "+interseccionR3);
 		
 		double d1= Double.MAX_VALUE;
 		double d2= Double.MAX_VALUE;
@@ -171,9 +174,9 @@ public class MathCollision {
 		if(this.estaEnTriangulo(v1, v2, v3, interR3))
 			d3= calculaDistanciaEuclidea(cci, interR3);
 		
-		//System.out.println("Distancia a la recta 1: "+d1);
-		//System.out.println("Distancia a la recta 2: "+d2);
-		//System.out.println("Distancia a la recta 3: "+d3);
+		logger.info("Distancia a la recta 1: "+d1);
+		logger.info("Distancia a la recta 2: "+d2);
+		logger.info("Distancia a la recta 3: "+d3);
 		double dv1cci= calculaDistanciaEuclidea(v1, cci);
 		double dv2cci= calculaDistanciaEuclidea(v2, cci);
 		double dv3cci= calculaDistanciaEuclidea(v3, cci);
@@ -186,7 +189,7 @@ public class MathCollision {
 		else if((d3 < 5.0) || (dv1cci < 5.0) || (dv2cci < 5.0) ||(dv3cci < 5.0)) 
 			parteConoColisionada= determinaOrientacionR3(v1, v3, interR3);//"centro";
 		
-		System.out.println("Colision en: "+parteConoColisionada);
+		logger.info("Colision en: "+parteConoColisionada);
 		
 		return parteConoColisionada;		
 	}
@@ -214,10 +217,6 @@ public class MathCollision {
 		double dI= this.calculaDistanciaEuclidea(v2, interR2);
 		double dC= this.calculaDistanciaEuclidea(puntoMedio, interR2);
 		double dD= this.calculaDistanciaEuclidea(v3, interR2);
-		
-		//System.out.println("dI= "+dI);
-		//System.out.println("dC= "+dC);
-		//System.out.println("dD= "+dD);
 		
 		if(dI < dC && dI < dD) 
 			res= "izquierda";

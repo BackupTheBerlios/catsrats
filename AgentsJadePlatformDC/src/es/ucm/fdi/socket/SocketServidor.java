@@ -33,10 +33,8 @@ public class SocketServidor
     		socket = new ServerSocket (25557); //Creamos una vez el canal de comunicacion y lo dejamos abierto para recibir las 
 			// Se acepata una conexión con un cliente. Esta llamada se queda
     			// bloqueada hasta que se arranque el cliente.
-    		System.out.println ("Esperando cliente..."); //peticiones de los clientes
     		logger.info("Esperando cliente..."); //peticiones de los clientes
     		cliente = socket.accept();
-    		System.out.println ("Conectado con cliente de " + cliente.getInetAddress());
     		logger.info("Conectado con cliente de " + cliente.getInetAddress());
     			// Se hace que el cierre del socket sea "gracioso". Esta llamada sólo
     			// es necesaria si cerramos el socket inmediatamente después de
@@ -56,7 +54,6 @@ public class SocketServidor
     			aux = new DatoSocket("");
 
     			aux.readObject (bufferEntrada);
-    			System.out.println ("Recibido: " + aux.toString());
     			logger.info("Recibido: " + aux.toString());
     			// Se prepara un flujo de salida de datos, es decir, la clase encargada
     			// de escribir datos en el socket.

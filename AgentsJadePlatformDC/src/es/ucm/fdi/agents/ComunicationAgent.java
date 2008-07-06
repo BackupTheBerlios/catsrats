@@ -31,10 +31,8 @@ public class ComunicationAgent extends Agent{
 		try {
 			DFService.register(this, dfd);
 		} catch (FIPAException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Agente "+getAID().getName()+" está listo");
 		logger.info("Agente "+getAID().getName()+" está listo");
 		
 		//Creamos el socket servidor y lo dejamos preparado a la escucha		
@@ -48,10 +46,8 @@ public class ComunicationAgent extends Agent{
 		try {
 			DFService.deregister(this);
 		} catch (FIPAException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Agente "+getAID().getName()+" terminando...");
 		logger.info("Agente "+getAID().getName()+" terminando...");
 		
 	}

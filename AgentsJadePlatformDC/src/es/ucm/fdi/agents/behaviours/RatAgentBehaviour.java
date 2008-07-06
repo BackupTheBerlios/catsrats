@@ -2,6 +2,8 @@ package es.ucm.fdi.agents.behaviours;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+
 import es.ucm.fdi.agents.behaviours.paths.PathsBehaviour;
 import es.ucm.fdi.agents.coordinates.Path;
 import es.ucm.fdi.agents.coordinates.Point;
@@ -30,6 +32,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 	private PathsBehaviour comportamientoTrayectorias;
 	private int tipoTrayectoria;
 	private String decisionAnterior;
+	static Logger logger = Logger.getLogger(RatAgentBehaviour.class);
 	
 	public RatAgentBehaviour(Agent agente, long tiempo) {
 		super(agente, tiempo);
@@ -122,7 +125,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 					else
 						decision= DecisionMaker.tomaDeDecisionesRaton(info.getTipoAgente(), info.getOrientacion(), info.getClaridadPercepcion(), info.getDistancia(), this.decisionAnterior, 0.5, 0.1, 0.1, 0.1, 0.2);
 					
-					System.out.println("--> DECISION TOMADA POR EL RATÓN: "+decision);
+					logger.info("--> DECISION TOMADA POR EL RATÓN: "+decision);
 					String contenido;
 					if(decision.equals("huir")){
 						contenido = generaCoordenadasHuir(info);
@@ -147,7 +150,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 					for(int i = 0; i<listaAgentesComunicacion.length && listaAgentesDeteccionColisiones.length>0; i++){
 						if(activado) nuevoMensaje(listaAgentesComunicacion[i].getLocalName(),contenido);
 						mensajeInfoAgente(listaAgentesDeteccionColisiones[i].getLocalName());
-						System.out.println("RATÓN EN "+camino.getPunto().getX()+" "+camino.getPunto().getY()+" "+camino.getPunto().getZ()+" "+camino.getOrientacion());
+						logger.info("RATÓN EN "+camino.getPunto().getX()+" "+camino.getPunto().getY()+" "+camino.getPunto().getZ()+" "+camino.getOrientacion());
 					}
 					
 					//Almacenamos la decisión para tenerla en cuenta la vez siguiente: es un criterio.
@@ -159,7 +162,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 				}
 			}
 			else{
-				System.out.println("Mensaje entrante del raton: "+mensajeEntrante.getContent());
+				logger.info("Mensaje entrante del raton: "+mensajeEntrante.getContent());
 				String contenidoMensaje = mensajeEntrante.getContent();
 				if(contenidoMensaje.contains("morir")){ //Matamos a los agentes
 					myAgent.doDelete();
@@ -172,7 +175,7 @@ public class RatAgentBehaviour extends TickerBehaviour{
 					for(int i = 0; i<listaAgentesComunicacion.length && listaAgentesDeteccionColisiones.length>0; i++){
 						if(activado) nuevoMensaje(listaAgentesComunicacion[i].getLocalName(), contenido);
 						mensajeInfoAgente(listaAgentesDeteccionColisiones[i].getLocalName());
-						System.out.println("RATON EN "+camino.getPunto().getX()+" "+camino.getPunto().getY()+" "+camino.getPunto().getZ()+" "+camino.getOrientacion());
+						logger.info("RATON EN "+camino.getPunto().getX()+" "+camino.getPunto().getY()+" "+camino.getPunto().getZ()+" "+camino.getOrientacion());
 					}
 				}
 			}

@@ -30,11 +30,9 @@ public class CatAgent extends Agent{
 		try {
 			DFService.register(this, dfd);
 		} catch (FIPAException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		System.out.println("Agente "+getAID().getName()+" está listo");
 		logger.info("Agente "+getAID().getName()+" está listo");
 		cab = new CatAgentBehaviour(this, 1);
 		addBehaviour(cab);		
@@ -44,9 +42,7 @@ public class CatAgent extends Agent{
 		try {
 			DFService.deregister(this);
 		} catch (FIPAException e) {
-			// TODO Auto-generated catch block
 		}
-		System.out.println("Agente "+getAID().getName()+" terminando...");
 		logger.info("Agente "+getAID().getName()+" terminando...");
 	}
 	

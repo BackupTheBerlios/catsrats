@@ -1,6 +1,8 @@
 package es.ucm.fdi.agents;
 
 
+import org.apache.log4j.Logger;
+
 import com.sun.j3d.utils.applet.MainFrame;
 
 import es.ucm.fdi.agents.behaviours.CollisionDetectionBehaviour;
@@ -12,7 +14,7 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
 /*
- * TODO Este agente debe recibir ArrayList<Agente> agentes con la descripción de los agentes que hay en el entorno.
+ * Este agente debe recibir ArrayList<Agente> agentes con la descripción de los agentes que hay en el entorno.
  */
 public class CollisionDetectionAgent extends Agent{	
 	
@@ -20,12 +22,9 @@ public class CollisionDetectionAgent extends Agent{
 	private static int m_kHeight = 400;
 	
 	private Java3d j3d;
-	
-	//ArrayList<InfoCollision> ic= null;
-	
 	private DFAgentDescription dfd;
-	
 	private CollisionDetectionBehaviour cdb;
+	static Logger logger = Logger.getLogger(CollisionDetectionAgent.class);
 	
 	//Inicializaciones del agente
 	protected void setup(){
@@ -43,19 +42,7 @@ public class CollisionDetectionAgent extends Agent{
 			e.printStackTrace();
 		}
 		
-		/*ArrayList<InfoAgent> agentes= new ArrayList();//TODO quitar estas lineas cuando reciba el arraylist
-		InfoAgent agente1= new InfoAgent("gato1", 4, -8, 0, Orientation.SO);
-		InfoAgent agente2= new InfoAgent("raton1", -2, 0, 0, Orientation.NE);
-		//Los agentes que no se mueven no tienen focus y por tanto el atributo "orientación" no es necesario.
-		InfoAgent agente3= new InfoAgent("mesa", 6.5, 0, 0, null);
-		agentes.add(agente1);
-		agentes.add(agente2);
-		agentes.add(agente3);^*/
-		
-		
-		//ic= new ArrayList<InfoCollision>();
-		
-		System.out.println("Agente "+getAID().getName()+" está listo");
+		logger.info("Agente "+getAID().getName()+" está listo");
 		
 		cdb= new CollisionDetectionBehaviour(this, 50);		
 		
@@ -75,7 +62,7 @@ public class CollisionDetectionAgent extends Agent{
 		} catch (FIPAException e) {
 			e.printStackTrace();
 		}
-		System.out.println("SE HA MATADO AL AGENTE DE DETECCION DE COLISIONES");
+		logger.info("SE HA MATADO AL AGENTE DE DETECCION DE COLISIONES");
 	}
 
 	public Java3d getJ3d() {

@@ -3,6 +3,8 @@ package es.ucm.fdi.agents.behaviours;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import es.ucm.fdi.agents.CollisionDetectionAgent;
 import es.ucm.fdi.agents.yellowPages.YellowPages;
 import es.ucm.fdi.collisionDetection.InfoAgent;
@@ -33,6 +35,7 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 	
 	private boolean activado;//TODO Esta variable inicializar a FALSE para hacer pruebas con el entorno gráfico.
 
+	static Logger logger = Logger.getLogger(CollisionDetectionBehaviour.class);
 
 	public CollisionDetectionBehaviour(Agent arg0, long tiempo) {
 		super(arg0, tiempo);				
@@ -47,10 +50,10 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 		
 		listaAgentesGeneradores= paginasAmarillas.buscarServicio("generacion-coordenadas", myAgent);
 		int numAgentes= listaAgentesGeneradores.length;
-		System.out.println("Numero de agentes generadores: "+ numAgentes);
+		logger.info("Numero de agentes generadores: "+ numAgentes);
 		
 		if(generaCoordenadasPrimeraVez && activado){
-			System.out.println("Mandamos mensaje 'genera'por primera vez");
+			logger.info("Mandamos mensaje 'genera'por primera vez");
 			ACLMessage mensaje = new ACLMessage(ACLMessage.INFORM);
 			//agrega contenido: generar coordenadas para la primera vez
 			String contenido = "genera";
@@ -96,16 +99,16 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 						//((CollisionDetectionAgent) myAgent).setIc(((CollisionDetectionAgent) myAgent).getJ3d().infoColisiones);
 						
 						if(ic!= null){
-							//System.out.println("...............................................................................");
-							//System.out.println("TAMAÑO DEL ARRAYLIST: "+ic.size());
+							logger.info("...............................................................................");
+							logger.info("TAMAÑO DEL ARRAYLIST: "+ic.size());
 							for(int i= 0; i< ic.size(); i++){
-								/*System.out.println("SE HA PRODUCIDO UNA COLISIÓN "+i);
-								System.out.println("nombre del agente que ve: "+ic.get(i).getAgenteQueVe());
-								System.out.println("nombre del agente que es visto: "+ic.get(i).getAgenteQueEsVisto());
-								System.out.println("Tipo de agente: "+ic.get(i).getTipoAgente());
-								System.out.println("Orientación con la que lo ve: "+ic.get(i).getOrientacion());
-								System.out.println("Claridad de percepción: "+ic.get(i).getClaridadPercepcion());
-								System.out.println("Distancia: "+ic.get(i).getDistancia());*/
+								logger.info("SE HA PRODUCIDO UNA COLISIÓN "+i);
+								logger.info("nombre del agente que ve: "+ic.get(i).getAgenteQueVe());
+								logger.info("nombre del agente que es visto: "+ic.get(i).getAgenteQueEsVisto());
+								logger.info("Tipo de agente: "+ic.get(i).getTipoAgente());
+								logger.info("Orientación con la que lo ve: "+ic.get(i).getOrientacion());
+								logger.info("Claridad de percepción: "+ic.get(i).getClaridadPercepcion());
+								logger.info("Distancia: "+ic.get(i).getDistancia());
 								
 								//Mandamos el mensaje a cada agente que ha detectado una colision:
 								ACLMessage mensaje = new ACLMessage(ACLMessage.REQUEST);
@@ -128,7 +131,7 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 						
 						
 						//Volvemos a decir a los agentes gato y ratón que generen coordenadas:
-						System.out.println("Mandamos mensaje 'genera'de nuevo...");
+						logger.info("Mandamos mensaje 'genera'de nuevo...");
 						ACLMessage mensaje = new ACLMessage(ACLMessage.INFORM);
 						//agrega contenido: generar coordenadas para la primera vez
 						String contenido = "genera";
@@ -173,44 +176,6 @@ public class CollisionDetectionBehaviour extends TickerBehaviour{
 			}
 			i++;
 		}
-			
-		/*ArrayList<InfoCollision> ic2= new ArrayList<InfoCollision>();
-		for(int i= 0; i< ic.size(); i++)
-			ic2.add(ic.get(i));		
-		for(int i= 0; i< ic2.size(); i++){
-			int j= ic.size();
-			while(j> i){
-				String agenteI= ic2.get(i).getAgenteQueVe();
-				String agenteJ= ic.get(j).getAgenteQueVe();
-				if(agenteI.equals(agenteJ))
-					ic.remove(j);
-				j--;
-			}
-		}*/	
+		
 	}
-
-	
-	
-	/*private void detectaColisiones(){
-		System.out.println("Dentro del método onTick");
-		Enumeration agentes= this.pickRoot.getAllChildren();
-		while(agentes.hasMoreElements()){
-			Object agente= agentes.nextElement();			 
-			if((agente.getClass().getName().contains("gato"))||(agente.getClass().getName().contains("raton"))){
-				Appearance app = new Appearance();
-				//J3dCollisionDetectionBehaviour comportamiento= new J3dCollisionDetectionBehaviour(pickRoot, (TransformGroup) agente, app);
-				//comportamiento.setSchedulingBounds(j3d.getApplicationBounds());// Pone la región de planificación del comportamiento a los límites especificados.
-			}
-		}
-
-	}	
-	 */
-
-//	public CollisionDetectionAgent(ArrayList<Agente> agentes){
-	//save references to the objects
-	//this.pickRoot = new BranchGroup();	
-//	}	
-
-
-
 }

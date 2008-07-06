@@ -23,6 +23,8 @@ import javax.media.j3d.WakeupOr;
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector3d;
 
+import org.apache.log4j.Logger;
+
 import com.sun.j3d.utils.geometry.Box;
 import com.sun.j3d.utils.geometry.Cone;
 import com.sun.j3d.utils.geometry.Sphere;
@@ -31,7 +33,7 @@ import com.sun.j3d.utils.geometry.Sphere;
 public class Java3d extends Java3dApplet{
 	private ArrayList<InfoAgent> agentes;
 	private ArrayList<InfoCollision> infoColisiones;
-	
+	static Logger logger = Logger.getLogger(Java3d.class);
 	BranchGroup objRoot;
 
 	public Java3d(ArrayList<InfoAgent> agentes) {
@@ -74,17 +76,17 @@ public class Java3d extends Java3dApplet{
 				tgAgente.setCollidable(true);
 				tgAgente.setPickable(true);
 				tgAgente.setName(agentes.get(i).getNombreAgente()+" x "+agentes.get(i).getX()+" y "+agentes.get(i).getY()+" z "+agentes.get(i).getZ()+" orientacion "+agentes.get(i).getOrientacion());
-				System.out.println(tgAgente.getName()+" ; Orientación(null si no es gato ni ratón): "+agentes.get(i).getOrientacion());//Imprimimos el nombre del agente.
+				logger.info(tgAgente.getName()+" ; Orientación(null si no es gato ni ratón): "+agentes.get(i).getOrientacion());//Imprimimos el nombre del agente.
 				if(agentes.get(i).getNombreAgente().contains("gato")||
 						agentes.get(i).getNombreAgente().contains("raton")){
 					//añadimos el cono:				
 					Vector3d nuevasCoord= cambiaCoordendas(agentes.get(i).getOrientacion(),agentes.get(i).getX(),agentes.get(i).getY(),agentes.get(i).getZ());							
 					añadeCirculoPequeñoDelCono(nuevasCoord.x, nuevasCoord.y, nuevasCoord.z, tgAgente, agentes.get(i).getOrientacion());
-					System.out.println("Añadido CIRCULITO del agente: "+agentes.get(i).getNombreAgente());
+					logger.info("Añadido CIRCULITO del agente: "+agentes.get(i).getNombreAgente());
 				}
 				//añadimos la esfera:
 				añadeEsfera(agentes.get(i).getX(), agentes.get(i).getY(), agentes.get(i).getZ(), tgAgente);
-				System.out.println("Añadida ESFERA del agente: "+agentes.get(i).getNombreAgente());
+				logger.info("Añadida ESFERA del agente: "+agentes.get(i).getNombreAgente());
 				BranchGroup bg = new BranchGroup();
 				bg.addChild(tgAgente);
 				
@@ -120,7 +122,7 @@ public class Java3d extends Java3dApplet{
 											circulito.setName(((TransformGroup)hijoTG).getName()+" circulito");
 											Vector3d nuevasCoord= cambiaCoordendas(agenteI.getOrientacion(),agenteI.getX(), agenteI.getY(), agenteI.getZ());
 											this.updateCirculoPequeñoDelCono(nuevasCoord.x, nuevasCoord.y, nuevasCoord.z, circulito, agenteI.getOrientacion());
-											System.out.println("Realizado update del CIRCULITO del agente: "+agenteI.getNombreAgente());
+											logger.info("Realizado update del CIRCULITO del agente: "+agenteI.getNombreAgente());
 										}
 									}
 									if(((TransformGroup)hijoTG2).getName().contains("esfera")){
@@ -128,7 +130,7 @@ public class Java3d extends Java3dApplet{
 										TransformGroup esfera= (TransformGroup)hijoTG2;
 										esfera.setName(((TransformGroup)hijoTG).getName()+" esfera");
 										this.updateEsfera(agenteI.getX(), agenteI.getY(), agenteI.getZ(), esfera);
-										System.out.println("Realizado update de la ESFERA del agente: "+agenteI.getNombreAgente());
+										logger.info("Realizado update de la ESFERA del agente: "+agenteI.getNombreAgente());
 									}
 								}
 							}
@@ -279,7 +281,6 @@ public class Java3d extends Java3dApplet{
 							comportamiento= (J3dCollisionDetectionBehaviour)hijoTg;
 							comportamiento.setPositionObject(new Vector3d(x,y,z));
 							comportamiento.setOrientacion(orientacion);
-							
 							comportamiento.setSchedulingBounds(getApplicationBounds());
 						}						
 					}
