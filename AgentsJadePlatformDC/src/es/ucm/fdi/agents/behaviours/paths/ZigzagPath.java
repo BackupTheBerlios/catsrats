@@ -9,9 +9,9 @@ import es.ucm.fdi.collisionDetection.Orientation;
  */
 public class ZigzagPath implements Trayectorias {
 
-	public final double TOPE_SUPERIOR = 15.0;
-	public final double TOPE_INFERIOR = -5.0;
-	private final double AVANCE = 0.5;//10.0;
+	public final double TOPE_SUPERIOR = 150.0;
+	public final double TOPE_INFERIOR = -50.0;
+	private final double AVANCE = 10.0;
 	
 	public void movimento(Path camino) {
 		double distanciaRecorrida = camino.getDistanciaRecorrida();

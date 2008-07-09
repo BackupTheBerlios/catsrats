@@ -21,7 +21,7 @@ import jade.lang.acl.UnreadableException;
 
 public class CatAgentBehaviour extends TickerBehaviour{
 	
-	public static final double DISTANCIA = 10;//2000.0;
+	public static final double DISTANCIA = 1000.0;
 	
 	private Point punto;
 	private String nombre;
@@ -37,7 +37,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 
 	public CatAgentBehaviour(Agent agente, long tiempo) {
 		super(agente, tiempo);
-		this.punto= new Point(0,0,0);//new Point(Math.random()*200, Math.random()*200, 0.0);
+		this.punto= new Point(Math.random()*2000, Math.random()*2000, 0.0);
 		this.nombre= myAgent.getLocalName();
 		this.paginasAmarillas= new YellowPages();
 		this.activado= false;
@@ -459,7 +459,7 @@ public class CatAgentBehaviour extends TickerBehaviour{
 
 	
 	private void mensajeInfoAgente(String destinatario) {
-		generaCoordenadas();//TODO quitar esta linea cuando probemos con la parte C
+		//generaCoordenadas();//TODO quitar esta linea cuando probemos con la parte C
 		InfoAgent info = new InfoAgent(nombre,camino.getPunto().getX(),camino.getPunto().getY(),camino.getPunto().getZ(),camino.getOrientacion());
 		
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);

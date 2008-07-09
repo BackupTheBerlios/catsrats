@@ -5,8 +5,8 @@ import es.ucm.fdi.agents.coordinates.Point;
 import es.ucm.fdi.collisionDetection.Orientation;
 
 public class BarridoPath implements Trayectorias {
-	private final double AVANCE = 0.5; //10.0;
-	private final double DESCENSO = 2.0;
+	private final double AVANCE = 10.0;
+	private final double DESCENSO = 5.0;
 	
 	int lado;
 	public BarridoPath(){

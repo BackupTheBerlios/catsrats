@@ -9,7 +9,7 @@ import es.ucm.fdi.collisionDetection.Orientation;
  */
 public class SquarePath implements Trayectorias {
 	
-	private final double AVANCE = 0.5; //10.0;
+	private final double AVANCE = 10.0;
 
 	public void movimento(Path camino) {
 		double distanciaRecorrida = camino.getDistanciaRecorrida();
